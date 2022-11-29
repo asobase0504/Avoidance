@@ -124,45 +124,32 @@ void CTutorial::Update(void)
 	m_pPaticleManager->Update();
 
 	CInput *CInputpInput = CInput::GetKey();
-	if (CInputpInput->Trigger(CInput::KEY_DELETE))
+	if (CInputpInput->Trigger(DIK_0))
 	{
 		//モードの設定
 		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
 	}
 
-	if (CInputpInput->Trigger(CInput::KEY_RELOAD))
-	{
-		if (m_pPaticleManager->GetEmitter().size() == 0)
-		{
-			/*	m_pMagicBox->CMagicBox::Magicplay((CTexture::TEXTURE)m_magic);
-			m_magic++; 
-			if (m_magic >= 6)
-			{
-				m_magic = 2;
-			}*/
-		}
-	}
-
 	if (m_nextTaskCount >= 300)
 	{
 		if (!m_isMoveClear
-			&& (CInputpInput->Press(CInput::KEY_UP)
-				|| CInputpInput->Press(CInput::KEY_DOWN)
-				|| CInputpInput->Press(CInput::KEY_RIGHT)
-				|| CInputpInput->Press(CInput::KEY_LEFT))
+			&& (CInputpInput->Press(KEY_UP)
+				|| CInputpInput->Press(KEY_DOWN)
+				|| CInputpInput->Press(KEY_RIGHT)
+				|| CInputpInput->Press(KEY_LEFT))
 			)
 		{
 			CText::Create(CText::GON, 300,10, "ナイス！！うまいのじゃ！\nタマをうってみるのじゃ！");
 			m_isMoveClear = true;
 			m_nextTaskCount = 0;
 		}
-		else if (!m_isAttackClear && CInputpInput->Press(CInput::KEY_SHOT)&& m_isMoveClear)
+		else if (!m_isAttackClear && CInputpInput->Press(KEY_SHOT)&& m_isMoveClear)
 		{
 			CText::Create(CText::GON, 300,10, "ナイス！！うまいのじゃ！\nつぎはマホウをハツドウしてみのじゃ！");
 			m_isAttackClear = true;
 			m_nextTaskCount = 0;
 		}
-		else if (!m_isMagicClear && CInputpInput->Trigger(CInput::KEY_DECISION)&& m_isAttackClear)
+		else if (!m_isMagicClear && CInputpInput->Trigger(KEY_DECISION)&& m_isAttackClear)
 		{
 			CText::Create(CText::GON, 500,10, "ナイス！！うまいのじゃ！\nさあこれでチュートリアルはおわりじゃ！\nぶっとばしにいくのじゃ！");
 			m_isMagicClear = true;

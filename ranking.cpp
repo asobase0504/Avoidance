@@ -195,7 +195,7 @@ void CRanking::Update(void)
 
 		CInput *CInputpInput = CInput::GetKey();
 
-		if (CInputpInput->Trigger(CInput::KEY_DECISION))
+		if (CInputpInput->Trigger(KEY_DECISION))
 		{
 			//ƒ‚[ƒh‚Ìİ’è
 			if (m_score == 0)

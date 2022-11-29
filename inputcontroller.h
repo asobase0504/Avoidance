@@ -17,7 +17,6 @@
 #pragma comment(lib,"xinput.lib") //入力処理に必要（ジョイパット）
 #pragma comment(lib,"dxguid.lib")		//DirectXコンポーネントに使用
 
-
 //----------------------------------------------------------------------------
 //インクルードファイル
 //----------------------------------------------------------------------------
@@ -29,6 +28,7 @@
 #define	 DIRECTINPUT_VERSION (0x0800)						//ビルド時の警告対策用マクロ(この位置から動かさない)
 #include <Xinput.h>				  //ジョイパット処理
 #include <dinput.h>				  //入力処理に必要
+
 //----------------------------------------------------------------------------
 //クラス定義
 //----------------------------------------------------------------------------
@@ -69,17 +69,18 @@ public:
 	void Uninit(void);									//入力処理全部の終了処理
 	void Update(void);									//入力処理全部の更新処理
 
-	bool GetJoypadPress(JOYKEY Key, int nPlayer);					//ジョイパッドプレス処理
-	bool GetJoypadTrigger(JOYKEY Key, int nPlayer);					//ジョイパッドトリガー処理
+	bool GetPress(JOYKEY Key, int nPlayer);					//ジョイパッドプレス処理
+	bool GetTrigger(JOYKEY Key, int nPlayer);				//ジョイパッドトリガー処理
 	D3DXVECTOR3 GetJoypadStick(JOYKEY Key, int nPlayer);			//ジョイパッドスティック処理
 	int GetJoypadTriggerPedal(JOYKEY Key, int nPlayer);				//ジョイパッドトリガーペダル処理
 	void JoypadVibration(int nTime, WORD nStrength, int nPlayer);	//ジョイパッド振動制御
 
 private:
 
-	LPDIRECTINPUT8 m_pInput;							//DirectInputオブジェクトへのポインタ
-	LPDIRECTINPUTDEVICE8 m_pDevJoypad;				//入力デバイス（キーボード（コントローラー用は別に作る））へのポインタ
-										//ジョイパッド
+	LPDIRECTINPUT8 m_pInput;				//DirectInputオブジェクトへのポインタ
+	LPDIRECTINPUTDEVICE8 m_pDevJoypad;		//入力デバイス（キーボード（コントローラー用は別に作る））へのポインタ
+
+	//ジョイパッド
 	XINPUT_STATE m_JoyKeyState[PLAYER_MAX];				//ジョイパットのプレス情報
 	XINPUT_STATE m_JoyKeyStateTrigger[PLAYER_MAX];		//ジョイパットのトリガー情報
 	D3DXVECTOR3 m_JoyStickPos[PLAYER_MAX];				//ジョイスティックの傾き

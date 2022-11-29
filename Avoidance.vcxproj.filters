@@ -208,6 +208,12 @@
     <ClCompile Include="camera_quaternion.cpp">
       <Filter>00_Cord\01_System\01_3D</Filter>
     </ClCompile>
+    <ClCompile Include="inputjoypad.cpp">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectInput.cpp">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -354,19 +360,14 @@
     <ClInclude Include="camera_quaternion.h">
       <Filter>00_Cord\01_System\01_3D</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="icon1.ico">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="ico00001.ico">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="gonn.ico">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="gonnGif.ico">
-      <Filter>リソース ファイル</Filter>
-    </Image>
+    <ClInclude Include="inputjoypad.h">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="inputkeydata.h">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInput.h">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

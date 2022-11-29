@@ -76,7 +76,7 @@ void CName::NormalUpdate()
 
 	if (m_isMove)
 	{
-		if (CInputpInput->Trigger(CInput::KEY_RIGHT))
+		if (CInputpInput->Trigger(KEY_RIGHT))
 		{
 			int nextType = m_type + 1;
 			if (nextType > MAX)
@@ -115,7 +115,7 @@ void CName::NormalUpdate()
 			SetAlphabet((EAlphabet)nextType);
 
 		}
-		if (CInputpInput->Trigger(CInput::KEY_LEFT))
+		if (CInputpInput->Trigger(KEY_LEFT))
 		{
 			int nextType = m_type - 1;
 			if (nextType <= -1)

@@ -129,28 +129,28 @@ void CPlayer::Move()
 	D3DXVECTOR3 *Camerarot = CRenderer::GetInstance()->GetCamera()->GetRot();
 	float consumption = 0.0f;
 
-	if (CInputpInput->Press(CInput::KEY_RIGHT))
+	if (CInputpInput->Press(KEY_RIGHT))
 	{
 		m_move.x += sinf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 		m_move.z += cosf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 		//consumption = m_rotMove.x + (D3DX_PI*0.5f) - m_rot.y + Camerarot->y;
 	}
-	if (CInputpInput->Press(CInput::KEY_LEFT))
+	if (CInputpInput->Press(KEY_LEFT))
 	{
 		m_move.x += sinf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 		m_move.z += cosf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 	}
-	if (CInputpInput->Press(CInput::KEY_DOWN))
+	if (CInputpInput->Press(KEY_DOWN))
 	{	
 		m_move.y -= m_MoveSpeed;
 	}
-	if (CInputpInput->Press(CInput::KEY_UP))
+	if (CInputpInput->Press(KEY_UP))
 	{	
 		m_move.y += m_MoveSpeed;
 	}
 	
 	//弾のクリエイト
-	if (CInputpInput->Press(CInput::KEY_SHOT))
+	if (CInputpInput->Press(KEY_SHOT))
 	{
 		
 	}
@@ -272,28 +272,28 @@ void CPlayer::TutorialMove()	//動きセット
 	D3DXVECTOR3 *Camerarot = CRenderer::GetInstance()->GetCamera()->GetRot();
 	float consumption = 0.0f;
 
-	if (CInputpInput->Press(CInput::KEY_RIGHT))
+	if (CInputpInput->Press(KEY_RIGHT))
 	{
 		m_move.x += sinf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 		m_move.z += cosf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 		//consumption = m_rotMove.x + (D3DX_PI*0.5f) - m_rot.y + Camerarot->y;
 	}
-	if (CInputpInput->Press(CInput::KEY_LEFT))
+	if (CInputpInput->Press(KEY_LEFT))
 	{
 		m_move.x += sinf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 		m_move.z += cosf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
 	}
-	if (CInputpInput->Press(CInput::KEY_DOWN))
+	if (CInputpInput->Press(KEY_DOWN))
 	{
 		m_move.y -= m_MoveSpeed;
 	}
-	if (CInputpInput->Press(CInput::KEY_UP))
+	if (CInputpInput->Press(KEY_UP))
 	{
 		m_move.y += m_MoveSpeed;
 	}
 
 	//弾のクリエイト
-	if (CInputpInput->Press(CInput::KEY_SHOT))
+	if (CInputpInput->Press(KEY_SHOT))
 	{
 	
 	}

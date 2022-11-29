@@ -161,6 +161,8 @@
     <ClCompile Include="2dpolygontemplate.cpp" />
     <ClCompile Include="camera_quaternion.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="DirectInput.cpp" />
+    <ClCompile Include="inputjoypad.cpp" />
     <ClCompile Include="object_mesh.cpp" />
     <ClCompile Include="object_polygon3d.cpp" />
     <ClCompile Include="3dpolygontemplate.cpp" />
@@ -213,6 +215,9 @@
     <ClInclude Include="2dpolygontemplate.h" />
     <ClInclude Include="camera_quaternion.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="DirectInput.h" />
+    <ClInclude Include="inputjoypad.h" />
+    <ClInclude Include="inputkeydata.h" />
     <ClInclude Include="object_mesh.h" />
     <ClInclude Include="object_polygon3d.h" />
     <ClInclude Include="3dpolygontemplate.h" />
@@ -258,12 +263,6 @@
     <ClInclude Include="title.h" />
     <ClInclude Include="tutorial.h" />
     <ClInclude Include="utility.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="gonn.ico" />
-    <Image Include="gonnGif.ico" />
-    <Image Include="ico00001.ico" />
-    <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

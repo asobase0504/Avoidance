@@ -56,7 +56,7 @@ void CResult::Uninit(void)
 //=============================================================================
 void CResult::Update(void)
 {
-	if (CInput::GetKey()->Trigger(CInput::KEY_DOWN))
+	if (CInput::GetKey()->Trigger(KEY_DOWN))
 	{
 		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
 	}

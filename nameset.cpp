@@ -102,7 +102,7 @@ void CNameSet::Uninit(void)
 void CNameSet::Update(void)
 {
 	CInput *CInputpInput = CInput::GetKey();
-	if (CInputpInput->Trigger(CInput::KEY_DELETE))
+	if (CInputpInput->Trigger(DIK_0))
 	{
 		if (m_NowPlay > 0)
 		{
@@ -116,7 +116,7 @@ void CNameSet::Update(void)
 		}
 	}
 
-	if (CInputpInput->Trigger(CInput::KEY_DECISION))
+	if (CInputpInput->Trigger(KEY_DECISION))
 	{
 		if (m_NowPlay >= 7)
 		{

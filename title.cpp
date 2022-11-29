@@ -80,12 +80,12 @@ void CTitle::Uninit(void)
 void CTitle::Update(void)
 {
 	static bool a = false;
-	if (CInput::GetKey()->Trigger(CInput::KEY_UP) && !a)
+	if (CInput::GetKey()->Trigger(KEY_UP) && !a)
 	{
 		a = true;
 		m_pPaticleManager->Create(CParticleEmitter::EObjectType::POLIGON2D, CApplication::CENTER_POS, 0);
 	}
-	if (CInput::GetKey()->Trigger(CInput::KEY_DOWN))
+	if (CInput::GetKey()->Trigger(KEY_DOWN))
 	{
 		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_GAME);
 	}

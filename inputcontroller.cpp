@@ -96,12 +96,12 @@ void CInputController::Update(void)
 }
 
 //キーボードプレス処理
-bool CInputController::GetJoypadPress(JOYKEY Key, int nPlayer)
+bool CInputController::GetPress(JOYKEY Key, int nPlayer)
 {
 	return (m_JoyKeyState[nPlayer].Gamepad.wButtons & (0x01 << Key)) ? true : false;
 }
 //キーボードトリガー処理
-bool CInputController::GetJoypadTrigger(JOYKEY Key, int nPlayer)
+bool CInputController::GetTrigger(JOYKEY Key, int nPlayer)
 {
 	return (m_JoyKeyStateTrigger[nPlayer].Gamepad.wButtons & (0x01 << Key)) ? true : false;
 }
