@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="00_Cord">
+      <UniqueIdentifier>{d9994d28-9025-4f4a-98c3-b8e46a168bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\00_Main">
+      <UniqueIdentifier>{4fe637f4-6403-45e0-a73e-5e1254665700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\01_System">
+      <UniqueIdentifier>{2a674479-747d-4b98-a217-447af06c09f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object">
+      <UniqueIdentifier>{26276af0-11f7-4f23-aa68-0ba0442fe6fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\00_Templeate">
+      <UniqueIdentifier>{4d7fd24e-a1f9-4a99-9cc9-c6db6ab29039}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\01_System\00_Input">
+      <UniqueIdentifier>{90ecc76b-9aa3-4ffa-bd60-12eb8866581f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\01_System\01_3D">
+      <UniqueIdentifier>{775d74d7-8669-4d67-a8a5-27c5c7e508f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\01_System\02_File">
+      <UniqueIdentifier>{95afe884-2b87-469e-9325-19fb95fb5af9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\01_System\03_OutSide">
+      <UniqueIdentifier>{385cb0a4-5e34-4c33-9cf6-9a633bf87c89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\00_Main\00_Main">
+      <UniqueIdentifier>{ada3f5d2-49da-4048-a6c1-47dae1b75f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\01_System\04_Utility">
+      <UniqueIdentifier>{7e1cb7a9-fedd-479d-9a12-e56a7686baab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode">
+      <UniqueIdentifier>{50f5e731-fd3b-4941-af9e-ece487b9fa44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\01_Master">
+      <UniqueIdentifier>{f8e8bc84-b686-49df-be46-67103f11226b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\01_Master\00_Motion">
+      <UniqueIdentifier>{59e62502-3da8-4b9f-86ed-0bd9883b247c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\10_Particle">
+      <UniqueIdentifier>{2bbde2d8-12d3-436a-8e56-d004ae5bbc93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\02_Object2D">
+      <UniqueIdentifier>{1275179e-97c5-4666-9150-08228b3071ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\02_Object2D\01_UI">
+      <UniqueIdentifier>{145a86af-5ff6-4807-9f6d-f2bec8c20e78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\02_Object2D\01_UI\00_Number">
+      <UniqueIdentifier>{893ba109-c22b-4607-bdee-b9db01165e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\03_ObjectX">
+      <UniqueIdentifier>{a769b689-bec5-49cb-b2fa-c4d659f98e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\00_Main\02_Group">
+      <UniqueIdentifier>{23a7b4ab-29bc-45d9-a9c1-f63e25d06da9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="game.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="title.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_manager.cpp">
+      <Filter>00_Cord\02_Object\10_Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_emitter.cpp">
+      <Filter>00_Cord\02_Object\10_Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>00_Cord\02_Object\10_Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClCompile>
+    <ClCompile Include="score.cpp">
+      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="number.cpp">
+      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="ranking.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="fade.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="tutorial.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="pause.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="text.cpp">
+      <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="2dpolygontemplate.cpp">
+      <Filter>00_Cord\02_Object\00_Templeate</Filter>
+    </ClCompile>
+    <ClCompile Include="3dpolygontemplate.cpp">
+      <Filter>00_Cord\02_Object\00_Templeate</Filter>
+    </ClCompile>
+    <ClCompile Include="nameset.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="mode.cpp">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="motion.cpp">
+      <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_model3D.cpp">
+      <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="bg.cpp">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClCompile>
+    <ClCompile Include="file.cpp">
+      <Filter>00_Cord\01_System\02_File</Filter>
+    </ClCompile>
+    <ClCompile Include="letter.cpp">
+      <Filter>00_Cord\01_System\02_File</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>00_Cord\01_System\01_3D</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="inputcontroller.cpp">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="inputkeyboard.cpp">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>00_Cord\01_System\01_3D</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>00_Cord\01_System\03_OutSide</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>00_Cord\01_System\03_OutSide</Filter>
+    </ClCompile>
+    <ClCompile Include="name.cpp">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClCompile>
+    <ClCompile Include="parts.cpp">
+      <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="task.cpp">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>00_Cord\01_System\04_Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="precompile.cpp">
+      <Filter>00_Cord</Filter>
+    </ClCompile>
+    <ClCompile Include="object2d.cpp">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClCompile>
+    <ClCompile Include="objectX.cpp">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClCompile>
+    <ClCompile Include="objectX_group.cpp">
+      <Filter>00_Cord\00_Main\02_Group</Filter>
+    </ClCompile>
+    <ClCompile Include="task_group.cpp">
+      <Filter>00_Cord\00_Main\02_Group</Filter>
+    </ClCompile>
+    <ClCompile Include="object_polygon3d.cpp">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClCompile>
+    <ClCompile Include="object_mesh.cpp">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClCompile>
+    <ClCompile Include="collision.cpp">
+      <Filter>00_Cord\01_System\04_Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="camera_quaternion.cpp">
+      <Filter>00_Cord\01_System\01_3D</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="result.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="title.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_manager.h">
+      <Filter>00_Cord\02_Object\10_Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_emitter.h">
+      <Filter>00_Cord\02_Object\10_Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>00_Cord\02_Object\10_Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClInclude>
+    <ClInclude Include="score.h">
+      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="number.h">
+      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ranking.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="fade.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorial.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="pause.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="text.h">
+      <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="2dpolygontemplate.h">
+      <Filter>00_Cord\02_Object\00_Templeate</Filter>
+    </ClInclude>
+    <ClInclude Include="3dpolygontemplate.h">
+      <Filter>00_Cord\02_Object\00_Templeate</Filter>
+    </ClInclude>
+    <ClInclude Include="nameset.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="mode.h">
+      <Filter>00_Cord\00_Main\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="motion.h">
+      <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_model3D.h">
+      <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="bg.h">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="file.h">
+      <Filter>00_Cord\01_System\02_File</Filter>
+    </ClInclude>
+    <ClInclude Include="letter.h">
+      <Filter>00_Cord\01_System\02_File</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>00_Cord\01_System\01_3D</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="inputcontroller.h">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="inputkeyboard.h">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>00_Cord\01_System\01_3D</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>00_Cord\01_System\03_OutSide</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>00_Cord\01_System\03_OutSide</Filter>
+    </ClInclude>
+    <ClInclude Include="name.h">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="parts.h">
+      <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="task.h">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
+      <Filter>00_Cord\01_System\04_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="precompile.h">
+      <Filter>00_Cord</Filter>
+    </ClInclude>
+    <ClInclude Include="object2d.h">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClInclude>
+    <ClInclude Include="objectX.h">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClInclude>
+    <ClInclude Include="objectX_group.h">
+      <Filter>00_Cord\00_Main\02_Group</Filter>
+    </ClInclude>
+    <ClInclude Include="task_group.h">
+      <Filter>00_Cord\00_Main\02_Group</Filter>
+    </ClInclude>
+    <ClInclude Include="object_polygon3d.h">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClInclude>
+    <ClInclude Include="object_mesh.h">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClInclude>
+    <ClInclude Include="collision.h">
+      <Filter>00_Cord\01_System\04_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_quaternion.h">
+      <Filter>00_Cord\01_System\01_3D</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="ico00001.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="gonn.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="gonnGif.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
