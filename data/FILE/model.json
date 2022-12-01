@@ -1,5 +1,6 @@
 {
   "MODEL": [
+    [ "BOX", "data\/MODEL\/box.x" ],
     [ "FOX_KAO", "data\/MODEL\/Fox\/kao.x" ],
     [ "GATTAI", "data\/MODEL\/Fox\/gattai.x" ]
   ]

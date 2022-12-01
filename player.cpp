@@ -31,7 +31,8 @@ const int CPlayer::INVINCIBLE = 30;			// 無敵時間
 //------------------------------------
 // コンストラクタ
 //------------------------------------
-CPlayer::CPlayer()
+CPlayer::CPlayer() :
+	m_quaternion(D3DXQUATERNION(0.0f,0.0,0.0f,1.0f))
 {
 }
 
@@ -40,7 +41,6 @@ CPlayer::CPlayer()
 //------------------------------------
 CPlayer::~CPlayer()
 {
-
 }
 
 //------------------------------------
@@ -50,10 +50,12 @@ HRESULT CPlayer::Init()
 {
 	// 現在のモーション番号の保管
 	CObjectX::Init();
-	//CObjectX::Set(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), "Data/system/Gon/Fox.txt");
-	D3DXVECTOR3	Size(2.0f, 2.0f, 2.0f);
+	LoadModel("BOX");
+
 	m_MoveSpeed = 7.0f;
-	m_rot.y += (-D3DX_PI*0.5f);
+	m_rot.y += -D3DX_PI * 0.5f;
+
+	D3DXVECTOR3	Size(2.0f, 2.0f, 2.0f);
 	SetSize(Size);
 	return S_OK;
 }
@@ -72,28 +74,36 @@ void CPlayer::Uninit()
 //------------------------------------
 void CPlayer::NormalUpdate()
 {
-	switch (*CApplication::GetInstance()->GetMode())
-	{
-	case CApplication::MODE_TITLE:
-		TitleMove();	//動きセット
-		break;
-	case CApplication::MODE_GAME:
-		Move();	//動きセット	
-		break;
-	case CApplication::MODE_RESULT:
-		ResetMove();
-		break;
-	case CApplication::MODE_RANKING:
-		break;
-	case CApplication::MODE_TUTORIAL:
-		TutorialMove();
-		break;
-	default:
-		break;
-	}
+	Move();	//動きセット
 
-	// 現在のモーション番号の保管
-	CObjectX::Update();
+	CInput* input = CInput::GetKey();
+	if (input->Trigger(DIK_0))
+	{
+		SetMaterialDiffuse(0, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	if (input->Trigger(DIK_1))
+	{
+		SetMaterialDiffuse(0, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	}
+	if (input->Trigger(DIK_2))
+	{
+		SetMaterialDiffuse(0, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+	}
+	if (input->Trigger(DIK_3))
+	{
+		SetMaterialDiffuse(0, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+	}
+	static D3DXCOLOR color = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+	if (input->Press(DIK_4))
+	{
+		color.r += 0.01f;
+		SetMaterialDiffuse(0, color);
+	}
+	if (input->Press(DIK_5))
+	{
+		color.r -= 0.01f;
+		SetMaterialDiffuse(0, color);
+	}
 }
 
 //------------------------------------
@@ -101,7 +111,7 @@ void CPlayer::NormalUpdate()
 //------------------------------------
 void CPlayer::Draw()
 {
-	CObjectX::Draw();
+	CObjectX::Draw(m_quaternion);
 }
 
 //------------------------------------
@@ -109,15 +119,14 @@ void CPlayer::Draw()
 //------------------------------------
 CPlayer *CPlayer::Create()
 {
-	CPlayer * pObject = nullptr;
-	pObject = new CPlayer;
+	CPlayer * player = new CPlayer;
 
-	if (pObject != nullptr)
+	if (player != nullptr)
 	{
-		pObject->Init();
+		player->Init();
 	}
 
-	return pObject;
+	return player;
 }
 
 //------------------------------------
@@ -125,207 +134,61 @@ CPlayer *CPlayer::Create()
 //------------------------------------
 void CPlayer::Move()
 {
-	CInput *CInputpInput = CInput::GetKey();
-	D3DXVECTOR3 *Camerarot = CRenderer::GetInstance()->GetCamera()->GetRot();
-	float consumption = 0.0f;
+	CInput* input = CInput::GetKey();
+	D3DXVECTOR3 moveInput = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
-	if (CInputpInput->Press(KEY_RIGHT))
+	if (input->Press(KEY_RIGHT))
 	{
-		m_move.x += sinf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-		m_move.z += cosf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-		//consumption = m_rotMove.x + (D3DX_PI*0.5f) - m_rot.y + Camerarot->y;
+		moveInput.x += 1.0f;
 	}
-	if (CInputpInput->Press(KEY_LEFT))
+	if (input->Press(KEY_LEFT))
 	{
-		m_move.x += sinf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-		m_move.z += cosf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
+		moveInput.x -= 1.0f;
 	}
-	if (CInputpInput->Press(KEY_DOWN))
+	if (input->Press(KEY_DOWN))
 	{	
-		m_move.y -= m_MoveSpeed;
+		moveInput.z -= 1.0f;
 	}
-	if (CInputpInput->Press(KEY_UP))
+	if (input->Press(KEY_UP))
 	{	
-		m_move.y += m_MoveSpeed;
-	}
-	
-	//弾のクリエイト
-	if (CInputpInput->Press(KEY_SHOT))
-	{
-		
+		moveInput.z += 1.0f;
 	}
 
+	if (D3DXVec3Length(&moveInput) > 0.0f)
+	{
+		// カメラの角度情報取得
+		D3DXVECTOR3* CameraRot = CRenderer::GetInstance()->GetCamera()->GetRot();
 
- 	else
-	{
-		m_Pow = 20;
-	}
+		D3DXVec3Normalize(&moveInput, &moveInput);
 
-	if (m_pos.y <= -SCREEN_HEIGHT * 0.5f + 20.0f)
-	{
-		m_pos.y = (-SCREEN_HEIGHT * 0.5f)+20.0f;
-	}
+		float c = cosf(-CameraRot->y);
+		float s = sinf(-CameraRot->y);
 
-	if (m_pos.y >= SCREEN_HEIGHT * 0.5f - 100.0f)
-	{
-		m_pos.y = SCREEN_HEIGHT * 0.5f - 100.0f;
-	}
-	if (m_pos.x <= -SCREEN_WIDTH * 0.5f + 100.0f)
-	{
-		m_pos.x = -SCREEN_WIDTH*0.5f + 100.0f;
-	}
-	if (m_pos.x >= SCREEN_WIDTH * 0.5f - 80.0f)
-	{
-		m_pos.x = SCREEN_WIDTH*0.5f - 80.0f;
+		// move の長さは 1 になる。
+		m_move.x = moveInput.x * c - moveInput.y * s;
+		m_move.z = moveInput.x * s + moveInput.y * c;
 	}
 
-	m_move.x += (0.0f - m_move.x)*ATTENUATION;	//（目的の値-現在の値）＊減衰係数
-	m_move.z += (0.0f - m_move.z)*ATTENUATION;
-	m_move.y += (0.0f - m_move.y)*ATTENUATION;
+	m_move = moveInput * SPEED * m_MoveSpeed;
+
+	m_move.x += (0.0f - m_move.x) * ATTENUATION;	//（目的の値-現在の値）＊減衰係数
+	m_move.z += (0.0f - m_move.z) * ATTENUATION;
+	m_move.y += (0.0f - m_move.y) * ATTENUATION;
 
 	m_pos += m_move;//移動を加算
 
-	//正規化
-	NormalizeAngle(consumption);
+	D3DXVECTOR3 axis;	// 回転軸
+	D3DXVECTOR3 inverseVec = -m_move;					// move値を反対にする
+	D3DXVECTOR3 vecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXVec3Cross(&axis, &inverseVec, &vecY);			// 外積で回転軸を算出。
 
-	//減算設定（感性）
-	m_rot.y += (consumption)* ATTENUATION;//目的の値-現在の値）＊減衰係数
+	// クオータニオンの計算
+	D3DXQUATERNION quaternion;
+	D3DXQuaternionRotationAxis(&quaternion, &axis, 0.15f);	// 回転軸と回転角度を指定
 
-	 //正規化
-	NormalizeAngle(m_rot.y);
-}
+	// クオータニオンを適用
+	m_quaternion *= quaternion;
 
-//------------------------------------
-// TitleのときのMove
-//------------------------------------
-void CPlayer::TitleMove()
-{
-
-	D3DXVECTOR3 *Camerarot = CRenderer::GetInstance()->GetCamera()->GetRot();
-	float consumption = 0.0f;
-	
-	m_move.x += sinf(-D3DX_PI *0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-	m_move.z += cosf(-D3DX_PI *0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-	//consumption = m_rotMove.x + -(D3DX_PI*0.5f) - m_rot.y + Camerarot->y;
-	
-	m_pos.y = 250.0f;
-
-	m_move.x += (0.0f - m_move.x)*ATTENUATION;//（目的の値-現在の値）＊減衰係数
-	m_move.z += (0.0f - m_move.z)*ATTENUATION;
-	m_move.y += (0.0f - m_move.y)*ATTENUATION;
-
-	m_pos += m_move;//移動を加算
-
-	NormalizeAngle(consumption);	//正規化
-
-	//減算設定（感性）
-	m_rot.y += (consumption)* ATTENUATION;//目的の値-現在の値）＊減衰係数
-
-	NormalizeAngle(m_rot.y);	//正規化
-
-	if (m_pos.x <= -SCREEN_WIDTH * 0.5f-100.0f)
-	{
-		m_pos.x = SCREEN_WIDTH * 0.5f;
-	}
-}
-
-//------------------------------------
-// ResetのときのMove
-//------------------------------------
-void CPlayer::ResetMove()
-{
-
-	D3DXVECTOR3 *Camerarot = CRenderer::GetInstance()->GetCamera()->GetRot();
-	float consumption = 0.0f;
-
-	m_move.x += sinf(-D3DX_PI *0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-	m_move.z += cosf(-D3DX_PI *0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-	//consumption = m_rotMove.x + -(D3DX_PI*0.5f) - m_rot.y + Camerarot->y;
-
-	m_pos.y = 250.0f;
-
-	m_move.x += (0.0f - m_move.x)*ATTENUATION;//（目的の値-現在の値）＊減衰係数
-	m_move.z += (0.0f - m_move.z)*ATTENUATION;
-	m_move.y += (0.0f - m_move.y)*ATTENUATION;
-
-	m_pos += m_move;//移動を加算
-
-	NormalizeAngle(consumption);	//正規化
-
-	//減算設定（感性）
-	m_rot.y += (consumption) * ATTENUATION;//目的の値-現在の値）＊減衰係数
-
-	NormalizeAngle(m_rot.y);	//正規化
-
-	if (m_pos.x <= -SCREEN_WIDTH*0.5f - 100.0f)
-	{
-		m_pos.x = SCREEN_WIDTH*0.5f;
-	}
-}
-
-//------------------------------------
-// Move
-//------------------------------------
-void CPlayer::TutorialMove()	//動きセット
-{
-	CInput *CInputpInput = CInput::GetKey();
-	D3DXVECTOR3 *Camerarot = CRenderer::GetInstance()->GetCamera()->GetRot();
-	float consumption = 0.0f;
-
-	if (CInputpInput->Press(KEY_RIGHT))
-	{
-		m_move.x += sinf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-		m_move.z += cosf(D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-		//consumption = m_rotMove.x + (D3DX_PI*0.5f) - m_rot.y + Camerarot->y;
-	}
-	if (CInputpInput->Press(KEY_LEFT))
-	{
-		m_move.x += sinf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-		m_move.z += cosf(-D3DX_PI * 0.5f + Camerarot->y) * SPEED * m_MoveSpeed;
-	}
-	if (CInputpInput->Press(KEY_DOWN))
-	{
-		m_move.y -= m_MoveSpeed;
-	}
-	if (CInputpInput->Press(KEY_UP))
-	{
-		m_move.y += m_MoveSpeed;
-	}
-
-	//弾のクリエイト
-	if (CInputpInput->Press(KEY_SHOT))
-	{
-	
-	}
-
-	if (m_pos.y <= -SCREEN_HEIGHT * 0.5f + 20.0f)
-	{
-		m_pos.y = (-SCREEN_HEIGHT * 0.5f) + 20.0f;
-	}
-
-	if (m_pos.y >= SCREEN_HEIGHT * 0.5f - 100.0f)
-	{
-		m_pos.y = SCREEN_HEIGHT * 0.5f - 100.0f;
-	}
-	if (m_pos.x <= -SCREEN_WIDTH * 0.5f + 100.0f)
-	{
-		m_pos.x = -SCREEN_WIDTH * 0.5f + 100.0f;
-	}
-	if (m_pos.x >= SCREEN_WIDTH * 0.5f - 80.0f)
-	{
-		m_pos.x = SCREEN_WIDTH * 0.5f - 80.0f;
-	}
-
-	m_move.x += (0.0f - m_move.x) * ATTENUATION;	//（目的の値-現在の値）* 減衰係数
-	m_move.z += (0.0f - m_move.z) * ATTENUATION;	//（目的の値-現在の値）* 減衰係数
-	m_move.y += (0.0f - m_move.y) * ATTENUATION;	//（目的の値-現在の値）* 減衰係数
-
-	m_pos += m_move;//移動を加算
-
-	NormalizeAngle(consumption);	//正規化
-
-	//減算設定（感性）
-	m_rot.y += (consumption)* ATTENUATION;//目的の値-現在の値）＊減衰係数
-
-	NormalizeAngle(m_rot.y);	//正規化
+	// クオータニオンのノーマライズ
+	D3DXQuaternionNormalize(&m_quaternion, &m_quaternion);
 }

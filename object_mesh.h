@@ -14,18 +14,6 @@
 #include "object_polygon3d.h"
 
 //-----------------------------------------------------------------------------
-// 定数
-//-----------------------------------------------------------------------------
-#define	EMESHX	(1)
-#define	EMESHY	(5)
-#define MAX_SIZEMESH (100.0f)
-#define MAX_EMESH (10)
-#define MOUNTAIN (50.0f)
-#define MAXMOVE (10)
-
-#define EMESHMAX (12800)
-
-//-----------------------------------------------------------------------------
 // メッシュ
 //-----------------------------------------------------------------------------
 class CMesh : public CObjectPolygon3D
@@ -43,8 +31,8 @@ public:
 
 	static CMesh* Create();
 
-	bool CreateMesh(D3DXVECTOR3 *pPos);			// メッシュの凸凹つける
-	bool CollisionMesh(D3DXVECTOR3 *pPos);		// メッシュの当たり判定つける
+	bool CreateMesh(D3DXVECTOR3 *pPos);		// メッシュの凸凹つける
+	bool Collision(D3DXVECTOR3 *pPos);	// メッシュの当たり判定つける
 
 	void Loadfile(const char * pFileName);	// メッシュの読み込み
 	void Savefile(const char * pFileName);	// メッシュの書き出し
@@ -54,11 +42,7 @@ public:
 	void SetNumber(int IsNumber) { m_Number = IsNumber; }
 	void SetType(int IsType) { m_Type = IsType; }
 
-	void SetOneMeshSize(D3DXVECTOR3 IsSize) 
-	{
-		m_MeshSize = IsSize; 
-		CMesh::SetMesh(m_NowMesh);
-	}
+	void SetOneMeshSize(D3DXVECTOR3 IsSize);
 
 	void SwitchCollision(bool onCollision) { IsCollision = onCollision; };
 
@@ -77,10 +61,8 @@ private:
 	void SetVtxMeshSize(int Size);
 	void SetVtxMeshLight();
 
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファーへのポインタ
 	LPDIRECT3DINDEXBUFFER9 m_pIdxBuff;	// インデックスバッファ
 
-	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
 	int m_xsiz;				// 面数
 	int m_zsiz;				// 面数
 	int m_vtxCountX;		// 辺の頂点数
@@ -91,7 +73,6 @@ private:
 	int m_NowMesh;
 	int m_Number;
 	int m_Type;
-	float m_move;
 	D3DXVECTOR3 m_MeshSize;
 	D3DXVECTOR3* m_nPosMesh;
 	std::string  m_pFileName;

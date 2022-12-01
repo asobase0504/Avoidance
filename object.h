@@ -48,12 +48,13 @@ public:
 		MAX
 	};
 
+private:
+	void Update() override final;
 public:
 	CObject(CTaskGroup::EPriority inPriority = CTaskGroup::LEVEL_2D_BG, CTaskGroup::EPushMethod inMethod = CTaskGroup::EPushMethod::PUSH_CURRENT);
 	virtual ~CObject() override;
 
 	// çXêV
-	void Update() override final;
 	void SetUpdateStatus(const EUpdateStatus inStatus) { m_updateStatus = inStatus; }
 
 	/* éÌóﬁån */

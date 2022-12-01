@@ -162,15 +162,6 @@ CObjectPolygon3D *CObjectPolygon3D::Create(CTaskGroup::EPriority list)
 	return pObject;
 }
 
-//=============================================================================
-// SetPos関数
-//=============================================================================
-void CObjectPolygon3D::SetPos(const D3DXVECTOR3 &pos)
-{
-	m_pos.x = pos.x;
-	m_pos.y = pos.y;
-}
-
 //---------------------------------------
 //セットテクスチャ(2d)
 //---------------------------------------
@@ -196,9 +187,9 @@ void CObjectPolygon3D::SetTex(PositionVec4 Tex)
 //---------------------------------------
 void  CObjectPolygon3D::SetSize(const D3DXVECTOR3 &size)
 {
-	m_size = size;
+	SetSize(size);
 
-	VERTEX_3D*pVtx;		//頂点情報へのポインタ
+	VERTEX_3D *pVtx;	// 頂点情報へのポインタ
 
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
@@ -209,20 +200,22 @@ void  CObjectPolygon3D::SetSize(const D3DXVECTOR3 &size)
 	//頂点座標
 	for (int i = 0; i < 4; ++i)
 	{
-		pVtx[i].pos.x = m_Vtx[i].x * m_size.x; // TODO: これなおす。
-		pVtx[i].pos.y = m_Vtx[i].y * m_size.y; // TODO: これなおす。
-		pVtx[i].pos.z = 0.0f;
+		pVtx[i].pos.x = m_Vtx[i].x * m_size.x;
+		pVtx[i].pos.y = m_Vtx[i].y * m_size.y;
+		pVtx[i].pos.z = m_Vtx[i].z * m_size.z;
 	}
 
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
-
 }
+
 //---------------------------------------
 //頂点Collarの設定
 //---------------------------------------
 void CObjectPolygon3D::SetCollar(D3DXCOLOR Collar)
 {
+	CObject::SetColor(Collar);
+
 	VERTEX_3D *pVtx; //頂点へのポインタ
 
 	//頂点バッファをロックし頂点情報へのポインタを取得

@@ -81,7 +81,6 @@ private:
 	CFade* m_pFade;
 	CMode* m_pGame;
 	CSound* m_pSound;
-	CInput* m_pInput;
 	CObjectXGroup* m_pObjectXGroup;
 	MODE m_mode;
 };

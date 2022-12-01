@@ -15,7 +15,6 @@
 //-----------------------------------------------------------------------------
 // 前方宣言
 //-----------------------------------------------------------------------------
-class CMagicBox;
 class CParticleManager;
 class CPlayer;
 class CPause; 
@@ -36,13 +35,11 @@ public:
 	void Draw() override;
 
 	// Getter
-	static CMagicBox* GetMagicBox() { return m_pMagicBox; };
 	static CParticleManager* GetParticleManager() { return m_pPaticleManager; }
 	static CPlayer* GetPlayer() { return m_pPlayer; };
 	static CPause* GetPause() { return m_pPause; };
 
 private:
-	static CMagicBox* m_pMagicBox;
 	static CPlayer* m_pPlayer;
 	static CParticleManager* m_pPaticleManager;	// パーティクルマネジャー
 	static CPause *m_pPause;

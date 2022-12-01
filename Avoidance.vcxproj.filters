@@ -65,6 +65,9 @@
     <Filter Include="00_Cord\00_Main\02_Group">
       <UniqueIdentifier>{23a7b4ab-29bc-45d9-a9c1-f63e25d06da9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01_File">
+      <UniqueIdentifier>{2516cd92-e29e-4ebd-80f1-224a1c9391c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game.cpp">
@@ -369,5 +372,10 @@
     <ClInclude Include="DirectInput.h">
       <Filter>00_Cord\01_System\00_Input</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\FILE\model.json">
+      <Filter>01_File</Filter>
+    </None>
   </ItemGroup>
 </Project>

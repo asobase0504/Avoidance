@@ -52,7 +52,6 @@ public:
 	void Draw() override;
 
 	// Setter
-	virtual void SetPos(const D3DXVECTOR3& inPos) override;
 	void SetTex(PositionVec4 inTex);
 	void SetSize(const D3DXVECTOR3& inSize);
 	void SetCollar(D3DXCOLOR inCollar);
@@ -64,11 +63,10 @@ public:
 
 protected:
 	float m_scale;
-	D3DXVECTOR3 m_size;
 	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
-	int  m_time;
+	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;	// 頂点バッファ
+	int m_time;
 private:
 	static int m_maxPolygon;
-	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;
 };
 #endif

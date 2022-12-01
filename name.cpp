@@ -70,7 +70,7 @@ void CName::Uninit()
 //=============================================================================
 void CName::NormalUpdate()
 {
-	CObject2d::Update();
+	CObject2d::NormalUpdate();
 
 	CInput *CInputpInput = CInput::GetKey();
 

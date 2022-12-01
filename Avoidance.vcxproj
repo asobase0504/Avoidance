@@ -264,6 +264,9 @@
     <ClInclude Include="tutorial.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\FILE\model.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

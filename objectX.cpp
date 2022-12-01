@@ -91,7 +91,55 @@ void CObjectX::Draw()
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
 	}
 
-	Projection();
+	// ワールドマトリックスの設定（ワールド座標行列の設定）
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	// 現在のマテリアルを保持
+	pDevice->GetMaterial(&matDef);
+
+	// マテリアルデータへのポインタを取得
+	pMat = m_pBuffMat;
+
+	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
+	{
+		// マテリアルの設定
+		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+		// モデルパーツの描画
+		m_pMesh->DrawSubset(nCntMat);
+	}
+
+	// 保持していたマテリアルを戻す
+	pDevice->SetMaterial(&matDef);
+}
+
+void CObjectX::Draw(const D3DXQUATERNION& quaternion)
+{
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
+
+	D3DXMATRIX mtxRot, mtxTrans, mtxParent;		// 計算用マトリックス
+	D3DMATERIAL9 matDef;						// 現在のマテリアル保存用
+	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// クォータニオンの使用した姿勢の設定
+	D3DXMatrixRotationQuaternion(&mtxRot, &quaternion);	// クオータニオンによる行列回転
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_pParent != nullptr)
+	{
+		mtxParent = m_pParent->GetMtxWorld();
+
+		// 行列掛け算関数
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
+	}
 
 	// ワールドマトリックスの設定（ワールド座標行列の設定）
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
@@ -100,10 +148,12 @@ void CObjectX::Draw()
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルデータへのポインタを取得
-	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+	pMat = m_pBuffMat;
 
 	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
+		pMat[nCntMat].MatD3D.Diffuse;
+
 		// マテリアルの設定
 		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
@@ -124,9 +174,6 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 {
 	// 計算用マトリックス
 	D3DXMATRIX mtxRot, mtxTrans, mtxScaling;
-
-	// 現在のマテリアル保存用
-	D3DMATERIAL9 matDef;
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -149,6 +196,7 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 	// 現在のマテリアルを保持
+	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
 	// テクスチャポインタの取得
@@ -159,7 +207,7 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 
 	if (m_pBuffMat != nullptr)
 	{// マテリアルデータへのポインタを取得
-		pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+		pMat = m_pBuffMat;
 
 		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 		{// マテリアルの設定
@@ -251,7 +299,7 @@ CObjectX * CObjectX::Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority)
 void CObjectX::LoadModel(const char *aFileName)
 {
 	CObjectXGroup *xGroup = CApplication::GetInstance()->GetObjectXGroup();
-	m_pBuffMat = xGroup->GetBuffMat(aFileName);
+	m_pBuffMat = (D3DXMATERIAL*)xGroup->GetBuffMat(aFileName)->GetBufferPointer();
 	m_MaxVtx = xGroup->GetMaxVtx(aFileName);
 	m_pMesh = xGroup->GetMesh(aFileName);
 	m_MinVtx = xGroup->GetMinVtx(aFileName);
@@ -268,7 +316,6 @@ void CObjectX::Projection(void)
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
-	D3DMATERIAL9 matDef;			// 現在のマテリアル保存用
 	D3DXMATERIAL *pMat;				// マテリアルデータへのポインタ
 
 	// 変数宣言
@@ -299,10 +346,11 @@ void CObjectX::Projection(void)
 	pDevice->SetTransform(D3DTS_WORLD, &mtxShadow);
 
 	// 現在のマテリアルを保持
+	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルデータへのポインタを取得
-	pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+	pMat = m_pBuffMat;
 
 	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
@@ -323,6 +371,21 @@ void CObjectX::Projection(void)
 
 	// 保持していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
+}
+
+//=============================================================================
+// 色味（拡散反射光）の設定
+//=============================================================================
+void CObjectX::SetMaterialDiffuse(unsigned int index, const D3DXCOLOR & inColor)
+{
+	// 変更予定のマテリアルがない場合
+	if (index >= m_NumMat)
+	{
+		assert(false);
+		return;
+	}
+
+	m_pBuffMat[index].MatD3D.Diffuse = inColor;
 }
 
 //=============================================================================

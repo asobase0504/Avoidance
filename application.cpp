@@ -85,8 +85,8 @@ HRESULT CApplication::Init(HWND hWnd, HINSTANCE hInstance)
 	}
 
 	// “ü—Íˆ—‚Ì‰Šú‰»ˆ—
-	m_pInput = CInput::Create();
-	if (FAILED(m_pInput->Init(hInstance, hWnd)))
+	CInput::Create();
+	if (FAILED(CInput::GetKey()->Init(hInstance, hWnd)))
 	{
 		return E_FAIL;
 	}
@@ -158,7 +158,7 @@ void CApplication::Uninit()
 	}
 
 	//“ü—Íˆ—‚ÌI—¹ˆ—
-	m_pInput->Uninit();
+	CInput::GetKey()->Uninit();
 
 }
 
@@ -168,7 +168,7 @@ void CApplication::Uninit()
 void CApplication::Update()
 {
 	//“ü—Íˆ—‚ÌXVˆ—
-	m_pInput->Update();
+	CInput::GetKey()->Update();
 	m_pGame->Update();
 	m_pRenderer->Update();
 }

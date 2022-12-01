@@ -19,29 +19,31 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <locale.h>
-#include <sstream>
 
-nlohmann::json JMesh;//リストの生成
+
+//-----------------------------------------------------------------------------
+// 定数
+//-----------------------------------------------------------------------------
+#define MOUNTAIN (50.0f)
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CMesh::CMesh(CTaskGroup::EPriority nPriority) :
 	CObjectPolygon3D(nPriority),
-	m_xsiz(0),						// 面数
-	m_zsiz(0),						// 面数
-	m_vtxCountX(0),					// 辺の頂点数
-	m_vtxCountZ(0),					// 辺の頂点数
-	m_vtx(0),						// 頂点数
-	m_index(0),						// インデックス
+	m_xsiz(0),			// X軸の面数
+	m_zsiz(0),			// Y軸の面数
+	m_vtxCountX(0),		// X軸の辺の頂点数
+	m_vtxCountZ(0),		// Y軸の辺の頂点数
+	m_vtx(0),			// 頂点数
+	m_index(0),			// インデックス
 	m_polygonCount(0),
 	m_NowMesh(0),
 	m_Number(0),
 	m_Type(0),
-	m_move(5.0f),
 	IsCollision(true)
 {
-	m_MeshSize = { 100.0f,0.0f,100.0f };
+	m_MeshSize = { 10.0f,0.0f,10.0f };
 }
 
 //=============================================================================
@@ -61,10 +63,6 @@ HRESULT CMesh::Init(void)
 	m_pVtxBuff = nullptr;		// 頂点バッファーへのポインタ
 	m_pIdxBuff = nullptr;		// インデックスバッファ
 	
-	//m_pFileName = nullptr;
-
-	//テクスチャの読み込み
-
 	SetMesh(10);
 
 	return S_OK;
@@ -176,11 +174,11 @@ CMesh* CMesh::Create()
 // Author: hamada ryuuga
 // Aythor: Yuda Kaito
 //=============================================================================
-bool CMesh::CollisionMesh(D3DXVECTOR3 *pPos)
+bool CMesh::Collision(D3DXVECTOR3 *pPos)
 {
-
 	bool bIsLanding = false;
 	const int nTri = 3;
+
 	// 頂点座標をロック
 	VERTEX_3D* pVtx = NULL;
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
@@ -351,21 +349,6 @@ bool CMesh::CreateMesh(D3DXVECTOR3 *pPos)
 				break;
 			}
 		}
-		if (LineCout == nTri)
-		{
-			/*
-			CInput *CInputpInput = CInput::GetKey();
-
-			if (CInputpInput->Trigger(CInput::KEY_MESHUP))
-			{			
-				SetVtxMesh(pVtx, pIdx, nCnt, true);
-			}
-			if (CInputpInput->Trigger(CInput::KEY_MESHDOWN))
-			{
-				SetVtxMesh(pVtx, pIdx, nCnt, false);
-			}
-			*/
-		}
 	}
 
 	// 頂点座標をアンロック
@@ -410,9 +393,10 @@ void CMesh::Loadfile(const char * pFileName)
 	std::string str;
 	if (ifs)
 	{
+		nlohmann::json JMesh;//リストの生成
+
 		ifs >> JMesh;
 		nIndex = JMesh["INDEX"];
-		m_move = JMesh["MOVE"];
 		D3DXVECTOR3 pos;
 		D3DXVECTOR3 size;
 		D3DXVECTOR3 rot;
@@ -475,6 +459,8 @@ void CMesh::Savefile(const char * pFileName)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 	int nIndex = 0;
 	
+	nlohmann::json JMesh;//リストの生成
+
 	for (int i = 0; i < m_vtx; i++)
 	{
 		std::string name = "MESH";
@@ -494,7 +480,6 @@ void CMesh::Savefile(const char * pFileName)
 	m_pVtxBuff->Unlock();
 
 	JMesh["INDEX"] = nIndex;
-	JMesh["MOVE"] = m_move;
 	JMesh["MESHDATASIZE"] = {
 		{ "X", m_MeshSize.x } ,
 		{ "Y", m_MeshSize.y } ,
@@ -518,20 +503,20 @@ void CMesh::Savefile(const char * pFileName)
 }
 
 //=============================================================================
-//サイズ初期化
+//　面の数を設定
 //=============================================================================
 void CMesh::SetVtxMeshSize(int Size)
 {
 	//CMesh::Uninit();
 	//NotRelease();
 
-	m_xsiz = Size;
-	m_zsiz = Size;
-	m_vtxCountX = m_xsiz + 1;	// 1多い数字
-	m_vtxCountZ = m_zsiz + 1;	// 1多い数字
+	m_xsiz = Size;				// 面の数
+	m_zsiz = Size;				// 面の数
+	m_vtxCountX = m_xsiz + 1;	// 頂点数
+	m_vtxCountZ = m_zsiz + 1;	// 頂点数
 
 	// 頂点数
-	m_vtx = m_vtxCountX* m_vtxCountZ;	// 頂点数を使ってるよ
+	m_vtx = m_vtxCountX * m_vtxCountZ;	// 頂点数を使ってるよ
 
 	// インデックス数
 	m_index = (2 * m_vtxCountX * m_zsiz + 2 * (m_zsiz - 1));
@@ -572,10 +557,10 @@ void CMesh::SetVtxMeshSize(int Size)
 		float texV = 1.0f / m_zsiz * (i / m_vtxCountZ);
 
 		// メッシュを真ん中にする補正
-		m_pos = (D3DXVECTOR3(-(posx - 1) * m_MeshSize.x * 0.5f, 0.0f, -posz * m_MeshSize.z * 0.5f)) + m_pos;
+		//m_pos = (D3DXVECTOR3(-(posx - 1) * m_MeshSize.x * 0.5f, 0.0f, -posz * m_MeshSize.z * 0.5f)) + m_pos;
 
 		// 座標の補正
-		pVtx[i].pos += D3DXVECTOR3(posx*m_MeshSize.x, 0.0f, posz * m_MeshSize.z);
+		pVtx[i].pos += D3DXVECTOR3(posx * m_MeshSize.x, 0.0f, posz * m_MeshSize.z);
 
 
 		// 各頂点の法線の設定(※ベクトルの大きさは1にする必要がある)
@@ -681,11 +666,17 @@ void CMesh::SetVtxMeshLight()
 }
 
 //=============================================================================
-// メッシュの枚数決めるやつ
+// メッシュ枚数の決定
 //=============================================================================
 void CMesh::SetMesh(const int Size)
 {
-	m_NowMesh = Size;//枚数保存
-	SetVtxMeshSize(Size);//サイズ決定
-	SetVtxMeshLight();//法線設定
+	m_NowMesh = Size;		// 枚数保存
+	SetVtxMeshSize(Size);	// サイズ決定
+	SetVtxMeshLight();		// 法線設定
+}
+
+void CMesh::SetOneMeshSize(D3DXVECTOR3 IsSize)
+{
+		m_MeshSize = IsSize;
+		CMesh::SetMesh(m_NowMesh);
 }
