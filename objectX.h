@@ -37,7 +37,7 @@ public:
 	void Draw() override;
 	void Draw(const D3DXQUATERNION& quaternion);	// 回転をクオータニオン
 	void Draw(D3DXMATRIX mtxParent);				// 親子関係
-	void Projection();							// 平行投影処理
+	void Projection();								// 平行投影処理
 
 	/* 生成処理 */
 	static CObjectX *Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority = CTaskGroup::LEVEL_3D_1);
@@ -77,7 +77,7 @@ private:
 	D3DXVECTOR3 m_MaxVtx;		// モデルの頂点最大値
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
 	LPD3DXMESH m_pMesh;			// メッシュ情報へのポインタ
-	D3DXMATERIAL* m_pBuffMat;	// マテリアル情報へのポインタ
+	D3DXMATERIAL* m_material;	// マテリアル情報へのポインタ
 	DWORD m_NumMat;				// マテリアル情報の数
 
 	CObjectX *m_pParent;		// 親モデルの情報

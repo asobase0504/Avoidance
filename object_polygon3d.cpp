@@ -1,23 +1,24 @@
 //=============================================================================
 //
 // Object
-// Author : 浜田琉雅
+// Author : Hamada Ryuuga
+// AUthor : Yuda Kaito
 //
 //=============================================================================
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "object.h"
 #include "object_polygon3d.h"
 #include "application.h"
 #include "input.h"
 #include "utility.h"
 #include "camera.h"
+#include "renderer.h"
+#include "texture.h"
 
 //-----------------------------------------------------------------------------
 // 静的メンバ変数
 //-----------------------------------------------------------------------------
-int CObjectPolygon3D::m_maxPolygon;
 const D3DXVECTOR3 CObjectPolygon3D::m_Vtx[4] =
 {
 	D3DXVECTOR3(-1.0f, +1.0f, 0.0f),
@@ -48,22 +49,17 @@ CObjectPolygon3D::~CObjectPolygon3D()
 //=============================================================================
 HRESULT CObjectPolygon3D::Init()
 {
-	m_size = D3DXVECTOR3(50.0f, 50.0f, 0.0f);
-	m_scale = 10.0f;
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_time = 0;
-	
-	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();	// デバイスの取得
 
 	//頂点バッファの生成
-	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,	//確保するバッファのサイズ
+	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,	// 確保するバッファのサイズ
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_3D,		//頂点フォーマット
 		D3DPOOL_MANAGED,
 		&m_pVtxBuff,
 		NULL);
 
-	VERTEX_3D* pVtx;		//頂点情報へのポインタ
+	VERTEX_3D* pVtx;	// 頂点情報へのポインタ
 
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
@@ -82,6 +78,7 @@ HRESULT CObjectPolygon3D::Init()
 
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
+
 	return S_OK;
 }
 
@@ -104,12 +101,6 @@ void CObjectPolygon3D::Uninit()
 //=============================================================================
 void CObjectPolygon3D::NormalUpdate()
 {
-	m_time++;
-	m_rot.z = -D3DXToRadian(TIMER);
-
-	m_maxPolygon++;
-
-	m_pos.z = -0.01f*m_maxPolygon;
 }
 
 //=============================================================================
@@ -119,9 +110,7 @@ void CObjectPolygon3D::Draw()
 {
 	// デバイスへのポインタ
 	// デバイスの取得
- 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
-
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+ 	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
 	// ワールド座標行列の設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
@@ -136,15 +125,10 @@ void CObjectPolygon3D::Draw()
 	pDevice->SetTexture(0, CApplication::GetInstance()->GetTexture()->GetTexture(GetTexture()));
 
 	// ポリゴンの描画
-	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);	// プリミティブ(ポリゴン)数
-
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
 	pDevice->SetTexture(0, NULL);
 }
-
-
-
 
 //=============================================================================
 // create関数
@@ -183,11 +167,53 @@ void CObjectPolygon3D::SetTex(PositionVec4 Tex)
 }
 
 //---------------------------------------
+// 位置の設定
+//---------------------------------------
+void CObjectPolygon3D::SetPos(const D3DXVECTOR3& inPos)
+{
+	CObject::SetPos(inPos);
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
+
+	// 向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+}
+
+//---------------------------------------
+// 向きの設定
+//---------------------------------------
+void CObjectPolygon3D::SetRot(const D3DXVECTOR3 & inRot)
+{
+	CObject::SetRot(inRot);
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
+
+	// 向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+}
+
+//---------------------------------------
 //セットサイズ
 //---------------------------------------
-void  CObjectPolygon3D::SetSize(const D3DXVECTOR3 &size)
+void CObjectPolygon3D::SetSize(const D3DXVECTOR3 &size)
 {
-	SetSize(size);
+	CObject::SetSize(size);
 
 	VERTEX_3D *pVtx;	// 頂点情報へのポインタ
 
@@ -197,12 +223,11 @@ void  CObjectPolygon3D::SetSize(const D3DXVECTOR3 &size)
 	//------------------------
 	// 頂点情報の設定
 	//------------------------
-	//頂点座標
 	for (int i = 0; i < 4; ++i)
 	{
-		pVtx[i].pos.x = m_Vtx[i].x * m_size.x;
-		pVtx[i].pos.y = m_Vtx[i].y * m_size.y;
-		pVtx[i].pos.z = m_Vtx[i].z * m_size.z;
+		pVtx[i].pos.x = m_Vtx[i].x * GetSize().x;
+		pVtx[i].pos.y = m_Vtx[i].y * GetSize().y;
+		pVtx[i].pos.z = m_Vtx[i].z * GetSize().z;
 	}
 
 	//頂点バッファをアンロックする
@@ -212,7 +237,7 @@ void  CObjectPolygon3D::SetSize(const D3DXVECTOR3 &size)
 //---------------------------------------
 //頂点Collarの設定
 //---------------------------------------
-void CObjectPolygon3D::SetCollar(D3DXCOLOR Collar)
+void CObjectPolygon3D::SetColor(const D3DXCOLOR& Collar)
 {
 	CObject::SetColor(Collar);
 
@@ -222,21 +247,12 @@ void CObjectPolygon3D::SetCollar(D3DXCOLOR Collar)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//テクスチャの座標設定
-	//頂点カラーの設定								  
-	pVtx[0].col = D3DXCOLOR(Collar.r, Collar.g, Collar.b, Collar.a);
-	pVtx[1].col = D3DXCOLOR(Collar.r, Collar.g, Collar.b, Collar.a);
-	pVtx[2].col = D3DXCOLOR(Collar.r, Collar.g, Collar.b, Collar.a);
-	pVtx[3].col = D3DXCOLOR(Collar.r, Collar.g, Collar.b, Collar.a);
+	//頂点カラーの設定
+	pVtx[0].col = GetColor();
+	pVtx[1].col = GetColor();
+	pVtx[2].col = GetColor();
+	pVtx[3].col = GetColor();
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
-
-}
-
-//---------------------------------------
-//Vtxの取得
-//---------------------------------------
-LPDIRECT3DVERTEXBUFFER9 CObjectPolygon3D::GetVtx()
-{
-	return m_pVtxBuff;
 }

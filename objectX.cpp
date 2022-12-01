@@ -69,8 +69,6 @@ void CObjectX::Draw()
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans, mtxParent;		// 計算用マトリックス
-	D3DMATERIAL9 matDef;						// 現在のマテリアル保存用
-	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -95,10 +93,11 @@ void CObjectX::Draw()
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 	// 現在のマテリアルを保持
+	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルデータへのポインタを取得
-	pMat = m_pBuffMat;
+	D3DXMATERIAL* pMat = m_material;
 
 	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
@@ -119,15 +118,14 @@ void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans, mtxParent;		// 計算用マトリックス
-	D3DMATERIAL9 matDef;						// 現在のマテリアル保存用
 	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
 	// クォータニオンの使用した姿勢の設定
-	D3DXMatrixRotationQuaternion(&mtxRot, &quaternion);	// クオータニオンによる行列回転
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
+	D3DXMatrixRotationQuaternion(&mtxRot, &quaternion);			// クオータニオンによる行列回転
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);		// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
 
 	// 位置を反映
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
@@ -145,10 +143,11 @@ void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
 	// 現在のマテリアルを保持
+	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルデータへのポインタを取得
-	pMat = m_pBuffMat;
+	pMat = m_material;
 
 	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
@@ -205,9 +204,9 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 	// マテリアルデータへのポインタ
 	D3DXMATERIAL *pMat;
 
-	if (m_pBuffMat != nullptr)
+	if (m_material != nullptr)
 	{// マテリアルデータへのポインタを取得
-		pMat = m_pBuffMat;
+		pMat = m_material;
 
 		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 		{// マテリアルの設定
@@ -299,7 +298,7 @@ CObjectX * CObjectX::Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority)
 void CObjectX::LoadModel(const char *aFileName)
 {
 	CObjectXGroup *xGroup = CApplication::GetInstance()->GetObjectXGroup();
-	m_pBuffMat = (D3DXMATERIAL*)xGroup->GetBuffMat(aFileName)->GetBufferPointer();
+	m_material = (D3DXMATERIAL*)xGroup->GetBuffMat(aFileName)->GetBufferPointer();
 	m_MaxVtx = xGroup->GetMaxVtx(aFileName);
 	m_pMesh = xGroup->GetMesh(aFileName);
 	m_MinVtx = xGroup->GetMinVtx(aFileName);
@@ -350,7 +349,7 @@ void CObjectX::Projection(void)
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルデータへのポインタを取得
-	pMat = m_pBuffMat;
+	pMat = m_material;
 
 	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
@@ -385,7 +384,7 @@ void CObjectX::SetMaterialDiffuse(unsigned int index, const D3DXCOLOR & inColor)
 		return;
 	}
 
-	m_pBuffMat[index].MatD3D.Diffuse = inColor;
+	m_material[index].MatD3D.Diffuse = inColor;
 }
 
 //=============================================================================

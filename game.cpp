@@ -61,13 +61,22 @@ HRESULT CGame::Init(void)
 		player->CalculationVtx();
 	}
 
+	//{
+	//	CMesh* test = CMesh::Create();
+	//	test->SetNumber(0);
+	//	test->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//	test->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//	test->SetMesh(10);
+	//	test->SetType(0);
+	//}
+
 	{
-		CMesh* test = CMesh::Create();
-		test->SetNumber(0);
-		test->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		test->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f,1.0f));
-		test->SetMesh(10);
-		test->SetType(0);
+		CObjectPolygon3D* test = CObjectPolygon3D::Create();
+		test->SetPos(D3DXVECTOR3(50.0f, 0.0f, 0.0f));
+		test->SetRot(D3DXVECTOR3(D3DX_PI * 0.5f, 0.0f, 0.0f));
+		test->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		test->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+		test->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	return S_OK;

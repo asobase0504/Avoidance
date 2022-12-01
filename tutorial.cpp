@@ -65,7 +65,7 @@ HRESULT CTutorial::Init(void)
 	m_pBg[0]->SetTexture("TUTORIAL");
 	m_pBg[0]->SetSize(CApplication::CENTER_POS);
 
-	m_pBg[0]->SetCollar(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pBg[0]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 	m_pPlayer = nullptr;
 	m_pPlayer = CPlayer::Create();

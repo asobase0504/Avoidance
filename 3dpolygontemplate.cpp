@@ -87,7 +87,7 @@ CTest3d *CTest3d::Create()
 		pObject->SetTexture("EXPLOSION");		// テクスチャ選択
 		pObject->SetSize(D3DXVECTOR3(640.0f, 360.0f, 0.0f));	// サイズ設定
 		pObject->SetPos(D3DXVECTOR3(0.0f, 0.0f, 10200.0f));		// 座標設定
-		pObject->SetCollar(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));	// 色設定
+		pObject->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));	// 色設定
 		pObject->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));		// moveの設定
 	}
 

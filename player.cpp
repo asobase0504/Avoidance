@@ -1,32 +1,22 @@
 //============================
 //
 // プレイヤー設定
-// Author:hamada ryuuga
+// Author:Yuda Kaito
 //
 //============================
-
-#include <stdio.h>
 #include <assert.h>
 #include "player.h"
 #include "input.h"
 #include "camera.h"
-#include "motion.h"
 #include "application.h"
-#include "motion.h"
 #include "particle_manager.h"
 #include "utility.h"
-#include "game.h"
-#include "tutorial.h"
 
 //------------------------------------
 // static変数
 //------------------------------------
 const float CPlayer::ATTENUATION = 0.5f;	// 移動減衰係数
 const float CPlayer::SPEED = 1.0f;			// 移動量
-const float CPlayer::WIDTH = 10.0f;			// モデルの半径
-const int CPlayer::MAX_PRAYER = 16;			// 最大数
-const int CPlayer::MAX_MOVE = 9;			// アニメーションの最大数
-const int CPlayer::INVINCIBLE = 30;			// 無敵時間
 
 //------------------------------------
 // コンストラクタ
@@ -74,7 +64,8 @@ void CPlayer::Uninit()
 //------------------------------------
 void CPlayer::NormalUpdate()
 {
-	Move();	//動きセット
+	Move();	// 移動
+	Jump();	// ジャンプ
 
 	CInput* input = CInput::GetKey();
 	if (input->Trigger(DIK_0))
@@ -154,28 +145,14 @@ void CPlayer::Move()
 		moveInput.z += 1.0f;
 	}
 
-	if (D3DXVec3Length(&moveInput) > 0.0f)
-	{
-		// カメラの角度情報取得
-		D3DXVECTOR3* CameraRot = CRenderer::GetInstance()->GetCamera()->GetRot();
+	moveInput = CRenderer::GetInstance()->GetCamera()->VectorCombinedRot(moveInput);
 
-		D3DXVec3Normalize(&moveInput, &moveInput);
+	m_move.x = moveInput.x * SPEED * m_MoveSpeed;
+	m_move.z = moveInput.z * SPEED * m_MoveSpeed;
 
-		float c = cosf(-CameraRot->y);
-		float s = sinf(-CameraRot->y);
-
-		// move の長さは 1 になる。
-		m_move.x = moveInput.x * c - moveInput.y * s;
-		m_move.z = moveInput.x * s + moveInput.y * c;
-	}
-
-	m_move = moveInput * SPEED * m_MoveSpeed;
-
-	m_move.x += (0.0f - m_move.x) * ATTENUATION;	//（目的の値-現在の値）＊減衰係数
+	//（目的の値-現在の値）＊減衰係数
+	m_move.x += (0.0f - m_move.x) * ATTENUATION;
 	m_move.z += (0.0f - m_move.z) * ATTENUATION;
-	m_move.y += (0.0f - m_move.y) * ATTENUATION;
-
-	m_pos += m_move;//移動を加算
 
 	D3DXVECTOR3 axis;	// 回転軸
 	D3DXVECTOR3 inverseVec = -m_move;					// move値を反対にする
@@ -191,4 +168,13 @@ void CPlayer::Move()
 
 	// クオータニオンのノーマライズ
 	D3DXQuaternionNormalize(&m_quaternion, &m_quaternion);
+}
+
+void CPlayer::Jump()
+{
+	if (CInput::GetKey()->Trigger(DIK_SPACE))
+	{
+		m_move.y = 20.0f;
+	}
+	m_move.y -= m_move.y * ATTENUATION;
 }

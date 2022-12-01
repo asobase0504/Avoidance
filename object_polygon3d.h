@@ -1,7 +1,8 @@
 //=============================================================================
 //
 // object_polygon3d
-// Author : 浜田琉雅
+// Author : Hamada Ryuuga
+// AUthor : Yuda Kaito
 //
 //=============================================================================
 #ifndef _3DPOLYGON_H_	// このマクロ定義がされてなかったら
@@ -10,8 +11,6 @@
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "renderer.h"
-#include "texture.h"
 #include "object2d.h"
 
 //-----------------------------------------------------------------------------
@@ -53,20 +52,15 @@ public:
 
 	// Setter
 	void SetTex(PositionVec4 inTex);
-	void SetSize(const D3DXVECTOR3& inSize);
-	void SetCollar(D3DXCOLOR inCollar);
+	void SetPos(const D3DXVECTOR3& inPos) override;
+	void SetRot(const D3DXVECTOR3& inRot) override;
+	void SetSize(const D3DXVECTOR3& inSize) override;
+	void SetColor(const D3DXCOLOR& inColor) override;
 
-	// Getter
-	LPDIRECT3DVERTEXBUFFER9 GetVtx();
-
-	static void PolygonReset() { m_maxPolygon = 0; }
+	LPDIRECT3DVERTEXBUFFER9 GetVtx() { return m_pVtxBuff; }	// 頂点バッファの取得
 
 protected:
-	float m_scale;
-	D3DXMATRIX m_mtxWorld;	// ワールドマトリックス
 	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;	// 頂点バッファ
-	int m_time;
-private:
-	static int m_maxPolygon;
+	D3DXMATRIX m_mtxWorld;				// ワールドマトリックス
 };
 #endif

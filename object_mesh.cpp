@@ -156,15 +156,13 @@ void CMesh::Draw(void)
 //=============================================================================
 CMesh* CMesh::Create()
 {
-	CMesh * pObject = nullptr;
-	pObject = new CMesh;
+	CMesh * pObject = new CMesh;
 
 	if (pObject != nullptr)
 	{
-		
 		pObject->Init();
-
 	}
+
 	return pObject;
 }
 
@@ -422,10 +420,9 @@ void CMesh::Loadfile(const char * pFileName)
 
 		for (int nCnt = 0; nCnt < m_vtx; nCnt++)
 		{
-			float posx = ((nCnt % m_vtxCountX) - 1.0f);
-			float posz = ((nCnt / m_vtxCountZ) - 1.0f) * -1.0f;
-
-			//‚ß‚Á‚µ‚ã‚ð^‚ñ’†‚É‚·‚é•â³
+			/* ˆÊ’u‚ð^‚ñ’†‚É‚·‚é•â³ */
+			//float posx = ((nCnt % m_vtxCountX) - 1.0f);
+			//float posz = ((nCnt / m_vtxCountZ) - 1.0f) * -1.0f;
 			//m_pos = D3DXVECTOR3(-(posx - 1)*MAX_SIZEMESH * 0.5f, 0.0f, -posz * MAX_SIZEMESH * 0.5f) + m_pos;
 
 			std::string name = "MESH";

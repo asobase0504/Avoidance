@@ -37,18 +37,10 @@ HRESULT CCamera::Init(void)
 	m_posR = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_directionR = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
-	m_directionV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-	m_Speed = 1.0f;
-	m_rotSpeed = 0.05f;
-	m_rotSpeed2 = D3DX_PI * 0.5f;
 
 	D3DXVECTOR3 distPos = m_posR - m_posV;
 	m_fDistance = sqrtf(distPos.x * distPos.x + distPos.z * distPos.z);
 	m_fDistance = sqrtf(distPos.y * distPos.y + (m_fDistance * m_fDistance));
-
-	m_rot.x = atan2f(distPos.z, distPos.y);
 
 	return S_OK;
 }
@@ -126,12 +118,36 @@ D3DXVECTOR3* CCamera::GetPos()
 	return &m_posV;
 }
 
+////=============================================================================
+//// GetRot
+////=============================================================================
+//D3DXVECTOR3* CCamera::GetRot()
+//{
+//	return &m_rot;
+//}
+
 //=============================================================================
-// GetRot
+// カメラの向きに合わせたベクトルに変換する
 //=============================================================================
-D3DXVECTOR3* CCamera::GetRot()
+const D3DXVECTOR3 & CCamera::VectorCombinedRot(const D3DXVECTOR3& inVector)
 {
-	return &m_rot;
+	if (D3DXVec3Length(&inVector) < 0.0f)
+	{
+		return inVector;
+	}
+
+	D3DXVECTOR3 vector = inVector;
+
+	D3DXVec3Normalize(&vector, &vector);
+
+	float c = cosf(-m_rot.y);
+	float s = sinf(-m_rot.y);
+
+	// move の長さは 1 になる。
+	vector.x = vector.x * c - vector.z * s;
+	vector.z = vector.x * s + vector.z * c;
+
+	return vector;
 }
 
 //=============================================================================

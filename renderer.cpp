@@ -10,7 +10,6 @@
 #include "light.h"
 #include "file.h"
 #include "camera.h"
-#include "object_polygon3d.h"
 #include "pause.h"
 #include "game.h"
 #include "application.h"
@@ -156,7 +155,6 @@ void CRenderer::Uninit()
 //=============================================================================
 void CRenderer::Update()
 {
-	CObjectPolygon3D::PolygonReset();
 	CApplication::GetInstance()->GetTaskGroup()->Update();
 }
 
