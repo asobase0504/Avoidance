@@ -15,14 +15,17 @@
 //------------------------------------
 // static変数
 //------------------------------------
+const float CPlayer::SPEED = 7.0f;			// 移動量
 const float CPlayer::ATTENUATION = 0.5f;	// 移動減衰係数
-const float CPlayer::SPEED = 1.0f;			// 移動量
+const float CPlayer::JUMPING_POWER = 10.0f;	// 跳躍力
+const float CPlayer::GRAVITY = 0.75f;		// 重力
 
 //------------------------------------
 // コンストラクタ
 //------------------------------------
 CPlayer::CPlayer() :
-	m_quaternion(D3DXQUATERNION(0.0f,0.0,0.0f,1.0f))
+	m_quaternion(D3DXQUATERNION(0.0f,0.0,0.0f,1.0f)),
+	m_jumpCount(0)
 {
 }
 
@@ -41,12 +44,6 @@ HRESULT CPlayer::Init()
 	// 現在のモーション番号の保管
 	CObjectX::Init();
 	LoadModel("BOX");
-
-	m_MoveSpeed = 7.0f;
-	m_rot.y += -D3DX_PI * 0.5f;
-
-	D3DXVECTOR3	Size(2.0f, 2.0f, 2.0f);
-	SetSize(Size);
 	return S_OK;
 }
 
@@ -55,7 +52,6 @@ HRESULT CPlayer::Init()
 //------------------------------------
 void CPlayer::Uninit()
 {
-	// 現在のモーション番号の保管
 	CObjectX::Uninit();
 }
 
@@ -68,23 +64,29 @@ void CPlayer::NormalUpdate()
 	Jump();	// ジャンプ
 
 	CInput* input = CInput::GetKey();
+
+	static D3DXCOLOR color = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+
 	if (input->Trigger(DIK_0))
 	{
-		SetMaterialDiffuse(0, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+		color = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+		SetMaterialDiffuse(0, color);
 	}
 	if (input->Trigger(DIK_1))
 	{
-		SetMaterialDiffuse(0, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		color = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
+		SetMaterialDiffuse(0, color);
 	}
 	if (input->Trigger(DIK_2))
 	{
-		SetMaterialDiffuse(0, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+		color = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
+		SetMaterialDiffuse(0, color);
 	}
 	if (input->Trigger(DIK_3))
 	{
-		SetMaterialDiffuse(0, D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+		color = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f);
+		SetMaterialDiffuse(0, color);
 	}
-	static D3DXCOLOR color = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	if (input->Press(DIK_4))
 	{
 		color.r += 0.01f;
@@ -145,10 +147,14 @@ void CPlayer::Move()
 		moveInput.z += 1.0f;
 	}
 
-	moveInput = CRenderer::GetInstance()->GetCamera()->VectorCombinedRot(moveInput);
+	CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(0, CTaskGroup::LEVEL_3D_1);
+	if (camera != nullptr)
+	{
+		moveInput = camera->VectorCombinedRot(moveInput);
+	}
 
-	m_move.x = moveInput.x * SPEED * m_MoveSpeed;
-	m_move.z = moveInput.z * SPEED * m_MoveSpeed;
+	m_move.x = moveInput.x * SPEED;
+	m_move.z = moveInput.z * SPEED;
 
 	//（目的の値-現在の値）＊減衰係数
 	m_move.x += (0.0f - m_move.x) * ATTENUATION;
@@ -172,9 +178,20 @@ void CPlayer::Move()
 
 void CPlayer::Jump()
 {
-	if (CInput::GetKey()->Trigger(DIK_SPACE))
+	// 跳躍
+	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount < 2))
 	{
-		m_move.y = 20.0f;
+		m_jumpCount++;
+		m_move.y = 10.0f;
 	}
-	m_move.y -= m_move.y * ATTENUATION;
+
+	// 重力
+	m_move.y -= 0.75f;
+
+	// 疑似的な床表現
+	if (m_pos.y + m_move.y <= 15.0f)
+	{
+		m_jumpCount = 0;
+ 		m_move.y = 0.0f;
+	}
 }

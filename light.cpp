@@ -36,7 +36,7 @@ HRESULT CLight::Init(void)
 
 	// ÉâÉCÉgÇÃê›íË
 	D3DXCOLOR color(1.0f, 1.0f, 1.0f, 1.0f);
-	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(0.0f, 0.0f, 1.0f), 0);
+	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(0.0f, -1.0f, 0.0f), 0);
 	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(0.2f, -0.34f, 0.2f), 1);
 	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(-0.3f, -0.5f, 0.3f), 2);
 

@@ -54,10 +54,17 @@ CGame::~CGame()
 //=============================================================================
 HRESULT CGame::Init(void)
 {
+	CCamera* camera = new CCamera;
+	camera->Init();
+
+	CLight* light = new CLight;
+	light->Init();
+
+
 	{
 		CPlayer* player = CPlayer::Create();
 		player->LoadModel("BOX");
-		player->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		player->SetPos(D3DXVECTOR3(0.0f, 15.0f, 0.0f));
 		player->CalculationVtx();
 	}
 
@@ -71,12 +78,28 @@ HRESULT CGame::Init(void)
 	//}
 
 	{
-		CObjectPolygon3D* test = CObjectPolygon3D::Create();
-		test->SetPos(D3DXVECTOR3(50.0f, 0.0f, 0.0f));
-		test->SetRot(D3DXVECTOR3(D3DX_PI * 0.5f, 0.0f, 0.0f));
-		test->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		test->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		test->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+		CObjectPolygon3D* floor = CObjectPolygon3D::Create();
+		floor->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		floor->SetRot(D3DXVECTOR3(D3DX_PI * 0.5f, D3DX_PI * 0.25f, 0.0f));
+		floor->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		floor->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+		floor->SetColor(D3DXCOLOR(0.93f, 0.47f, 0.0f, 1.0f));
+	}
+	{
+		CObjectPolygon3D* wall = CObjectPolygon3D::Create();
+		wall->SetPos(D3DXVECTOR3(75.0f, 100.0f, 75.0f));
+		wall->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.25f, 0.0f));
+		wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+		wall->SetColor(D3DXCOLOR(0.93f, 0.47f, 0.0f, 1.0f));
+	}
+	{
+		CObjectPolygon3D* wall = CObjectPolygon3D::Create();
+		wall->SetPos(D3DXVECTOR3(-75.0f, 100.0f, 75.0f));
+		wall->SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.25f, 0.0f));
+		wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+		wall->SetColor(D3DXCOLOR(0.93f, 0.47f, 0.0f, 1.0f));
 	}
 
 	return S_OK;

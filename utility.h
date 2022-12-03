@@ -113,7 +113,7 @@ D3DXVECTOR3 ScreenCastWorld(const D3DXVECTOR3 &screenPos,			// スクリーン座標
 // 引数3  : D3DXVECTOR3 inRot
 // 返値  : D3DXMATRIX / 計算したマトリックス
 //--------------------------------------------------
-D3DXMATRIX *GiftMtx(D3DXMATRIX *pOut, D3DXVECTOR3 inPos, D3DXVECTOR3 inRot);
+D3DXMATRIX *GiftMtx(D3DXMATRIX *pOut, const D3DXVECTOR3& inPos, const D3DXVECTOR3& inRot);
 
 //--------------------------------------------------
 // ScreenCastWorld

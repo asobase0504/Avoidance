@@ -41,7 +41,8 @@ CTitle::~CTitle()
 //=============================================================================
 HRESULT CTitle::Init(void)
 {
-	m_pCamera = CRenderer::GetInstance()->SetCamera(new CCamera);
+	m_pCamera = new CCamera;
+	m_pCamera->Init();
 
 	m_pLight = new CLight;
 	m_pLight->Init();

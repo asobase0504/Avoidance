@@ -17,11 +17,13 @@
 
 class CPlayer : public CObjectX
 {
-public:
-	static const float ATTENUATION;		// 減衰係数
+private: // 定数
 	static const float SPEED;			// スピード
-	
-public:
+	static const float ATTENUATION;		// 減衰係数
+	static const float JUMPING_POWER;	// 跳躍力
+	static const float GRAVITY;			// 重力
+
+public: // パブリック関数
 	CPlayer();
 	~CPlayer();
 
@@ -32,13 +34,13 @@ public:
 
 	static CPlayer *Create();
 
-private:
-	
+private: // プライベート関数
 	void Move();	// 移動
 	void Jump();	// 跳躍
 
-	D3DXQUATERNION m_quaternion;
-	float m_MoveSpeed;
-private:
+private: // メンバー変数
+
+	D3DXQUATERNION m_quaternion;	// クオータニオン
+	int m_jumpCount;				// ジャンプ回数
 };
 #endif

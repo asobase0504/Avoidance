@@ -24,7 +24,7 @@
 class  CObjectPolygon3D : public CObject
 {
 public:
-	const DWORD FVF_VERTEX_3D = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1);
+	static const DWORD FVF_VERTEX_3D = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1);
 
 	//頂点情報「3D」の構造体を定義
 	struct VERTEX_3D

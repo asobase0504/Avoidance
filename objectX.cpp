@@ -14,6 +14,7 @@
 #include "renderer.h"
 #include "main.h"
 #include "texture.h"
+#include "utility.h"
 #include <assert.h>
 
 //=============================================================================
@@ -36,16 +37,18 @@ CObjectX::~CObjectX()
 
 //=============================================================================
 // オブジェクトの初期化
+// Author : Hamada Ryuuga
+// 概要 : 値の初期化を行う
 //=============================================================================
 HRESULT CObjectX::Init()
 {
-	//モデルの読み込み
-	LoadModel("BOX");
 	return S_OK;
 }
 
 //=============================================================================
 // オブジェクトの終了
+// Author : Hamada Ryuuga
+// 概要 : 更新を行う
 //=============================================================================
 void CObjectX::Uninit()
 {
@@ -55,39 +58,32 @@ void CObjectX::Uninit()
 
 //=============================================================================
 // オブジェクトの更新
+// Author : Yuda Kaito
+// 概要 : 更新を行う
 //=============================================================================
 void CObjectX::NormalUpdate()
 {
 }
 
 //=============================================================================
-// オブジェクトの描画
+// 描画
+// Author : Hamada Ryuga
+// 概要 : 描画を行う
 //=============================================================================
 void CObjectX::Draw()
 {
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
-
-	D3DXMATRIX mtxRot, mtxTrans, mtxParent;		// 計算用マトリックス
-
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	GiftMtx(&m_mtxWorld, m_pos, m_rot);	// マトリックスの設定
 
 	if (m_pParent != nullptr)
 	{
-		mtxParent = m_pParent->GetMtxWorld();
+		D3DXMATRIX mtxParent = m_pParent->GetMtxWorld();
 
 		// 行列掛け算関数
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
 	}
+
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
 	// ワールドマトリックスの設定（ワールド座標行列の設定）
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
@@ -112,6 +108,11 @@ void CObjectX::Draw()
 	pDevice->SetMaterial(&matDef);
 }
 
+//=============================================================================
+// クオータニオンを使用した描画
+// Author : Yuda Kaito
+// 概要 : 描画を行う
+//=============================================================================
 void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 {
 	// デバイスの取得
@@ -165,7 +166,7 @@ void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 }
 
 //=============================================================================
-// 描画
+// 親子関係のある描画
 // Author : 唐﨑結斗
 // 概要 : 描画を行う
 //=============================================================================

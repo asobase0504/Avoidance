@@ -32,7 +32,7 @@ public:
 	// Getter
 	D3DXMATRIX* GetMtxProje();
 	D3DXMATRIX* GetMtxView();
-	D3DXVECTOR3* GetPos();
+	const D3DXVECTOR3& GetPos();
 	//D3DXVECTOR3* GetRot();
 
 	const D3DXVECTOR3& VectorCombinedRot(const D3DXVECTOR3& inVector);

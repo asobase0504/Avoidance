@@ -65,10 +65,10 @@ HRESULT CObjectPolygon3D::Init()
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//rhwの設定
-	pVtx[0].nor = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pVtx[1].nor = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pVtx[2].nor = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	pVtx[3].nor = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	pVtx[0].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+	pVtx[1].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+	pVtx[2].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+	pVtx[3].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
 
 	//テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -112,6 +112,8 @@ void CObjectPolygon3D::Draw()
 	// デバイスの取得
  	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	// ワールド座標行列の設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
@@ -126,6 +128,8 @@ void CObjectPolygon3D::Draw()
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 	pDevice->SetTexture(0, NULL);
 }
@@ -173,18 +177,8 @@ void CObjectPolygon3D::SetPos(const D3DXVECTOR3& inPos)
 {
 	CObject::SetPos(inPos);
 
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
-
-	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	// マトリックスの計算
+	GiftMtx(&m_mtxWorld, m_pos, m_rot);
 }
 
 //---------------------------------------
@@ -194,18 +188,8 @@ void CObjectPolygon3D::SetRot(const D3DXVECTOR3 & inRot)
 {
 	CObject::SetRot(inRot);
 
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
-
-	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	// マトリックスの計算
+	GiftMtx(&m_mtxWorld, m_pos, m_rot);
 }
 
 //---------------------------------------

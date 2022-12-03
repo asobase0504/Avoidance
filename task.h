@@ -23,7 +23,8 @@ public:
 	enum ERole
 	{
 		ROLE_OBJECT = 0,
-		ROLE_CAMERA
+		ROLE_CAMERA,
+		ROLE_MAX
 	};
 
 public:

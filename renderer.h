@@ -64,12 +64,8 @@ public:
 	void Update();
 	void Draw();
 
-	// Setter
-	CCamera* SetCamera(CCamera* inCamera);
-
 	// Getter
 	LPDIRECT3DDEVICE9 GetDevice() { return m_pD3DDevice; }
-	CCamera* GetCamera() { return m_camera; }
 
 private:	// プライベート関数
 #ifdef _DEBUG
@@ -79,9 +75,6 @@ private:	// プライベート関数
 private:	// メンバー変数
 	LPDIRECT3D9 m_pD3D;				// Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9 m_pD3DDevice;	// Deviceオブジェクト
-
-	CCamera* m_camera;	// カメラ
-
 #ifdef _DEBUG
 	// フォント
 	LPD3DXFONT m_pFont = nullptr;
