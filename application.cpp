@@ -245,9 +245,6 @@ void CApplication::SetMode(MODE mode)
 	case CApplication::MODE_RESULT:
 		m_pGame = new CResult;
 		break;
-	case CApplication::MODE_RANKING:
-		m_pGame = new CRanking;
-		break;
 	case CApplication::MODE_NAMESET:
 		m_pGame = new CNameSet;
 		break;

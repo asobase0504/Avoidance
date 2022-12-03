@@ -120,10 +120,10 @@ void CNameSet::Update(void)
 	{
 		if (m_NowPlay >= 7)
 		{
-			//モードの設定
-			CRanking::SetPlayNeme(m_PlayName);
+			////モードの設定
+			//CRanking::SetPlayNeme(m_PlayName);
 
-			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_RANKING);
+			//CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_RANKING);
 			return;
 		}
 
@@ -153,9 +153,9 @@ void CNameSet::RankingNeme()
 		//モードの設定
 		if (m_PlayName != "")
 		{
-			CRanking::SetPlayNeme(m_PlayName);
+			//CRanking::SetPlayNeme(m_PlayName);
 
-			CApplication::GetInstance()->SetMode(CApplication::MODE_RANKING);
+			//CApplication::GetInstance()->SetMode(CApplication::MODE_RANKING);
 			return;
 		}
 		else
