@@ -22,6 +22,8 @@
 #include "particle_manager.h"
 #include "particle_emitter.h"
 
+#include "title_logo.h"
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -41,28 +43,67 @@ CTitle::~CTitle()
 //=============================================================================
 HRESULT CTitle::Init(void)
 {
-	m_pCamera = new CCamera;
-	m_pCamera->Init();
+	CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_BGM_TITLE);
 
+	// ライト
 	m_pLight = new CLight;
 	m_pLight->Init();
 
+	// カメラ
+	m_pCamera = new CCamera;
+	m_pCamera->Init();
+
+	// パーティクルマネージャー
 	m_pPaticleManager = new CParticleManager;
 	if (FAILED(m_pPaticleManager->Init()))
 	{
 		return E_FAIL;
 	}
 
-	CObject2d* test = CObject2d::Create();
-	test->Init();
-	test->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	test->SetPos(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-	test->SetMove(D3DXVECTOR3(2.5f, 2.5f, 0.0f));
-	test->SetSize(D3DXVECTOR3(20.0f, 20.0f, 0.0f));
+	// 背景
+	{
+		CObject2d* titleBg = CObject2d::Create();
+		titleBg->SetPos(CApplication::CENTER_POS);
+		titleBg->SetRot(D3DXVECTOR3(0.0f,0.0f,0.25f));
+		titleBg->SetSize(CApplication::CENTER_POS * 0.9f);
+		titleBg->SetColor(D3DCOLOR(0xfffbbc04));
+	}
 
-	CObjectX* testX = CObjectX::Create(D3DXVECTOR3(0.0f,0.0f,0.0f));
-	testX->LoadModel("FOX_KAO");
-	testX->CalculationVtx();
+	// タイトルロゴ
+	CTitleLogo* titleLogo = new CTitleLogo(CTaskGroup::LEVEL_2D_1);
+	titleLogo->Init();
+
+	{
+		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(0.0f, 20.0f, 0.0f));
+		testX->LoadModel("BOX");
+		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
+		testX->SetMaterialDiffuse(0, D3DCOLOR(0xff46bdc6));
+		testX->CalculationVtx();
+	}
+
+	{
+		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		testX->LoadModel("BOX");
+		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
+		testX->SetMaterialDiffuse(0, D3DCOLOR(0xffea4335));
+		testX->CalculationVtx();
+	}
+
+	{
+		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(15.0f, 0.0f, -15.0f));
+		testX->LoadModel("BOX");
+		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
+		testX->SetMaterialDiffuse(0, D3DCOLOR(0xff4285f4));
+		testX->CalculationVtx();
+	}
+
+	{
+		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(-15.0f, 0.0f, -15.0f));
+		testX->LoadModel("BOX");
+		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
+		testX->SetMaterialDiffuse(0, D3DCOLOR(0xfffbbc04));
+		testX->CalculationVtx();
+	}
 
 	return S_OK;
 }

@@ -27,16 +27,18 @@ public: // パブリック関数
 	CPlayer();
 	~CPlayer();
 
-	HRESULT Init()override;			// 初期化
-	void Uninit()override;			// 破棄
-	void NormalUpdate()override;	// 更新
-	void Draw()override;			// 描画
+	HRESULT Init() override;		// 初期化
+	void Uninit() override;			// 破棄
+	void NormalUpdate() override;	// 更新
+	void Draw() override;			// 描画
 
-	static CPlayer *Create();
+	static CPlayer* Create();	// 生成
 
 private: // プライベート関数
 	void Move();	// 移動
 	void Jump();	// 跳躍
+	void boost();	// 突進
+	void Landing();	// 落下
 
 private: // メンバー変数
 

@@ -68,15 +68,15 @@
     <Filter Include="01_File">
       <UniqueIdentifier>{2516cd92-e29e-4ebd-80f1-224a1c9391c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\01_Title">
+      <UniqueIdentifier>{a0875b5e-ed76-4d55-a476-4dba649652bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="result.cpp">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="title.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="particle_manager.cpp">
@@ -217,15 +217,18 @@
     <ClCompile Include="DirectInput.cpp">
       <Filter>00_Cord\01_System\00_Input</Filter>
     </ClCompile>
+    <ClCompile Include="title.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClCompile>
+    <ClCompile Include="title_logo.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="result.h">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="title.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="particle_manager.h">
@@ -372,9 +375,18 @@
     <ClInclude Include="DirectInput.h">
       <Filter>00_Cord\01_System\00_Input</Filter>
     </ClInclude>
+    <ClInclude Include="title.h">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClInclude>
+    <ClInclude Include="title_logo.h">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\FILE\model.json">
+      <Filter>01_File</Filter>
+    </None>
+    <None Include="data\FILE\texture.json">
       <Filter>01_File</Filter>
     </None>
   </ItemGroup>

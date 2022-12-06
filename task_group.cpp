@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 #include "task_group.h"
 #include "task.h"
+#include "renderer.h"
 
 //=============================================================================
 // コンストラクタ
@@ -102,16 +103,24 @@ void CTaskGroup::Draw()
 			continue;
 		}
 
-		CTask* now = m_list.at(i).top;
+		// 画面クリア(バックバッファ＆Zバッファのクリア)
+		CRenderer::GetInstance()->GetDevice()->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
-		while (now != nullptr)
 		{
-			CTask* next = now->GetNext();
-			if (!now->IsDeleted())
+			CTask* now = m_list.at(i).top;
+
+			while (now != nullptr)
 			{
-				now->Draw();
+				CTask* next = now->GetNext();
+				if (!now->IsDeleted())
+				{
+					now->Draw();
+				}
+				now = next;
 			}
-			now = next;
+
+			// Direct3Dによる描画の終了
+			//CRenderer::GetInstance()->GetDevice()->EndScene();
 		}
 	}
 }

@@ -18,11 +18,12 @@
 CObject::CObject(CTaskGroup::EPriority inPriority, CTaskGroup::EPushMethod inMethod) :
 	CTask(inPriority, inMethod),
 	m_updateStatus(EUpdateStatus::POP),
-	m_pos(D3DXVECTOR3(0.0f,0.0f,0.0f)),		// 位置
-	m_move(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 移動量
-	m_rot(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 回転量
-	m_size(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 大きさ
-	m_color(D3DXCOLOR(0.0f,0.0f,0.0f,1.0f))	// 色
+	m_pos(D3DXVECTOR3(0.0f,0.0f,0.0f)),			// 位置
+	m_move(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),		// 移動量
+	m_rot(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),		// 向き
+	m_moveRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 回転量
+	m_size(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),		// 大きさ
+	m_color(D3DXCOLOR(0.0f,0.0f,0.0f,1.0f))		// 色
 {
 	SetRole(ROLE_OBJECT);
 }
@@ -57,6 +58,7 @@ void CObject::Update()
 
 	// 移動
 	AddPos(GetMove());
+	AddRot(GetMoveRot());
 }
 
 //=============================================================================

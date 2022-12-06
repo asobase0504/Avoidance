@@ -75,11 +75,17 @@ public:
 	void MulMove(const float &inRatio) { SetMove(m_move * inRatio); }
 	const D3DXVECTOR3 &GetMove() const { return m_move; }
 
-	/* 回転系 */
+	/* 向き系 */
 	virtual void SetRot(const D3DXVECTOR3 &inRot) { m_rot = inRot; }
 	void AddRot(const D3DXVECTOR3 &inRot) { SetRot(m_rot + inRot); }
 	void MulRot(const float &inRatio) { SetRot(m_rot * inRatio); }
 	const D3DXVECTOR3 &GetRot() const { return m_rot; }
+
+	/* 回転系 */
+	virtual void SetMoveRot(const D3DXVECTOR3 &inMove) { m_moveRot = inMove; }
+	void AddMoveRot(const D3DXVECTOR3 &inMove) { SetMove(m_moveRot + inMove); }
+	void MulMoveRot(const float &inRatio) { SetMove(m_moveRot * inRatio); }
+	const D3DXVECTOR3 &GetMoveRot() const { return m_moveRot; }
 
 	/* 大きさ系 */
 	virtual void SetSize(const D3DXVECTOR3 &inSize) { m_size = inSize; }
@@ -108,11 +114,12 @@ protected:
 	virtual void EndUpdate();
 
 protected:
-	D3DXVECTOR3 m_pos;	// 位置
-	D3DXVECTOR3 m_move;	// 移動量
-	D3DXVECTOR3 m_rot;	// 回転量
-	D3DXVECTOR3 m_size;	// 大きさ
-	D3DXCOLOR m_color;	// 色
+	D3DXVECTOR3 m_pos;		// 位置
+	D3DXVECTOR3 m_move;		// 移動量
+	D3DXVECTOR3 m_rot;		// 向き
+	D3DXVECTOR3 m_moveRot;	// 回転量
+	D3DXVECTOR3 m_size;		// 大きさ
+	D3DXCOLOR m_color;		// 色
 
 	EType m_type;	// 種別
 	std::string m_textureKey;	// テクスチャにアクセスするキー

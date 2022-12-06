@@ -92,16 +92,28 @@ void CObjectX::Draw()
 	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
-	// マテリアルデータへのポインタを取得
-	D3DXMATERIAL* pMat = m_material;
-
-	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
+	if (m_pBuffMat != nullptr)
 	{
-		// マテリアルの設定
-		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+		// マテリアルデータへのポインタを取得
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+		D3DXCOLOR diffuse;
 
-		// モデルパーツの描画
-		m_pMesh->DrawSubset(nCntMat);
+		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
+		{
+			diffuse = pMat[nCntMat].MatD3D.Diffuse;
+			if (m_materialDiffuse.count(nCntMat) != 0)
+			{
+				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];
+			}
+
+			// マテリアルの設定
+			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+			// モデルパーツの描画
+			m_pMesh->DrawSubset(nCntMat);
+
+			pMat[nCntMat].MatD3D.Diffuse = diffuse;
+		}
 	}
 
 	// 保持していたマテリアルを戻す
@@ -119,7 +131,6 @@ void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans, mtxParent;		// 計算用マトリックス
-	D3DXMATERIAL *pMat;							// マテリアルデータへのポインタ
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -147,18 +158,28 @@ void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
-	// マテリアルデータへのポインタを取得
-	pMat = m_material;
-
-	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
+	if (m_pBuffMat != nullptr)
 	{
-		pMat[nCntMat].MatD3D.Diffuse;
+		// マテリアルデータへのポインタを取得
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+		D3DXCOLOR diffuse;
 
-		// マテリアルの設定
-		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
+		{
+			diffuse = pMat[nCntMat].MatD3D.Diffuse;
+			if (m_materialDiffuse.count(nCntMat) != 0)
+			{
+				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];
+			}
 
-		// モデルパーツの描画
-		m_pMesh->DrawSubset(nCntMat);
+			// マテリアルの設定
+			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+			// モデルパーツの描画
+			m_pMesh->DrawSubset(nCntMat);
+
+			pMat[nCntMat].MatD3D.Diffuse = diffuse;
+		}
 	}
 
 	// 保持していたマテリアルを戻す
@@ -202,15 +223,22 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 	// テクスチャポインタの取得
 	CTexture *pTexture = CApplication::GetInstance()->GetTexture();
 
-	// マテリアルデータへのポインタ
-	D3DXMATERIAL *pMat;
-
-	if (m_material != nullptr)
-	{// マテリアルデータへのポインタを取得
-		pMat = m_material;
+	if (m_pBuffMat != nullptr)
+	{
+		// マテリアルデータへのポインタを取得
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+		D3DXCOLOR diffuse;
 
 		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 		{// マテリアルの設定
+
+			diffuse = pMat[nCntMat].MatD3D.Diffuse;
+
+			if (m_materialDiffuse.count(nCntMat) != 0)
+			{
+				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];
+			}
+
 			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
 			// テクスチャの設定
@@ -218,6 +246,8 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 
 			// モデルパーツの描画
 			m_pMesh->DrawSubset(nCntMat);
+
+			pMat[nCntMat].MatD3D.Diffuse = diffuse;
 
 			// テクスチャの設定
 			pDevice->SetTexture(0, nullptr);
@@ -299,7 +329,7 @@ CObjectX * CObjectX::Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority)
 void CObjectX::LoadModel(const char *aFileName)
 {
 	CObjectXGroup *xGroup = CApplication::GetInstance()->GetObjectXGroup();
-	m_material = (D3DXMATERIAL*)xGroup->GetBuffMat(aFileName)->GetBufferPointer();
+	m_pBuffMat = xGroup->GetBuffMat(aFileName);
 	m_MaxVtx = xGroup->GetMaxVtx(aFileName);
 	m_pMesh = xGroup->GetMesh(aFileName);
 	m_MinVtx = xGroup->GetMinVtx(aFileName);
@@ -316,7 +346,6 @@ void CObjectX::Projection(void)
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
-	D3DXMATERIAL *pMat;				// マテリアルデータへのポインタ
 
 	// 変数宣言
 	D3DXMATRIX mtxShadow;
@@ -349,24 +378,26 @@ void CObjectX::Projection(void)
 	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
-	// マテリアルデータへのポインタを取得
-	pMat = m_material;
-
-	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
+	if (m_pBuffMat != nullptr)
 	{
-		// マテリアルの設定
-		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+		// マテリアルデータへのポインタを取得
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
 
-		Material = pMat[nCntMat].MatD3D;
+		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
+		{
+			// マテリアルの設定
+			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
-		Material.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
-		Material.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+			Material = pMat[nCntMat].MatD3D;
+			Material.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+			Material.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 
-		// マテリアルの設定
-		pDevice->SetMaterial(&Material);
+			// マテリアルの設定
+			pDevice->SetMaterial(&Material);
 
-		// モデルパーツの描画
-		m_pMesh->DrawSubset(nCntMat);
+			// モデルパーツの描画
+			m_pMesh->DrawSubset(nCntMat);
+		}
 	}
 
 	// 保持していたマテリアルを戻す
@@ -385,7 +416,14 @@ void CObjectX::SetMaterialDiffuse(unsigned int index, const D3DXCOLOR & inColor)
 		return;
 	}
 
-	m_material[index].MatD3D.Diffuse = inColor;
+	if (m_materialDiffuse.count(index) == 0)
+	{
+		m_materialDiffuse.emplace(index, inColor);
+	}
+	else
+	{
+		m_materialDiffuse[index] = inColor;
+	}
 }
 
 //=============================================================================

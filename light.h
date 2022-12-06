@@ -23,7 +23,7 @@
 class CLight : public CTask
 {
 public:
-	CLight();
+	CLight(CTaskGroup::EPriority inPriority = CTaskGroup::LEVEL_3D_1);
 	~CLight();
 	HRESULT Init();
 	void Uninit();

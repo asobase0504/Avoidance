@@ -15,10 +15,10 @@
 //------------------------------------
 // static変数
 //------------------------------------
-const float CPlayer::SPEED = 7.0f;			// 移動量
-const float CPlayer::ATTENUATION = 0.5f;	// 移動減衰係数
-const float CPlayer::JUMPING_POWER = 10.0f;	// 跳躍力
-const float CPlayer::GRAVITY = 0.75f;		// 重力
+const float CPlayer::SPEED = 3.5f;			// 移動量
+const float CPlayer::ATTENUATION = 0.05f;	// 移動減衰係数
+const float CPlayer::JUMPING_POWER = 2.5f;	// 跳躍力
+const float CPlayer::GRAVITY = 0.95f;		// 重力
 
 //------------------------------------
 // コンストラクタ
@@ -60,8 +60,10 @@ void CPlayer::Uninit()
 //------------------------------------
 void CPlayer::NormalUpdate()
 {
-	Move();	// 移動
-	Jump();	// ジャンプ
+	Move();		// 移動
+	boost();	// 突進
+	Jump();		// ジャンプ
+	Landing();	// 落下
 
 	CInput* input = CInput::GetKey();
 
@@ -110,9 +112,9 @@ void CPlayer::Draw()
 //------------------------------------
 // create
 //------------------------------------
-CPlayer *CPlayer::Create()
+CPlayer* CPlayer::Create()
 {
-	CPlayer * player = new CPlayer;
+	CPlayer* player = new CPlayer;
 
 	if (player != nullptr)
 	{
@@ -123,7 +125,7 @@ CPlayer *CPlayer::Create()
 }
 
 //------------------------------------
-// 動きセット
+// 移動
 //------------------------------------
 void CPlayer::Move()
 {
@@ -147,18 +149,24 @@ void CPlayer::Move()
 		moveInput.z += 1.0f;
 	}
 
-	CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(0, CTaskGroup::LEVEL_3D_1);
+	CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(ROLE_CAMERA, CTaskGroup::LEVEL_3D_1);
+
 	if (camera != nullptr)
 	{
 		moveInput = camera->VectorCombinedRot(moveInput);
 	}
 
-	m_move.x = moveInput.x * SPEED;
-	m_move.z = moveInput.z * SPEED;
+	if (D3DXVec3Length(&moveInput) != 0.0f)
+	{
+		m_move.x = moveInput.x * SPEED;
+		m_move.z = moveInput.z * SPEED;
+	}
 
-	//（目的の値-現在の値）＊減衰係数
+	//（目的の値 - 現在の値） ＊ 減衰係数
 	m_move.x += (0.0f - m_move.x) * ATTENUATION;
 	m_move.z += (0.0f - m_move.z) * ATTENUATION;
+
+	D3DXVECTOR2 horizontalAxis(m_move.x, m_move.z);
 
 	D3DXVECTOR3 axis;	// 回転軸
 	D3DXVECTOR3 inverseVec = -m_move;					// move値を反対にする
@@ -167,7 +175,7 @@ void CPlayer::Move()
 
 	// クオータニオンの計算
 	D3DXQUATERNION quaternion;
-	D3DXQuaternionRotationAxis(&quaternion, &axis, 0.15f);	// 回転軸と回転角度を指定
+	D3DXQuaternionRotationAxis(&quaternion, &axis, D3DXVec2Length(&horizontalAxis) * 0.035f);	// 回転軸と回転角度を指定
 
 	// クオータニオンを適用
 	m_quaternion *= quaternion;
@@ -176,22 +184,48 @@ void CPlayer::Move()
 	D3DXQuaternionNormalize(&m_quaternion, &m_quaternion);
 }
 
+//------------------------------------
+// 跳躍
+//------------------------------------
 void CPlayer::Jump()
 {
 	// 跳躍
-	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount < 2))
+	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 0))
 	{
 		m_jumpCount++;
-		m_move.y = 10.0f;
+		m_move.y = 15.0f;
 	}
+}
 
+//------------------------------------
+// 突進
+//------------------------------------
+void CPlayer::boost()
+{
+	// 跳躍
+	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
+	{
+		m_jumpCount++;
+
+		m_move.y *= 2.0f;
+
+		m_move.x *= 7.0f;
+		m_move.z *= 7.0f;
+	}
+}
+
+//------------------------------------
+// 落下
+//------------------------------------
+void CPlayer::Landing()
+{
 	// 重力
-	m_move.y -= 0.75f;
+	m_move.y -= GRAVITY;
 
 	// 疑似的な床表現
 	if (m_pos.y + m_move.y <= 15.0f)
 	{
 		m_jumpCount = 0;
- 		m_move.y = 0.0f;
+		m_move.y = 0.0f;
 	}
 }

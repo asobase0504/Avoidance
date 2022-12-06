@@ -14,7 +14,8 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CLight::CLight()
+CLight::CLight(CTaskGroup::EPriority inPriority) :
+	CTask(inPriority, CTaskGroup::EPushMethod::PUSH_TOP)
 {
 }
 

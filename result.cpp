@@ -35,6 +35,8 @@ CResult::~CResult()
 //=============================================================================
 HRESULT CResult::Init(void)
 {
+	CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_BGM_RESULE);
+
 	CObject2d* test = CObject2d::Create();
 	test->Init();
 	test->SetColor(D3DXCOLOR(0.5f, 0.0f, 0.5f, 1.0f));

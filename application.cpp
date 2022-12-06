@@ -102,9 +102,9 @@ HRESULT CApplication::Init(HWND hWnd, HINSTANCE hInstance)
 	m_pObjectXGroup = new CObjectXGroup;
 	m_pObjectXGroup->LoadAll();
 
-	m_pTexture = nullptr;
 	m_pTexture = CTexture::GetInstance();
-	
+	m_pTexture->LoadAll();
+
 	m_mode = CApplication::MODE_TITLE;	//現在のモード
 
 	//モードの設定

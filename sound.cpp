@@ -16,30 +16,9 @@
 //==================================================
 const CSound::SParam CSound::PARAM[] =
 {// 各音素材のパラメータ
-	{ "data/BGM/yukiguni.wav", -1},		// タイトル
-	{ "data/BGM/Game.wav", -1 },		// game
-	{ "data/BGM/Tricky Future.wav", -1 },		// Boss1
-	{ "data/BGM/オレンジトンネルを抜ける.wav", -1 },	// Boss2
-	{ "data/BGM/bgm006.wav", -1 },				// リザルト
-	{ "data/BGM/rizaruto.wav", -1 },			// チュートリアル
-	{ "data/BGM/Chattotata.wav", -1 },			// ランキング
-	{ "data/SE/hit003.wav", 0},					// 
-	{ "data/SE/ショット.wav", 0 },				// 
-	{ "data/SE/火炎魔法3.wav", 0 },				// 
-	{ "data/SE/wallHit.wav", 0 },				// 
-	{ "data/SE/風魔法1.wav", 0 },				// 
-	{ "data/SE/雷魔法1.wav", 0 },				// 
-	{ "data/SE/魔法使いが空を飛ぶ.wav", 0 },	//
-	{ "data/SE/キャンセル5.wav", 0 },			//
-	{ "data/SE/決定、ボタン押下37.wav", 0 },	//
-	{ "data/SE/警報が鳴る.wav", 0 },			//
-	{ "data/SE/和太鼓でドドン.wav", 0 },		//
-	{ "data/SE/ライオンの鳴き声2.wav", 0 },		// 
-	{ "data/SE/ロボット起動2.wav", 0 },			//
-	{ "data/SE/ブースタージャンプ1.wav", 0 },	//
-	{ "data/SE/携帯電話の呼び出し音.wav", 0 },	//
-	{ "data/SE/決定ボタンを押す16.wav", 0 },	//
-	
+	{ "data/BGM/BGM_02.wav", -1 },
+	{ "data/BGM/BGM_00.wav", -1},
+	{ "data/BGM/BGM_01.wav", -1 }
 };
 
 static_assert(sizeof(CSound::PARAM) / sizeof(CSound::PARAM[0]) == CSound::LABEL_MAX, "aho");

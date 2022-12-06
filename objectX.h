@@ -77,7 +77,8 @@ private:
 	D3DXVECTOR3 m_MaxVtx;		// モデルの頂点最大値
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
 	LPD3DXMESH m_pMesh;			// メッシュ情報へのポインタ
-	D3DXMATERIAL* m_material;	// マテリアル情報へのポインタ
+	LPD3DXBUFFER m_pBuffMat;	// マテリアル情報へのポインタ
+	std::unordered_map<unsigned int,D3DXCOLOR> m_materialDiffuse;	// マテリアルのDiffuse
 	DWORD m_NumMat;				// マテリアル情報の数
 
 	CObjectX *m_pParent;		// 親モデルの情報

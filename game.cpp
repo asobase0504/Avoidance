@@ -54,17 +54,19 @@ CGame::~CGame()
 //=============================================================================
 HRESULT CGame::Init(void)
 {
-	CCamera* camera = new CCamera;
-	camera->Init();
-
 	CLight* light = new CLight;
 	light->Init();
 
+	CCamera* camera = new CCamera;
+	camera->Init();
+
+	CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_BGM_GAME);
 
 	{
 		CPlayer* player = CPlayer::Create();
 		player->LoadModel("BOX");
 		player->SetPos(D3DXVECTOR3(0.0f, 15.0f, 0.0f));
+		player->SetMaterialDiffuse(0, D3DCOLOR(0xff46bdc6));
 		player->CalculationVtx();
 	}
 
@@ -83,7 +85,7 @@ HRESULT CGame::Init(void)
 		floor->SetRot(D3DXVECTOR3(D3DX_PI * 0.5f, D3DX_PI * 0.25f, 0.0f));
 		floor->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		floor->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-		floor->SetColor(D3DXCOLOR(0.93f, 0.47f, 0.0f, 1.0f));
+		floor->SetColor(D3DCOLOR(0xff4285f4));
 	}
 	{
 		CObjectPolygon3D* wall = CObjectPolygon3D::Create();
@@ -91,7 +93,7 @@ HRESULT CGame::Init(void)
 		wall->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.25f, 0.0f));
 		wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-		wall->SetColor(D3DXCOLOR(0.93f, 0.47f, 0.0f, 1.0f));
+		wall->SetColor(D3DCOLOR(0xff4285f4));
 	}
 	{
 		CObjectPolygon3D* wall = CObjectPolygon3D::Create();
@@ -99,7 +101,7 @@ HRESULT CGame::Init(void)
 		wall->SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.25f, 0.0f));
 		wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-		wall->SetColor(D3DXCOLOR(0.93f, 0.47f, 0.0f, 1.0f));
+		wall->SetColor(D3DCOLOR(0xff4285f4));
 	}
 
 	return S_OK;
