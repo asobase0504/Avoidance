@@ -1,60 +1,104 @@
-//**************************************************
+//=============================================================================
 // 
-// Hackathon ( color.cpp )
-// Author  : katsuki mizuki
+// 色管理クラス
+// Author YudaKaito
 // 
-//**************************************************
-
-//==================================================
-// インクルード
-//==================================================
-#include "main.h"
+//=============================================================================
+//-----------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------
 #include "color.h"
+#include "file.h"
+#include "application.h"
+#include "texture.h"
 
-#include <assert.h>
+//-----------------------------------------------------------------------------
+// 静的変数
+//-----------------------------------------------------------------------------
+static const nlohmann::json colorFile = LoadJson(L"data/FILE/color.json");
 
-//==================================================
-// 定義
-//==================================================
-namespace
+//-----------------------------------------------------------------------------
+// コンストラクタ
+//-----------------------------------------------------------------------------
+CColor::CColor() :
+	typeNumber(0)
 {
-const D3DXCOLOR	RED(1.0f, 0.0f, 0.0f, 1.0f);		// 赤
-const D3DXCOLOR	GREEN(0.0f, 1.0f, 0.0f, 1.0f);		// 緑
-const D3DXCOLOR	BLUE(0.0f, 0.0f, 1.0f, 1.0f);		// 青
-const D3DXCOLOR	YELLOW(1.0f, 1.0f, 0.0f, 1.0f);		// 黄色
-const D3DXCOLOR	PURPLE(1.0f, 0.0f, 1.0f, 1.0f);		// 紫
-const D3DXCOLOR	LIGHTBLUE(0.0f, 1.0f, 1.0f, 1.0f);	// 水色
-const D3DXCOLOR	WHITE(1.0f, 1.0f, 1.0f, 1.0f);		// 白
-const D3DXCOLOR	GRAY(0.5f, 0.5f, 0.5f, 1.0f);		// 灰色
-const D3DXCOLOR	BLACK(0.0f, 0.0f, 0.0f, 1.0f);		// 黒
+}
 
-const D3DXCOLOR* s_Colors[] =
-{// 色の配列
-	&RED,
-	&GREEN,
-	&BLUE,
-	&YELLOW,
-	&PURPLE,
-	&LIGHTBLUE,
-	&WHITE,
-	&GRAY,
-	&BLACK
-};
-}// namespaceはここまで
-
-static_assert(sizeof(s_Colors) / sizeof(s_Colors[0]) == COLOR_MAX, "aho");
-
-//#define ARRAY_LENGTH(array_) (sizeof(array_)/sizeof(array_[0]))
-//static_assert(ARRAY_LENGTH(s_Colors) == COLOR_MAX, "aho");
-//#define STATIC_ASSERT(a) static_assert(a, #a)
-//STATIC_ASSERT(ARRAY_LENGTH(s_Colors) == COLOR_MAX);
-
-//--------------------------------------------------
-// 取得
-//--------------------------------------------------
-D3DXCOLOR GetColor(COLOR color)
+//-----------------------------------------------------------------------------
+// デストラクタ
+//-----------------------------------------------------------------------------
+CColor::~CColor()
 {
-	assert(color >= 0 && color < COLOR_MAX);
+}
 
-	return *s_Colors[color];
+//-----------------------------------------------------------------------------
+// 初期化
+//-----------------------------------------------------------------------------
+HRESULT CColor::Init()
+{
+	SetTheme(0);
+	typeNumber = colorFile["TYPE"].size();
+	return S_OK;
+}
+
+//-----------------------------------------------------------------------------
+// 終了
+//-----------------------------------------------------------------------------
+void CColor::Uninit()
+{
+}
+
+//-----------------------------------------------------------------------------
+// 色の取得
+//-----------------------------------------------------------------------------
+const D3DXCOLOR& CColor::GetColor(EColorConfig inConfig)
+{
+	// 指定されたKeyが存在するか否か
+	if (m_color.count(inConfig) == 0)
+	{ // Keyが設定されてなかった場合
+		return D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+	}
+
+	/* ↓Keyが設定されていた場合↓ */
+
+	return m_color[inConfig];
+}
+
+//-----------------------------------------------------------------------------
+// テーマ色の決定
+//-----------------------------------------------------------------------------
+void CColor::SetTheme(int idx)
+{
+	// jsonのコンテナをD3DXCOLORに変換する
+	auto VectorToD3DXCOLOR = [this](int inIndex, int inColor)
+	{
+		// 指定番号に値が存在しているか否か
+		if ((int)colorFile["TYPE"].size() < inIndex || 0 > inIndex)
+		{ // 指定番号に値が存在しない
+			return D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+
+		D3DXCOLOR color;
+
+		color.r = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[0];	// 赤色の設定
+		color.g = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[1];	// 緑色の設定
+		color.b = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[2];	// 青色の設定
+		color.a = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[3];	// 透明色の設定
+
+		return color;
+	};
+
+	// 色の代入
+	for (int i = 0; i < 4; i++)
+	{
+		if (m_color.count(i) != 0)
+		{
+			m_color[i] = VectorToD3DXCOLOR(idx, i);
+		}
+		else
+		{
+			m_color.insert(std::make_pair(i, VectorToD3DXCOLOR(idx, i)));
+		}
+	}
 }

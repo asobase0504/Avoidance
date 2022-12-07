@@ -1,37 +1,48 @@
-//**************************************************
-//
-// Hackathon ( color.h )
-// Author  : katsuki mizuki
-//
-//**************************************************
-#ifndef _COLOR_H_	// このマクロ定義がされてなかったら
-#define _COLOR_H_	// ２重インクルード防止のマクロ定義
+//=============================================================================
+// 
+// 色管理クラス
+// Author YudaKaito
+// 
+//=============================================================================
+#ifndef _THEME_COLOR_H_
+#define _THEME_COLOR_H_
 
-//==================================================
-// 列挙型
-//==================================================
-typedef enum
+#include <d3dx9.h>
+#include <map>
+#include <string>
+
+//-----------------------------------------------------------------------------
+// 色管理クラス
+//-----------------------------------------------------------------------------
+class CColor
 {
-	COLOR_RED = 0,		// 赤
-	COLOR_GREEN,		// 緑
-	COLOR_BLUE,			// 青
-	COLOR_YELLOW,		// 黄色
-	COLOR_PURPLE,		// 紫
-	COLOR_LIGHTBLUE,	// 水色
-	COLOR_WHITE,		// 白
-	COLOR_GRAY,			// 灰色
-	COLOR_BLACK,		// 黒
-	COLOR_MAX,
-}COLOR;
+public:	// 列挙型
+	enum EColorConfig
+	{
+		COLOR_0,
+		COLOR_1,
+		COLOR_2,
+		COLOR_3,
+		COLOR_MAX,
+	};
 
-//==================================================
-// プロトタイプ宣言
-//==================================================
-//--------------------------------------------------
-// 取得
-// 引数  : COLOR color / 列挙型 種類
-// 返値  : D3DXCOLOR / 色
-//--------------------------------------------------
-D3DXCOLOR GetColor(COLOR color);
+public:	// メンバー関数
+	CColor();
+	~CColor();
+
+	HRESULT Init();
+	void Uninit();
+
+	// Getter
+	const D3DXCOLOR& GetColor(EColorConfig inConfig);
+	int GetSize() { return typeNumber; }
+
+	// Setter
+	void SetTheme(int idx);
+
+private: // 動的メンバー変数
+	std::map<int, D3DXCOLOR> m_color;
+	int typeNumber;
+};
 
 #endif // !_COLOR_H_

@@ -26,9 +26,6 @@
     <Filter Include="00_Cord\01_System\01_3D">
       <UniqueIdentifier>{775d74d7-8669-4d67-a8a5-27c5c7e508f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\01_System\02_File">
-      <UniqueIdentifier>{95afe884-2b87-469e-9325-19fb95fb5af9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00_Cord\01_System\03_OutSide">
       <UniqueIdentifier>{385cb0a4-5e34-4c33-9cf6-9a633bf87c89}</UniqueIdentifier>
     </Filter>
@@ -70,6 +67,9 @@
     </Filter>
     <Filter Include="00_Cord\00_Main\01_Mode\01_Title">
       <UniqueIdentifier>{a0875b5e-ed76-4d55-a476-4dba649652bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\01_System\03_OutSide\02_File">
+      <UniqueIdentifier>{95afe884-2b87-469e-9325-19fb95fb5af9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,10 +134,10 @@
       <Filter>00_Cord\02_Object\02_Object2D</Filter>
     </ClCompile>
     <ClCompile Include="file.cpp">
-      <Filter>00_Cord\01_System\02_File</Filter>
+      <Filter>00_Cord\01_System\03_OutSide\02_File</Filter>
     </ClCompile>
     <ClCompile Include="letter.cpp">
-      <Filter>00_Cord\01_System\02_File</Filter>
+      <Filter>00_Cord\01_System\03_OutSide\02_File</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>00_Cord\01_System\01_3D</Filter>
@@ -223,6 +223,12 @@
     <ClCompile Include="title_logo.cpp">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClCompile>
+    <ClCompile Include="color.cpp">
+      <Filter>00_Cord\01_System\03_OutSide</Filter>
+    </ClCompile>
+    <ClCompile Include="goal.cpp">
+      <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -289,10 +295,10 @@
       <Filter>00_Cord\02_Object\02_Object2D</Filter>
     </ClInclude>
     <ClInclude Include="file.h">
-      <Filter>00_Cord\01_System\02_File</Filter>
+      <Filter>00_Cord\01_System\03_OutSide\02_File</Filter>
     </ClInclude>
     <ClInclude Include="letter.h">
-      <Filter>00_Cord\01_System\02_File</Filter>
+      <Filter>00_Cord\01_System\03_OutSide\02_File</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>00_Cord\01_System\01_3D</Filter>
@@ -381,12 +387,21 @@
     <ClInclude Include="title_logo.h">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>00_Cord\01_System\03_OutSide</Filter>
+    </ClInclude>
+    <ClInclude Include="goal.h">
+      <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\FILE\model.json">
       <Filter>01_File</Filter>
     </None>
     <None Include="data\FILE\texture.json">
+      <Filter>01_File</Filter>
+    </None>
+    <None Include="data\FILE\color.json">
       <Filter>01_File</Filter>
     </None>
   </ItemGroup>

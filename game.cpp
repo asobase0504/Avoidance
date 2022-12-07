@@ -1,39 +1,29 @@
 //=============================================================================
 //
 // ゲーム画面
-// Author : Hamada Ryuuga
+// Author : Yuda Kaito
 //
 //=============================================================================
-
 //-----------------------------------------------------------------------------
-// インクルード
+// include
 //-----------------------------------------------------------------------------
 #include "game.h"
+/* Sestem系統 */
+#include "application.h"
+#include "fade.h"
 #include "sound.h"
 #include "input.h"
-#include "application.h"
-#include "object.h"
-#include "light.h"
-#include "player.h"
-#include "file.h"
-#include "fade.h"
-#include "multiply.h"
-#include "particle_manager.h"
-#include "ranking.h"
-#include "score.h"
-#include "bg.h"
-#include "pause.h"
+/* 3D系統 */
 #include "camera.h"
-#include "task_group.h"
-#include "text.h"
-#include "object_mesh.h"
+#include "light.h"
+/* Object系統*/
+#include "object_polygon3d.h"
+#include "player.h"
+#include "pause.h"
 
 //-----------------------------------------------------------------------------
 // 静的メンバ変数の宣言
 //-----------------------------------------------------------------------------
-CParticleManager*CGame::m_pPaticleManager = nullptr;
-CPlayer*CGame::m_pPlayer = nullptr;
-CPause *CGame::m_pPause = nullptr;
 
 //=============================================================================
 // コンストラクタ
@@ -70,15 +60,6 @@ HRESULT CGame::Init(void)
 		player->CalculationVtx();
 	}
 
-	//{
-	//	CMesh* test = CMesh::Create();
-	//	test->SetNumber(0);
-	//	test->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	//	test->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//	test->SetMesh(10);
-	//	test->SetType(0);
-	//}
-
 	{
 		CObjectPolygon3D* floor = CObjectPolygon3D::Create();
 		floor->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -113,14 +94,6 @@ HRESULT CGame::Init(void)
 void CGame::Uninit(void)
 {
 	CApplication::GetInstance()->GetSound()->Stop();
-
-	if (m_pPaticleManager != nullptr)
-	{
-		m_pPaticleManager->Uninit();
-		delete m_pPaticleManager;
-		m_pPaticleManager = nullptr;
-	}
-
 	Release();
 }
 

@@ -15,10 +15,6 @@
 //-----------------------------------------------------------------------------
 // 前方宣言
 //-----------------------------------------------------------------------------
-class CParticleManager;
-class CPlayer;
-class CPause; 
-class CCamera;
 
 //=============================================================================
 // ゲームクラス
@@ -34,18 +30,6 @@ public:
 	void Update() override;
 	void Draw() override;
 
-	// Getter
-	static CParticleManager* GetParticleManager() { return m_pPaticleManager; }
-	static CPlayer* GetPlayer() { return m_pPlayer; };
-	static CPause* GetPause() { return m_pPause; };
-
 private:
-	static CPlayer* m_pPlayer;
-	static CParticleManager* m_pPaticleManager;	// パーティクルマネジャー
-	static CPause *m_pPause;
-	CCamera* m_pCamera[2];
-
-	int m_gameCount;
-	int m_speedUp;
 };
 #endif

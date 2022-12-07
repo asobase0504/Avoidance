@@ -161,7 +161,9 @@
     <ClCompile Include="2dpolygontemplate.cpp" />
     <ClCompile Include="camera_quaternion.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="color.cpp" />
     <ClCompile Include="DirectInput.cpp" />
+    <ClCompile Include="goal.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
     <ClCompile Include="object_mesh.cpp" />
     <ClCompile Include="object_polygon3d.cpp" />
@@ -216,7 +218,9 @@
     <ClInclude Include="2dpolygontemplate.h" />
     <ClInclude Include="camera_quaternion.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="DirectInput.h" />
+    <ClInclude Include="goal.h" />
     <ClInclude Include="inputjoypad.h" />
     <ClInclude Include="inputkeydata.h" />
     <ClInclude Include="object_mesh.h" />
@@ -267,6 +271,7 @@
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\FILE\color.json" />
     <None Include="data\FILE\model.json" />
     <None Include="data\FILE\texture.json" />
   </ItemGroup>

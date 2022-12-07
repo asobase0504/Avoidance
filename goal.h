@@ -4,8 +4,8 @@
 // Author:Yuda Kaito
 //
 //=============================================================================
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#ifndef _GOAL_H_
+#define _GOAL_H_
 
 //-----------------------------------------------------------------------------
 // include
@@ -13,7 +13,7 @@
 #include "motion.h"
 #include "objectX.h"
 
-class CPlayer : public CObjectX
+class CGoal : public CObjectX
 {
 private: // 定数
 	static const float SPEED;			// スピード
@@ -22,25 +22,18 @@ private: // 定数
 	static const float GRAVITY;			// 重力
 
 public: // パブリック関数
-	CPlayer();
-	~CPlayer();
+	CGoal();
+	~CGoal();
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
 	void NormalUpdate() override;	// 更新
 	void Draw() override;			// 描画
 
-	static CPlayer* Create();	// 生成
+	static CGoal* Create();	// 生成
 
 private: // プライベート関数
-	void Move();	// 移動
-	void Jump();	// 跳躍
-	void boost();	// 突進
-	void Landing();	// 落下
 
 private: // メンバー変数
-
-	D3DXQUATERNION m_quaternion;	// クオータニオン
-	int m_jumpCount;				// ジャンプ回数
 };
 #endif

@@ -202,7 +202,7 @@ void CPlayer::Jump()
 //------------------------------------
 void CPlayer::boost()
 {
-	// ’µ–ô
+	// “Ëi
 	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
 	{
 		m_jumpCount++;

@@ -12,6 +12,7 @@
 #include "input.h"
 #include "sound.h"
 #include "fade.h"
+#include "color.h"
 // 3D系統
 #include "camera.h"
 #include "light.h"
@@ -44,7 +45,7 @@ CTitle::~CTitle()
 HRESULT CTitle::Init(void)
 {
 	CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_BGM_TITLE);
-
+	CApplication::GetInstance()->GetColor()->SetTheme(3);
 	// ライト
 	m_pLight = new CLight;
 	m_pLight->Init();
@@ -66,7 +67,7 @@ HRESULT CTitle::Init(void)
 		titleBg->SetPos(CApplication::CENTER_POS);
 		titleBg->SetRot(D3DXVECTOR3(0.0f,0.0f,0.25f));
 		titleBg->SetSize(CApplication::CENTER_POS * 0.9f);
-		titleBg->SetColor(D3DCOLOR(0xfffbbc04));
+		titleBg->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
 	}
 
 	// タイトルロゴ
@@ -74,34 +75,34 @@ HRESULT CTitle::Init(void)
 	titleLogo->Init();
 
 	{
-		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(0.0f, 20.0f, 0.0f));
-		testX->LoadModel("BOX");
-		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
-		testX->SetMaterialDiffuse(0, D3DCOLOR(0xff46bdc6));
-		testX->CalculationVtx();
-	}
-
-	{
 		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		testX->LoadModel("BOX");
 		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
-		testX->SetMaterialDiffuse(0, D3DCOLOR(0xffea4335));
+		testX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
 		testX->CalculationVtx();
 	}
 
 	{
-		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(15.0f, 0.0f, -15.0f));
+		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(40.0f, 0.0f, 0.0f));
 		testX->LoadModel("BOX");
 		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
-		testX->SetMaterialDiffuse(0, D3DCOLOR(0xff4285f4));
+		testX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
 		testX->CalculationVtx();
 	}
 
 	{
-		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(-15.0f, 0.0f, -15.0f));
+		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(20.0f, 0.0f, 0.0f));
 		testX->LoadModel("BOX");
 		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
-		testX->SetMaterialDiffuse(0, D3DCOLOR(0xfffbbc04));
+		testX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
+		testX->CalculationVtx();
+	}
+
+	{
+		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(-20.0f, 0.0f, 0.0f));
+		testX->LoadModel("BOX");
+		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
+		testX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_3));
 		testX->CalculationVtx();
 	}
 
@@ -121,10 +122,8 @@ void CTitle::Uninit(void)
 //=============================================================================
 void CTitle::Update(void)
 {
-	static bool a = false;
-	if (CInput::GetKey()->Trigger(KEY_UP) && !a)
+	if (CInput::GetKey()->Trigger(KEY_UP))
 	{
-		a = true;
 		m_pPaticleManager->Create(CParticleEmitter::EObjectType::POLIGON2D, CApplication::CENTER_POS, 0);
 	}
 	if (CInput::GetKey()->Trigger(KEY_DOWN))

@@ -16,6 +16,7 @@
 #include "objectX_group.h"
 #include "texture.h"
 #include "fade.h"
+#include "color.h"
 
 /* シーンモード */
 #include "title.h"
@@ -98,12 +99,17 @@ HRESULT CApplication::Init(HWND hWnd, HINSTANCE hInstance)
 		return E_FAIL;
 	}
 
-	// 音楽処理の初期化処理
+	// objectXの初期化処理
 	m_pObjectXGroup = new CObjectXGroup;
 	m_pObjectXGroup->LoadAll();
 
+	// Textureの読込み
 	m_pTexture = CTexture::GetInstance();
 	m_pTexture->LoadAll();
+
+	// テーマカラーの読込み
+	m_color = new CColor;
+	m_color->Init();
 
 	m_mode = CApplication::MODE_TITLE;	//現在のモード
 
@@ -157,6 +163,14 @@ void CApplication::Uninit()
 		m_pSound = nullptr;
 	}
 
+	if (m_color != nullptr)
+	{// 終了処理
+
+		m_color->Uninit();
+		delete m_color;
+		m_color = nullptr;
+	}
+
 	//入力処理の終了処理
 	CInput::GetKey()->Uninit();
 
@@ -180,48 +194,6 @@ void CApplication::Draw()
 {
 	m_pRenderer->Draw();	// 描画処理
 }
-
-//=============================================================================
-// GetRenderer
-//=============================================================================
-CRenderer *CApplication::GetRenderer()
-{
-	return m_pRenderer;
-}
-
-//=============================================================================
-// GetTexture
-//=============================================================================
-CTexture *CApplication::GetTexture()
-{
-	return m_pTexture;
-}
-
-//=============================================================================
-// GetFade
-//=============================================================================
-CFade * CApplication::GetFade()
-{
-	return m_pFade;
-}
-
-
-//=============================================================================
-// GetMode
-//=============================================================================
-CApplication::MODE * CApplication::GetMode()
-{
-	return &m_mode;
-}
-
-//=============================================================================
-// GetSound
-//=============================================================================
-CSound * CApplication::GetSound()
-{
-	return m_pSound;
-}
-
 
 //=============================================================================
 // モードの設定
