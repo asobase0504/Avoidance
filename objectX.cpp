@@ -26,6 +26,7 @@ CObjectX::CObjectX(CTaskGroup::EPriority nPriority) :
 {
 	//オブジェクトのタイプセット処理
 	CObject::SetType(CObject::MODEL);
+	D3DXMatrixIdentity(&m_mtxRot);
 }
 
 //=============================================================================
@@ -73,6 +74,22 @@ void CObjectX::NormalUpdate()
 void CObjectX::Draw()
 {
 	GiftMtx(&m_mtxWorld, m_pos, m_rot);	// マトリックスの設定
+
+	// 計算用マトリックス
+	D3DXMATRIX mtxRot, mtxTrans;
+
+	// ワールドマトリックスの初期化
+	// 行列初期化関数(第1引数の行列を単位行列に初期化)
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);
+
+	// 位置を反映
+	// 行列移動関数(第１引数にX,Y,Z方向の移動行列を作成)
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	if (m_pParent != nullptr)
 	{
@@ -130,14 +147,13 @@ void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
-	D3DXMATRIX mtxRot, mtxTrans, mtxParent;		// 計算用マトリックス
+	D3DXMATRIX mtxTrans, mtxParent;		// 計算用マトリックス
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
 	// クォータニオンの使用した姿勢の設定
-	D3DXMatrixRotationQuaternion(&mtxRot, &quaternion);			// クオータニオンによる行列回転
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);		// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);		// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
 
 	// 位置を反映
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
@@ -194,14 +210,13 @@ void CObjectX::Draw(const D3DXQUATERNION& quaternion)
 void CObjectX::Draw(D3DXMATRIX mtxParent)
 {
 	// 計算用マトリックス
-	D3DXMATRIX mtxRot, mtxTrans, mtxScaling;
+	D3DXMATRIX mtxTrans, mtxScaling;
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
 	// 向きの反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);	// 行列回転関数
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);				// 行列掛け算関数 
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);			// 行列掛け算関数 
 
 	// 位置を反映
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);		// 行列移動関数
@@ -258,18 +273,36 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 	pDevice->SetMaterial(&matDef);
 }
 
+void CObjectX::SetRot(const D3DXVECTOR3 & inRot)
+{
+	if (m_rot != inRot)
+	{
+		SetMtxRot(inRot);
+	}
+	m_rot = inRot;
+}
+
+//=============================================================================
+// 頂点最大小値の計算処理
+//=============================================================================
+void CObjectX::SetMtxRot(const D3DXVECTOR3 & inRot)
+{
+	D3DXQUATERNION quaternion;
+	D3DXQuaternionRotationYawPitchRoll(&quaternion, inRot.y, inRot.x, inRot.z);
+	SetMtxQuaternion(quaternion);
+}
+
 //=============================================================================
 // 頂点最大小値の計算処理
 //=============================================================================
 void CObjectX::CalculationVtx()
 {
-	D3DXMATRIX mtxRot, mtxTrans, mtxWorld;
+	D3DXMATRIX mtxTrans, mtxWorld;
 
 	D3DXMatrixIdentity(&mtxWorld);
 
 	// 向きの反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);	// 行列回転関数
-	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);					// 行列掛け算関数
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &m_mtxRot);					// 行列掛け算関数
 
 	D3DXVec3TransformCoord(&m_MaxVtx, &m_MaxVtx, &mtxWorld);
 	D3DXVec3TransformCoord(&m_MinVtx, &m_MinVtx, &mtxWorld);
@@ -345,7 +378,7 @@ void CObjectX::Projection(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
-	D3DXMATRIX mtxRot, mtxTrans;	// 計算用マトリックス
+	D3DXMATRIX mtxTrans;	// 計算用マトリックス
 
 	// 変数宣言
 	D3DXMATRIX mtxShadow;
@@ -429,7 +462,7 @@ void CObjectX::SetMaterialDiffuse(unsigned int index, const D3DXCOLOR & inColor)
 //=============================================================================
 // 当たり判定 (左右,奥,手前)
 //=============================================================================
-bool CObjectX::Collision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * pSize)
+bool CObjectX::Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize)
 {
 	if (!m_isCollision)
 	{
@@ -442,48 +475,44 @@ bool CObjectX::Collision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 
 	bool bIsLanding = false;
 
 	// モデルの左側当たり判定
-	if ((pPos->z - pSize->z * 0.5f < pos.z + m_MaxVtx.z) &&
-		(pPos->z + pSize->z * 0.5f > pos.z + m_MinVtx.z) &&
-		(pPosOld->x + pSize->x * 0.5f <= pos.x + m_MinVtx.x * 0.5f) &&
-		(pPos->x + pSize->x * 0.5f > pos.x + m_MinVtx.x * 0.5f) &&
-		(pPos->y + pSize->y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos->y < pos.y + m_MaxVtx.y * 0.5f))
+	if ((pPos.z - pSize.z * 0.5f < pos.z + m_MaxVtx.z) &&
+		(pPos.z + pSize.z * 0.5f > pos.z + m_MinVtx.z) &&
+		(pPosOld.x + pSize.x * 0.5f <= pos.x + m_MinVtx.x ) &&
+		(pPos.x + pSize.x * 0.5f > pos.x + m_MinVtx.x * 0.5f) &&
+		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
+		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
 	{
 		bIsLanding = true;
-		pPos->x = pos.x + m_MinVtx.x * 0.5f - pSize->x * 0.5f;
 	}
 	// モデルの右側当たり判定
-	if ((pPos->z - pSize->z * 0.5f < pos.z + m_MaxVtx.z) &&
-		(pPos->z + pSize->z * 0.5f > pos.z + m_MinVtx.z) &&
-		(pPosOld->x - pSize->x * 0.5f >= pos.x + m_MaxVtx.x * 0.5f) &&
-		(pPos->x - pSize->x * 0.5f < pos.x + m_MaxVtx.x * 0.5f) &&
-		(pPos->y + pSize->y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos->y < pos.y + m_MaxVtx.y * 0.5f))
+	if ((pPos.z - pSize.z * 0.5f < pos.z + m_MaxVtx.z) &&
+		(pPos.z + pSize.z * 0.5f > pos.z + m_MinVtx.z) &&
+		(pPosOld.x - pSize.x * 0.5f >= pos.x + m_MaxVtx.x) &&
+		(pPos.x - pSize.x * 0.5f < pos.x + m_MaxVtx.x * 0.5f) &&
+		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
+		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
 	{
 		bIsLanding = true;
-		pPos->x = pos.x + m_MaxVtx.x * 0.5f + pSize->x * 0.5f;
 	}
 	// モデルの奥側当たり判定
-	if ((pPos->x - pSize->x * 0.5f < pos.x + m_MaxVtx.x) &&
-		(pPos->x + pSize->x * 0.5f > pos.x + m_MinVtx.x) &&
-		(pPosOld->z - pSize->z * 0.5f >= pos.z + m_MaxVtx.z * 0.5f) &&
-		(pPos->z - pSize->z * 0.5f < pos.z + m_MaxVtx.z * 0.5f) &&
-		(pPos->y + pSize->y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos->y < pos.y + m_MaxVtx.y * 0.5f))
+	if ((pPos.x - pSize.x * 0.5f < pos.x + m_MaxVtx.x) &&
+		(pPos.x + pSize.x * 0.5f > pos.x + m_MinVtx.x) &&
+		(pPosOld.z - pSize.z * 0.5f >= pos.z + m_MaxVtx.z) &&
+		(pPos.z - pSize.z * 0.5f < pos.z + m_MaxVtx.z * 0.5f) &&
+		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
+		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
 	{
 		bIsLanding = true;
-		pPos->z = pos.z + m_MaxVtx.z * 0.5f + pSize->z * 0.5f;
 	}
 	// モデルの手前側当たり判定
-	if ((pPos->x - pSize->x * 0.5f < pos.x + m_MaxVtx.x) &&
-		(pPos->x + pSize->x * 0.5f > pos.x + m_MinVtx.x) &&
-		(pPosOld->z + pSize->z * 0.5f <= pos.z + m_MinVtx.z * 0.5f) &&
-		(pPos->z + pSize->z * 0.5f > pos.z + m_MinVtx.z * 0.5f) &&
-		(pPos->y + pSize->y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos->y < pos.y + m_MaxVtx.y * 0.5f))
+	if ((pPos.x - pSize.x * 0.5f < pos.x + m_MaxVtx.x) &&
+		(pPos.x + pSize.x * 0.5f > pos.x + m_MinVtx.x) &&
+		(pPosOld.z + pSize.z * 0.5f <= pos.z + m_MinVtx.z) &&
+		(pPos.z + pSize.z * 0.5f > pos.z + m_MinVtx.z * 0.5f) &&
+		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
+		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
 	{
 		bIsLanding = true;
-		pPos->z = pos.z + m_MinVtx.z * 0.5f - pSize->z * 0.5f;
 	}
 
 	// 値を返す
@@ -595,6 +624,260 @@ bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR
 
 	// 値を返す
 	return bIsLanding;
+}
+
+//=============================================================================
+// 線分の当たり判定
+//=============================================================================
+bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
+{
+	if (!inObjectX->IsCollision())
+	{
+		return false;
+	}
+
+	// 変数宣言
+	D3DXVECTOR3 interval = GetPos() - inObjectX->GetPos();
+
+	D3DXVECTOR3 thisVecX;
+	D3DXVECTOR3 thisVecY;
+	D3DXVECTOR3 thisVecZ;
+	D3DXVECTOR3 thisNormalizeVecX;
+	D3DXVECTOR3 thisNormalizeVecY;
+	D3DXVECTOR3 thisNormalizeVecZ;
+
+	{
+		// 計算用マトリックス
+		D3DXMATRIX mtxWorld = m_mtxRot;
+
+		D3DXVECTOR3 size = m_size * 0.5f;
+		thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+		thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+		D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &m_mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &m_mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &m_mtxRot);
+		D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
+		D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
+		D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
+		thisVecX = thisNormalizeVecX * size.x;
+		thisVecY = thisNormalizeVecY * size.y;
+		thisVecZ = thisNormalizeVecZ * size.z;
+	}
+
+	D3DXVECTOR3 targetVecX;
+	D3DXVECTOR3 targetVecY;
+	D3DXVECTOR3 targetVecZ;
+	D3DXVECTOR3 targetNormalizeVecX;
+	D3DXVECTOR3 targetNormalizeVecY;
+	D3DXVECTOR3 targetNormalizeVecZ;
+
+	{
+		// 計算用マトリックス
+		D3DXMATRIX mtxWorld = inObjectX->GetMatRot();
+
+		D3DXVECTOR3 size = inObjectX->GetSize() * 0.5f;
+
+		targetNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+		targetNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		targetNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+		D3DXVec3TransformCoord(&targetNormalizeVecX, &targetNormalizeVecX, &mtxWorld);
+		D3DXVec3TransformCoord(&targetNormalizeVecY, &targetNormalizeVecY, &mtxWorld);
+		D3DXVec3TransformCoord(&targetNormalizeVecZ, &targetNormalizeVecZ, &mtxWorld);
+		D3DXVec3Normalize(&targetNormalizeVecX, &targetNormalizeVecX);
+		D3DXVec3Normalize(&targetNormalizeVecY, &targetNormalizeVecY);
+		D3DXVec3Normalize(&targetNormalizeVecZ, &targetNormalizeVecZ);
+		targetVecX = targetNormalizeVecX * size.x;
+		targetVecY = targetNormalizeVecY * size.y;
+		targetVecZ = targetNormalizeVecZ * size.z;
+	}
+
+	float thisRadius;
+	float targetRadius;
+	float length;
+
+	//A.e1
+	thisRadius = D3DXVec3Length(&thisVecX);
+	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecX, &targetVecX, &targetVecY, &targetVecZ);
+	length = fabs(D3DXVec3Dot(&interval, &thisNormalizeVecX));
+	if (length > thisRadius + targetRadius)
+	{
+		return false;
+	}
+
+	//A.e2
+	thisRadius = D3DXVec3Length(&thisVecY);
+	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecY, &targetVecX, &targetVecY, &targetVecZ);
+	length = fabs(D3DXVec3Dot(&interval, &thisNormalizeVecY));
+	if (length > thisRadius + targetRadius)
+	{
+		return false;
+	}
+
+	//A.e3
+	thisRadius = D3DXVec3Length(&thisVecZ);
+	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecZ, &targetVecX, &targetVecY, &targetVecZ);
+	length = fabs(D3DXVec3Dot(&interval, &thisNormalizeVecZ));
+	if (length > thisRadius + targetRadius)
+	{
+		return false;
+	}
+
+	//B.e1
+	thisRadius = D3DXVec3Length(&targetVecX);
+	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecX, &thisVecX, &thisVecY, &thisVecZ);
+	length = fabs(D3DXVec3Dot(&interval, &targetNormalizeVecX));
+	if (length > thisRadius + targetRadius)
+	{
+		return false;
+	}
+
+	//B.e2
+	thisRadius = D3DXVec3Length(&targetVecY);
+	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecY, &thisVecX, &thisVecY, &thisVecZ);
+	length = fabs(D3DXVec3Dot(&interval, &targetNormalizeVecY));
+	if (length > thisRadius + targetRadius)
+	{
+		return false;
+	}
+
+	//B.e3
+	thisRadius = D3DXVec3Length(&targetVecZ);
+	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecZ, &thisVecX, &thisVecY, &thisVecZ);
+	length = fabs(D3DXVec3Dot(&interval, &targetNormalizeVecZ));
+	if (length > thisRadius + targetRadius)
+	{
+		return false;
+	}
+
+	//C11
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecX, &targetNormalizeVecX);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecY, &thisVecZ);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecY, &targetVecZ);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C12
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecX, &targetNormalizeVecY);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecY, &thisVecZ);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecZ);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C13
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecX, &targetNormalizeVecZ);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecY, &thisVecZ);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecY);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C21
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecY, &targetNormalizeVecX);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecZ);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecY, &targetVecZ);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C22
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecY, &targetNormalizeVecY);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecZ);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecZ);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C23
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecY, &targetNormalizeVecZ);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecZ);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecY);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C31
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecZ, &targetNormalizeVecX);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecY);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecY, &targetVecZ);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C32
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecZ, &targetNormalizeVecY);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecY);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecZ);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+
+	//C33
+	{
+		D3DXVECTOR3 Cross;
+		D3DXVec3Cross(&Cross, &thisNormalizeVecZ, &targetNormalizeVecZ);
+		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecY);
+		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecY);
+		length = fabs(D3DXVec3Dot(&interval, &Cross));
+		if (length > thisRadius + targetRadius)
+		{
+			return false;
+		}
+	}
+	return true;
+
+}
+
+float CObjectX::LenSegOnSeparateAxis(D3DXVECTOR3 * Sep, D3DXVECTOR3 * e1, D3DXVECTOR3 * e2, D3DXVECTOR3 * e3)
+{
+	// 3つの内積の絶対値の和で投影線分長を計算
+	// 分離軸Sepは標準化されていること
+	float r1 = fabs(D3DXVec3Dot(Sep, e1));
+	float r2 = fabs(D3DXVec3Dot(Sep, e2));
+	float r3 = e3 ? (fabs(D3DXVec3Dot(Sep, e3))) : 0.0f;
+	return r1 + r2 + r3;
 }
 
 bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * inMaxVtx, D3DXVECTOR3 * inMinVtx, D3DXVECTOR3 * pMove)

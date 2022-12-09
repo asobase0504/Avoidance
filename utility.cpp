@@ -201,3 +201,22 @@ float Vec2Dot(D3DXVECTOR3* v1, D3DXVECTOR3* v2)
 {
 	return v1->x * v2->x + v1->z * v2->z;
 }
+
+D3DXVECTOR3 ConvertQuaternionfromRadian(const D3DXQUATERNION& inQuaternion)
+{
+	D3DXVECTOR3 rot;
+	float z1 = 2 * (inQuaternion.x * inQuaternion.y + inQuaternion.z * inQuaternion.w);
+	float z2 = inQuaternion.x * inQuaternion.x - inQuaternion.y * inQuaternion.y - inQuaternion.z * inQuaternion.z - inQuaternion.w * inQuaternion.w;
+	float z3 = z1 / z2;
+	rot.z = atanf(z3);
+
+	float y1 = 2 * (inQuaternion.x * inQuaternion.z - inQuaternion.y * inQuaternion.w);
+	rot.y = atanf(y1);
+
+	float x1 = 2 * (inQuaternion.x * inQuaternion.w + inQuaternion.y * inQuaternion.z);
+	float x2 = inQuaternion.x * inQuaternion.x + inQuaternion.y * inQuaternion.y - inQuaternion.z * inQuaternion.z - inQuaternion.w * inQuaternion.w;
+	float x3 = x1 / x2;
+	rot.x = atanf(x3);
+
+	return rot;
+}

@@ -47,6 +47,12 @@ public:
 	void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }	// 設定
 	const D3DXMATRIX& GetMtxWorld() { return m_mtxWorld; }				// 取得
 
+	/* 回転行列 */
+	void SetRot(const D3DXVECTOR3& inRot) override;
+	void SetMtxRot(const D3DXVECTOR3& inRot);
+	void SetMtxQuaternion(const D3DXQUATERNION& inQuaternion) { D3DXMatrixRotationQuaternion(&m_mtxRot, &inQuaternion); }
+	const D3DXMATRIX& GetMatRot() { return m_mtxRot; }
+
 	/* 頂点位置 */
 	void CalculationVtx();				// 頂点最大小値の計算
 	void SetMaxVtx(const D3DXVECTOR3& Maxvtx) { m_MaxVtx = Maxvtx; }	// 頂点最大値設定
@@ -64,9 +70,11 @@ public:
 	/* 当たり判定 */
 	void SetCollisionFlag(bool inFlag) { m_isCollision = inFlag; }	// 当たり判定の有無を設定
 	bool IsCollision() { return m_isCollision; }	// 当たり判定の有無を取得
-	bool Collision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pSize);	// 当たり判定 (左右, 奥, 手前)
+	bool Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize);	// 当たり判定 (左右, 奥, 手前)
 	bool Collision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx);	// 当たり判定 (左右, 奥, 手前)
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pSize, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
+	bool OBBAndOBB(CObjectX* inObjectX);
+	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = 0);
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
 
 private:
@@ -76,6 +84,7 @@ private:
 	D3DXVECTOR3 m_MinVtx;		// モデルの頂点最小値
 	D3DXVECTOR3 m_MaxVtx;		// モデルの頂点最大値
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
+	D3DXMATRIX m_mtxRot;		// 回転行列
 	LPD3DXMESH m_pMesh;			// メッシュ情報へのポインタ
 	LPD3DXBUFFER m_pBuffMat;	// マテリアル情報へのポインタ
 	std::unordered_map<unsigned int,D3DXCOLOR> m_materialDiffuse;	// マテリアルのDiffuse

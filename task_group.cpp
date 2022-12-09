@@ -347,7 +347,7 @@ CTask * CTaskGroup::SearchRoleCurrent(int inRole, int inPriority)
 //=============================================================================
 CTask * CTaskGroup::SearchSameRoleNext(CTask* inTask)
 {
-	CTask* now = inTask;
+	CTask* now = inTask->GetNext();
 	CTask::ERole role = inTask->GetRole();
 
 	while (now != nullptr)

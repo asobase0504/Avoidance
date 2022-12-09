@@ -24,16 +24,9 @@ public:
 	{
 		ENEMY = 0,
 		PLAYER,
-		MODEL,
-		BULLET,
-		GON,
-		MAGIC,
-		CRYSTAL,
-		BG,
-		SORCERY,
-		BELL,
+		GOAL,
 		MODE,
-		RANKUPBULLET,
+		MODEL,
 		PAUSE,
 		MAX,
 		NONE

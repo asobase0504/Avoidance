@@ -71,11 +71,17 @@
     <Filter Include="00_Cord\01_System\03_OutSide\02_File">
       <UniqueIdentifier>{95afe884-2b87-469e-9325-19fb95fb5af9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game">
+      <UniqueIdentifier>{276fc89d-9b3a-45f4-b02e-a0c1a5a23ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\00_Pause">
+      <UniqueIdentifier>{3f09c638-2e67-484e-832a-9f76200c8703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\02_Object\03_ObjectX\00_Enemy">
+      <UniqueIdentifier>{d56a522c-3de1-4ba3-acd8-505c8e2112f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="game.cpp">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClCompile>
     <ClCompile Include="result.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
@@ -104,9 +110,6 @@
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="tutorial.cpp">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="pause.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
@@ -229,11 +232,20 @@
     <ClCompile Include="goal.cpp">
       <Filter>00_Cord\02_Object\03_ObjectX</Filter>
     </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="pause.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\00_Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_oneway.cpp">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="game.h">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClInclude>
     <ClInclude Include="result.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
@@ -265,9 +277,6 @@
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="tutorial.h">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="pause.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="text.h">
@@ -392,6 +401,18 @@
     </ClInclude>
     <ClInclude Include="goal.h">
       <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="pause.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\00_Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_oneway.h">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

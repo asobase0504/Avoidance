@@ -103,7 +103,7 @@ CFade* CFade::Create()
 		pObject->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 		pObject->SetSize(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f));
 		pObject->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-		pObject->SetType(CObject::MODE);
+		pObject->SetType(CObject::EType::MODE);
 		pObject->m_fade = FADENON;
 	}
 	return pObject;

@@ -58,6 +58,21 @@ void CCamera::Uninit(void)
 //=============================================================================
 void CCamera::Update(void)
 {
+	// 視点角度の回転
+	if (CInput::GetKey()->Press(DIK_Q))
+	{
+		m_rot.y += -(0.05f);	// 回転量
+	}
+	if (CInput::GetKey()->Press(DIK_E))
+	{
+		m_rot.y += 0.05f;	// 回転量
+	}
+
+	//m_posR.x += (player->pos.x - pCamera->posR.x) * 0.05f;
+	//m_posR.z += (player->pos.z - pCamera->posR.z) * 0.05f;
+
+	m_posV.x = m_posR.x - sinf(m_rot.y) * m_fDistance;
+	m_posV.z = m_posR.z - cosf(m_rot.y) * m_fDistance;
 }
 
 //=============================================================================
@@ -112,27 +127,11 @@ void CCamera::Set(int Type)
 }
 
 //=============================================================================
-// GetPos
-//=============================================================================
-const D3DXVECTOR3& CCamera::GetPos()
-{
-	return m_posV;
-}
-
-////=============================================================================
-//// GetRot
-////=============================================================================
-//D3DXVECTOR3* CCamera::GetRot()
-//{
-//	return &m_rot;
-//}
-
-//=============================================================================
 // カメラの向きに合わせたベクトルに変換する
 //=============================================================================
 const D3DXVECTOR3 & CCamera::VectorCombinedRot(const D3DXVECTOR3& inVector)
 {
-	if (D3DXVec3Length(&inVector) < 0.0f)
+	if (D3DXVec3Length(&inVector) <= 0.0f)
 	{
 		return inVector;
 	}
@@ -141,28 +140,15 @@ const D3DXVECTOR3 & CCamera::VectorCombinedRot(const D3DXVECTOR3& inVector)
 
 	D3DXVec3Normalize(&vector, &vector);
 
-	float c = cosf(-m_rot.y);
-	float s = sinf(-m_rot.y);
+	D3DXMATRIX mtxRot;
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y,m_rot.x,m_rot.z);
+	D3DXVec3TransformCoord(&vector, &vector, &mtxRot);
 
 	// move の長さは 1 になる。
-	vector.x = vector.x * c - vector.z * s;
-	vector.z = vector.x * s + vector.z * c;
+	//vector.x = vector.x * c - vector.z * s;
+	//vector.z = vector.x * s + vector.z * c;
+
+	D3DXVec3Normalize(&vector, &vector);
 
 	return vector;
-}
-
-//=============================================================================
-// MtxProje
-//=============================================================================
-D3DXMATRIX* CCamera::GetMtxProje()
-{
-	return &m_MtxProject;
-}
-
-//=============================================================================
-// MtxView
-//=============================================================================
-D3DXMATRIX* CCamera::GetMtxView()
-{
-	return &m_MtxView;
 }

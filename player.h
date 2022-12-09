@@ -32,15 +32,20 @@ public: // パブリック関数
 
 	static CPlayer* Create();	// 生成
 
+	bool GetIsGoal() { return m_isGoal; }
+
 private: // プライベート関数
 	void Move();	// 移動
 	void Jump();	// 跳躍
 	void boost();	// 突進
 	void Landing();	// 落下
+	void OnHitGoal();	// Goalとの当たり判定
+	void OnHitEnemy();	// Enemyとの当たり判定
 
 private: // メンバー変数
 
 	D3DXQUATERNION m_quaternion;	// クオータニオン
 	int m_jumpCount;				// ジャンプ回数
+	bool m_isGoal;
 };
 #endif

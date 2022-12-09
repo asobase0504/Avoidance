@@ -163,6 +163,8 @@
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="DirectInput.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="enemy_oneway.cpp" />
     <ClCompile Include="goal.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
     <ClCompile Include="object_mesh.cpp" />
@@ -220,6 +222,8 @@
     <ClInclude Include="collision.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="DirectInput.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="enemy_oneway.h" />
     <ClInclude Include="goal.h" />
     <ClInclude Include="inputjoypad.h" />
     <ClInclude Include="inputkeydata.h" />

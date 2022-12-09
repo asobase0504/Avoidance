@@ -30,10 +30,9 @@ public:
 	void Set(int Type);
 
 	// Getter
-	D3DXMATRIX* GetMtxProje();
-	D3DXMATRIX* GetMtxView();
-	const D3DXVECTOR3& GetPos();
-	//D3DXVECTOR3* GetRot();
+	const D3DXMATRIX& GetMtxProje() { return m_MtxProject; }
+	const D3DXMATRIX& GetMtxView() { return m_MtxView; }
+	const D3DXVECTOR3& GetPos() { return m_posV; }
 
 	const D3DXVECTOR3& VectorCombinedRot(const D3DXVECTOR3& inVector);
 

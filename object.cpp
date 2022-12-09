@@ -64,7 +64,7 @@ void CObject::Update()
 //=============================================================================
 // Žw’è‚³‚ê‚½Ží•Ê‚ð’T‚·
 //=============================================================================
-CObject * CObject::SearchType(EType inType, int inPriority)
+CObject* CObject::SearchType(EType inType, int inPriority)
 {
 	CTaskGroup* taskGroup = CApplication::GetInstance()->GetTaskGroup();
 

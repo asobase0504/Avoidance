@@ -138,7 +138,7 @@ float easeInQuad(float X);
 // 引数2  : D3DXVECTOR3*  v2
 // 返値  : float/ 外積
 //=============================================================================
-float Vec2Cross(D3DXVECTOR3* v1, D3DXVECTOR3* v2);	// 2Dの外積
+float Vec2Cross(D3DXVECTOR3* v1, D3DXVECTOR3* v2);
 
 //=============================================================================
 // 2Dの内積
@@ -146,6 +146,7 @@ float Vec2Cross(D3DXVECTOR3* v1, D3DXVECTOR3* v2);	// 2Dの外積
 // 引数2  : D3DXVECTOR3*  v2
 // 返値  : float / 内積
 //=============================================================================
-float Vec2Dot(D3DXVECTOR3* v1, D3DXVECTOR3* v2);	// 2Dの内積
+float Vec2Dot(D3DXVECTOR3* v1, D3DXVECTOR3* v2);
 
+D3DXVECTOR3 ConvertQuaternionfromRadian(const D3DXQUATERNION& inQuaternion);
 #endif // !_UTILITY_H_
