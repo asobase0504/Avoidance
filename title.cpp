@@ -14,7 +14,7 @@
 #include "fade.h"
 #include "color.h"
 // 3D系統
-#include "camera.h"
+#include "camera_title.h"
 #include "light.h"
 // Object系統
 #include "object2d.h"
@@ -51,7 +51,7 @@ HRESULT CTitle::Init(void)
 	m_pLight->Init();
 
 	// カメラ
-	m_pCamera = new CCamera;
+	m_pCamera = new CCameraTitle;
 	m_pCamera->Init();
 
 	// パーティクルマネージャー

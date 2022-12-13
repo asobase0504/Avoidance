@@ -10,7 +10,6 @@
 #include "application.h"
 
 #include "camera.h"
-#include "input.h"
 
 //=============================================================================
 // コンストラクタ
@@ -34,14 +33,11 @@ CCamera::~CCamera()
 HRESULT CCamera::Init(void)
 {
 	// 視点　注視点　上方向　設定
-	m_posV = D3DXVECTOR3(0.0f, 150.0f, -200.0f);
+	m_posV = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_posR = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	D3DXVECTOR3 distPos = m_posR - m_posV;
-	m_fDistance = sqrtf(distPos.x * distPos.x + distPos.z * distPos.z);
-	m_fDistance = sqrtf(distPos.y * distPos.y + (m_fDistance * m_fDistance));
 
 	return S_OK;
 }
@@ -58,21 +54,6 @@ void CCamera::Uninit(void)
 //=============================================================================
 void CCamera::Update(void)
 {
-	// 視点角度の回転
-	if (CInput::GetKey()->Press(DIK_Q))
-	{
-		m_rot.y += -(0.05f);	// 回転量
-	}
-	if (CInput::GetKey()->Press(DIK_E))
-	{
-		m_rot.y += 0.05f;	// 回転量
-	}
-
-	//m_posR.x += (player->pos.x - pCamera->posR.x) * 0.05f;
-	//m_posR.z += (player->pos.z - pCamera->posR.z) * 0.05f;
-
-	m_posV.x = m_posR.x - sinf(m_rot.y) * m_fDistance;
-	m_posV.z = m_posR.z - cosf(m_rot.y) * m_fDistance;
 }
 
 //=============================================================================

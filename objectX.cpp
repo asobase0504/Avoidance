@@ -10,6 +10,7 @@
 //=============================================================================
 #include "objectX.h"
 #include "objectX_group.h"
+#include "object_polygon3d.h"
 #include "application.h"
 #include "renderer.h"
 #include "main.h"
@@ -76,7 +77,7 @@ void CObjectX::Draw()
 	GiftMtx(&m_mtxWorld, m_pos, m_rot);	// マトリックスの設定
 
 	// 計算用マトリックス
-	D3DXMATRIX mtxRot, mtxTrans;
+	D3DXMATRIX mtxTrans;
 
 	// ワールドマトリックスの初期化
 	// 行列初期化関数(第1引数の行列を単位行列に初期化)
@@ -273,6 +274,9 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 	pDevice->SetMaterial(&matDef);
 }
 
+//=============================================================================
+// 向きの設定
+//=============================================================================
 void CObjectX::SetRot(const D3DXVECTOR3 & inRot)
 {
 	if (m_rot != inRot)
@@ -306,7 +310,6 @@ void CObjectX::CalculationVtx()
 
 	D3DXVec3TransformCoord(&m_MaxVtx, &m_MaxVtx, &mtxWorld);
 	D3DXVec3TransformCoord(&m_MinVtx, &m_MinVtx, &mtxWorld);
-
 
 	if (m_MaxVtx.x < m_MinVtx.x)
 	{
@@ -627,9 +630,9 @@ bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR
 }
 
 //=============================================================================
-// 線分の当たり判定
+// OBBとOBBの当たり判定
 //=============================================================================
-bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
+bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 {
 	if (!inObjectX->IsCollision())
 	{
@@ -870,10 +873,67 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 
 }
 
+//=============================================================================
+// OBBと3DPolygonの当たり判定
+//=============================================================================
+bool CObjectX::OBBAndPolygon(const CObjectPolygon3D * inObjectPolgon, float* outLength)
+{
+	// 平面の法線に対するOBBの射影線の長さを算出
+	float r = 0.0f;		// 近接距離
+	D3DXVECTOR3 polygonNormal = inObjectPolgon->GetNormal();	// 平面の法線ベクトル
+
+	// X軸
+	D3DXVECTOR3 thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &m_mtxRot);
+	D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
+	r += fabs(D3DXVec3Dot(&(thisNormalizeVecX * (this->GetSize().x * 0.5f)), &polygonNormal));
+
+	// Y軸
+	D3DXVECTOR3 thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &m_mtxRot);
+	D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
+	r += fabs(D3DXVec3Dot(&(thisNormalizeVecY * (this->GetSize().y * 0.5f)), &polygonNormal));
+
+	// Z軸
+	D3DXVECTOR3 thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &m_mtxRot);
+	D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
+	r += fabs(D3DXVec3Dot(&(thisNormalizeVecZ * (this->GetSize().z * 0.5f)), &polygonNormal));
+
+	// 平面とOBBの距離を算出
+	D3DXVECTOR3 ObbPos = this->GetPos();
+	D3DXVECTOR3 PlanePos = inObjectPolgon->GetPos();
+
+	float dist = D3DXVec3Dot(&(ObbPos - PlanePos), &polygonNormal);
+
+	// 戻し距離を算出
+	if (outLength != nullptr)
+	{
+		if (dist > 0)
+		{
+			*outLength = r - fabs(dist);
+		}
+		else
+		{
+			*outLength = r + fabs(dist);
+		}
+	}
+
+	// 衝突判定
+	if (fabs(dist) - r < 0.0f)
+	{
+		return true; // 衝突している
+	}
+
+	return false; // 衝突していない
+}
+
+//=============================================================================
+// 3つの内積の絶対値の和で投影線分長を計算
+// 事項：分離軸Sepは標準化されていること
+//=============================================================================
 float CObjectX::LenSegOnSeparateAxis(D3DXVECTOR3 * Sep, D3DXVECTOR3 * e1, D3DXVECTOR3 * e2, D3DXVECTOR3 * e3)
 {
-	// 3つの内積の絶対値の和で投影線分長を計算
-	// 分離軸Sepは標準化されていること
 	float r1 = fabs(D3DXVec3Dot(Sep, e1));
 	float r2 = fabs(D3DXVec3Dot(Sep, e2));
 	float r3 = e3 ? (fabs(D3DXVec3Dot(Sep, e3))) : 0.0f;

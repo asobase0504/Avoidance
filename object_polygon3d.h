@@ -58,9 +58,12 @@ public:
 	void SetColor(const D3DXCOLOR& inColor) override;
 
 	LPDIRECT3DVERTEXBUFFER9 GetVtx() { return m_pVtxBuff; }	// 頂点バッファの取得
+	const D3DXVECTOR3& GetNormal() const { return m_Normal; }
 
 protected:
 	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff;	// 頂点バッファ
 	D3DXMATRIX m_mtxWorld;				// ワールドマトリックス
+private:
+	D3DXVECTOR3 m_Normal;
 };
 #endif

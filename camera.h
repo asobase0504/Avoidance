@@ -2,6 +2,7 @@
 //
 // カメラ
 // Author : Hamada Ryuuga
+// Author : Yuda Kaito
 //
 //=============================================================================
 #ifndef _CAMERA_H_
@@ -14,7 +15,7 @@
 #include "task.h"
 
 //=============================================================================
-// フェードクラス
+// カメラクラス
 //=============================================================================
 class CCamera : public CTask
 {
@@ -36,7 +37,7 @@ public:
 
 	const D3DXVECTOR3& VectorCombinedRot(const D3DXVECTOR3& inVector);
 
-private:
+protected:
 	D3DXVECTOR3 m_posV;			// 位置
 	D3DXVECTOR3 m_posVDest;		// 目的地からの差
 	D3DXVECTOR3 m_posR;			// 注視点
@@ -46,7 +47,6 @@ private:
 	D3DVIEWPORT9 m_viewport;	//
 	D3DXMATRIX m_MtxProject;	// プロジェクションマトリックス
 	D3DXMATRIX m_MtxView;		// ビューマトリックス
-	float m_fDistance;			// 距離
 	int m_Type;
 };
 

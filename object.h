@@ -28,6 +28,7 @@ public:
 		MODE,
 		MODEL,
 		PAUSE,
+		POLYGON,
 		MAX,
 		NONE
 	};

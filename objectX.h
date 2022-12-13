@@ -8,15 +8,20 @@
 #ifndef _OBJECTX_H_
 #define _OBJECTX_H_
 
-//=============================================================================
-// インクルードファイル
-//=============================================================================
+//-----------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------
 #include "main.h"
 #include "object.h"
 
-//=============================================================================
+//-----------------------------------------------------------------------------
+// 前方宣言
+//-----------------------------------------------------------------------------
+class CObjectPolygon3D;
+
+//-----------------------------------------------------------------------------
 // クラスの定義
-//=============================================================================
+//-----------------------------------------------------------------------------
 class CObjectX : public CObject
 {
 public:
@@ -54,15 +59,15 @@ public:
 	const D3DXMATRIX& GetMatRot() { return m_mtxRot; }
 
 	/* 頂点位置 */
-	void CalculationVtx();				// 頂点最大小値の計算
+	void CalculationVtx();	// 頂点最大小値の計算
 	void SetMaxVtx(const D3DXVECTOR3& Maxvtx) { m_MaxVtx = Maxvtx; }	// 頂点最大値設定
-	const D3DXVECTOR3& GetMaxVtx() { return m_MaxVtx; }				// 頂点最大値取得
+	const D3DXVECTOR3& GetMaxVtx() { return m_MaxVtx; }					// 頂点最大値取得
 	void SetMinVtx(const D3DXVECTOR3& Minvtx) { m_MaxVtx = Minvtx; }	// 頂点最大値設定
-	const D3DXVECTOR3& GetMinVtx() { return m_MinVtx; }				// 頂点最小値取得
+	const D3DXVECTOR3& GetMinVtx() { return m_MinVtx; }					// 頂点最小値取得
 
 	/* 親子関係 */
-	void SetParent(CObjectX* inParent) { m_pParent = inParent; }	// 親モデルの情報
-	CObjectX* GetParent() const { return m_pParent; }			// 親モデルの情報
+	void SetParent(CObjectX* inParent) { m_pParent = inParent; }	// 親モデルの設定
+	CObjectX* GetParent() const { return m_pParent; }				// 親モデルの取得
 
 	/* マテリアル関係 */
 	void SetMaterialDiffuse(unsigned int index, const D3DXCOLOR& inColor);
@@ -73,8 +78,9 @@ public:
 	bool Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize);	// 当たり判定 (左右, 奥, 手前)
 	bool Collision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx);	// 当たり判定 (左右, 奥, 手前)
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pSize, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
-	bool OBBAndOBB(CObjectX* inObjectX);
-	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = 0);
+	bool OBBAndOBB(CObjectX* inObjectX, float* outLength = nullptr);
+	bool OBBAndPolygon(const CObjectPolygon3D* inObjectPolgon, float* outLength = nullptr);
+	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = nullptr);
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
 
 private:

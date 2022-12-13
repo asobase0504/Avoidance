@@ -244,6 +244,12 @@
     <ClCompile Include="enemy_oneway.cpp">
       <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="camera_title.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClCompile>
+    <ClCompile Include="camera_game.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -413,6 +419,12 @@
     </ClInclude>
     <ClInclude Include="enemy_oneway.h">
       <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_title.h">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_game.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

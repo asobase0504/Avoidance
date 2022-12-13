@@ -53,6 +53,9 @@ bool SegmentAndRectangleRight(const D3DXVECTOR3& pos1, const D3DXVECTOR3& size1,
 bool PointAndRectangle(const D3DXVECTOR3& pointPos, const D3DXVECTOR3& rectanglePos, const D3DXVECTOR3& rectangleSize);	// “_‚Æ‹éŒ`
 bool Circle2DAndCircle2D(const D3DXVECTOR3& Pos1, float fRadius1, const D3DXVECTOR3& Pos2, float fRadius2);	// ‰~“¯Žm‚Ì“–‚½‚è”»’è
 
+#include "objectX.h"
+
+bool ObbAndObb(const CObjectX* object1, const CObjectX* object2);
 };
 
 #endif

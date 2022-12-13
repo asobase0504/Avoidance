@@ -12,11 +12,12 @@
 #include "particle_manager.h"
 #include "utility.h"
 #include "collision.h"
+#include "object_polygon3d.h"
 
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CPlayer::SPEED = 4.5f;			// 移動量
+const float CPlayer::SPEED = 6.5f;			// 移動量
 const float CPlayer::ATTENUATION = 0.50f;	// 移動減衰係数
 const float CPlayer::JUMPING_POWER = 1.5f;	// 跳躍力
 const float CPlayer::GRAVITY = 0.95f;		// 重力
@@ -67,8 +68,8 @@ void CPlayer::NormalUpdate()
 	boost();	// 突進
 	Jump();		// ジャンプ
 	Landing();	// 落下
-	OnHitGoal();	// Goalとの当たり判定
-	OnHitEnemy();
+	//OnHitGoal();	// Goalとの当たり判定
+	//OnHitEnemy();
 
 	CInput* input = CInput::GetKey();
 
@@ -232,15 +233,22 @@ void CPlayer::boost()
 //-----------------------------------------------------------------------------
 void CPlayer::Landing()
 {
-	// 重力
-	m_move.y -= GRAVITY;
 
-	// 疑似的な床表現
-	if (m_pos.y + m_move.y <= 15.0f)
+	if (OnHitPolygon())
 	{
-		m_jumpCount = 0;
-		m_move.y = 0.0f;
+		//m_move.y = 0.0f;
 	}
+	else
+	{
+		m_move.y -= GRAVITY;		// 重力
+	}
+
+	//// 疑似的な床表現
+	//if (m_pos.y + m_move.y <= 15.0f)
+	//{
+	//	m_jumpCount = 0;
+	//	m_move.y = 0.0f;
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -281,4 +289,31 @@ void CPlayer::OnHitEnemy()
 
 		object = next;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Polygonとの当たり判定
+//-----------------------------------------------------------------------------
+bool CPlayer::OnHitPolygon()
+{
+	CObject* object = SearchType(CObject::EType::POLYGON, CTaskGroup::EPriority::LEVEL_3D_1);	// 最初に見つけた指定したタイプのobjectを持ってくる
+
+	float length;
+	bool isHit = false;
+
+	while (object != nullptr)
+	{
+		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
+
+		CObjectPolygon3D* objectPolygon = (CObjectPolygon3D*)object;	// 変換
+
+		if (OBBAndPolygon(objectPolygon, &length))
+		{
+			AddPos(objectPolygon->GetNormal() * length);
+			isHit = true;	// Goal
+		}
+
+		object = next;
+	}
+	return isHit;
 }

@@ -15,7 +15,7 @@
 #include "input.h"
 #include "color.h"
 /* 3DŒn“ */
-#include "camera.h"
+#include "camera_game.h"
 #include "light.h"
 /* ObjectŒn“ */
 #include "object_polygon3d.h"
@@ -53,7 +53,7 @@ HRESULT CGame::Init(void)
 	light->Init();
 
 	// ƒJƒƒ‰
-	CCamera* camera = new CCamera;
+	CCamera* camera = new CCameraGame;
 	camera->Init();
 
 	// ‰¹
@@ -85,23 +85,23 @@ HRESULT CGame::Init(void)
 		floor->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
 	}
 
-	{// •Ç
-		CObjectPolygon3D* wall = CObjectPolygon3D::Create();
-		wall->SetPos(D3DXVECTOR3(75.0f, 100.0f, 75.0f));
-		wall->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.25f, 0.0f));
-		wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-		wall->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-	}
+	//{// •Ç
+	//	CObjectPolygon3D* wall = CObjectPolygon3D::Create();
+	//	wall->SetPos(D3DXVECTOR3(75.0f, 100.0f, 75.0f));
+	//	wall->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.25f, 0.0f));
+	//	wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//	wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+	//	wall->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+	//}
 
-	{// •Ç
-		CObjectPolygon3D* wall = CObjectPolygon3D::Create();
-		wall->SetPos(D3DXVECTOR3(-75.0f, 100.0f, 75.0f));
-		wall->SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.25f, 0.0f));
-		wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-		wall->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-	}
+	//{// •Ç
+	//	CObjectPolygon3D* wall = CObjectPolygon3D::Create();
+	//	wall->SetPos(D3DXVECTOR3(-75.0f, 100.0f, 75.0f));
+	//	wall->SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.25f, 0.0f));
+	//	wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//	wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+	//	wall->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+	//}
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -111,7 +111,7 @@ HRESULT CGame::Init(void)
 				CEnemyOneWay* enemy = new CEnemyOneWay;
 				enemy->Init();
 				enemy->SetPos(D3DXVECTOR3(-30.0f + j * 20.0f, 210.0f + i * 40.0f + j * 20.0f, -70.0f + 40.0f * i));
-				enemy->SetMove(D3DXVECTOR3(0.0f, -0.75f, 0.0f));
+				enemy->SetMove(D3DXVECTOR3(0.0f, -1.25f, 0.0f));
 			}
 		}
 	}
@@ -138,7 +138,7 @@ void CGame::Update(void)
 	{
 		if (player->GetIsGoal())
 		{
-			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_RESULT);
+			//CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_RESULT);
 		}
 	}
 }

@@ -49,6 +49,8 @@ CObjectPolygon3D::~CObjectPolygon3D()
 //=============================================================================
 HRESULT CObjectPolygon3D::Init()
 {
+	SetType(CObject::EType::POLYGON);
+
 	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();	// デバイスの取得
 
 	//頂点バッファの生成
@@ -65,10 +67,17 @@ HRESULT CObjectPolygon3D::Init()
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//rhwの設定
-	pVtx[0].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
-	pVtx[1].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
-	pVtx[2].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
-	pVtx[3].nor = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+	//m_Normal = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	//pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	//pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	//pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	//pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+
+	m_Normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 	//テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -187,6 +196,12 @@ void CObjectPolygon3D::SetPos(const D3DXVECTOR3& inPos)
 void CObjectPolygon3D::SetRot(const D3DXVECTOR3 & inRot)
 {
 	CObject::SetRot(inRot);
+
+	//// 法線の変更
+	//D3DXMATRIX mtx;
+	//D3DXMatrixRotationYawPitchRoll(&mtx, inRot.y, inRot.x, inRot.z);
+	//D3DXVec3TransformCoord(&m_Normal, &m_Normal, &mtx);
+	//D3DXVec3Normalize(&m_Normal, &m_Normal);
 
 	// マトリックスの計算
 	GiftMtx(&m_mtxWorld, m_pos, m_rot);
