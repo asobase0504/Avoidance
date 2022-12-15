@@ -110,6 +110,7 @@ protected:
 
 protected:
 	D3DXVECTOR3 m_pos;		// ˆÊ’u
+	D3DXVECTOR3 m_posOld;	// ‰ß‹Ž‚ÌˆÊ’u
 	D3DXVECTOR3 m_move;		// ˆÚ“®—Ê
 	D3DXVECTOR3 m_rot;		// Œü‚«
 	D3DXVECTOR3 m_moveRot;	// ‰ñ“]—Ê

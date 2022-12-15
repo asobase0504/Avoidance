@@ -237,11 +237,11 @@ void CPlayer::Landing()
 
 	if (OnHitPolygon())
 	{
-		//m_move.y = 0.0f;
+		SetPos(m_move * -1.0f);
 	}
 	else
 	{
-		//m_move.y -= GRAVITY;		// 重力
+		m_move.y -= GRAVITY;		// 重力
 	}
 
 	//// 疑似的な床表現
@@ -268,11 +268,8 @@ void CPlayer::OnHitGoal()
 		if (OBBAndOBB((CObjectX*)object, &dist))
 		{
 			m_isGoal = true;	// Goal
-			D3DXVECTOR3 move = GetMove();
-			move.y = 0.0f;
-			move *= -1.0f;
-			D3DXVec3Normalize(&move, &move);
-			SetMove(move * dist);
+			SetPos(m_posOld);
+			SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
 		}
 
 		object = next;
@@ -305,7 +302,7 @@ void CPlayer::OnHitEnemy()
 bool CPlayer::OnHitPolygon()
 {
 	// 最初に見つけた指定したタイプのobjectを持ってくる
-	CObject* object = SearchType(CObject::EType::POLYGON, CTaskGroup::EPriority::LEVEL_3D_1);
+	CObject* object = SearchType(CObject::EType::MODEL, CTaskGroup::EPriority::LEVEL_3D_1);
 
 	float length;
 	bool isHit = false;
@@ -318,7 +315,7 @@ bool CPlayer::OnHitPolygon()
 
 		if (OBBAndPolygon(objectPolygon, &length))
 		{
-			AddPos(objectPolygon->GetNormal() * length);
+			SetPos(m_posOld);
 			isHit = true;	// Goal
 		}
 

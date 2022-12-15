@@ -40,6 +40,8 @@ CObject::~CObject()
 //=============================================================================
 void CObject::Update()
 {
+	m_posOld = m_pos;
+
 	switch (m_updateStatus)
 	{
 	case EUpdateStatus::POP:
