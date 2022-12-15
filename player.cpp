@@ -48,6 +48,7 @@ HRESULT CPlayer::Init()
 	// 現在のモーション番号の保管
 	CObjectX::Init();
 	LoadModel("BOX");
+	SetScale(D3DXVECTOR3(1.0f,1.0f,1.0f));
 	return S_OK;
 }
 
@@ -68,8 +69,8 @@ void CPlayer::NormalUpdate()
 	boost();	// 突進
 	Jump();		// ジャンプ
 	Landing();	// 落下
-	//OnHitGoal();	// Goalとの当たり判定
-	//OnHitEnemy();
+	OnHitGoal();	// Goalとの当たり判定
+	OnHitEnemy();
 
 	CInput* input = CInput::GetKey();
 
@@ -240,7 +241,7 @@ void CPlayer::Landing()
 	}
 	else
 	{
-		m_move.y -= GRAVITY;		// 重力
+		//m_move.y -= GRAVITY;		// 重力
 	}
 
 	//// 疑似的な床表現
@@ -258,13 +259,20 @@ void CPlayer::OnHitGoal()
 {
 	CObject* object = SearchType(CObject::EType::GOAL, CTaskGroup::EPriority::LEVEL_3D_1);
 
+	float dist = 0.0f;
+
 	while (object != nullptr)
 	{
 		CObject* next = object->NextSameType();
 		
-		//if ()
+		if (OBBAndOBB((CObjectX*)object, &dist))
 		{
-			m_isGoal = OBBAndOBB((CObjectX*)object);	// Goal
+			m_isGoal = true;	// Goal
+			D3DXVECTOR3 move = GetMove();
+			move.y = 0.0f;
+			move *= -1.0f;
+			D3DXVec3Normalize(&move, &move);
+			SetMove(move * dist);
 		}
 
 		object = next;
@@ -296,7 +304,8 @@ void CPlayer::OnHitEnemy()
 //-----------------------------------------------------------------------------
 bool CPlayer::OnHitPolygon()
 {
-	CObject* object = SearchType(CObject::EType::POLYGON, CTaskGroup::EPriority::LEVEL_3D_1);	// 最初に見つけた指定したタイプのobjectを持ってくる
+	// 最初に見つけた指定したタイプのobjectを持ってくる
+	CObject* object = SearchType(CObject::EType::POLYGON, CTaskGroup::EPriority::LEVEL_3D_1);
 
 	float length;
 	bool isHit = false;

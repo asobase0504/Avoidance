@@ -77,12 +77,11 @@ HRESULT CGame::Init(void)
 	}
 
 	{// °
-		CObjectPolygon3D* floor = CObjectPolygon3D::Create();
-		floor->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		floor->SetRot(D3DXVECTOR3(D3DX_PI * 0.5f, D3DX_PI * 0.25f, 0.0f));
-		floor->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		floor->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-		floor->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+		CObjectX* floor = CObjectX::Create(D3DXVECTOR3(00.0f,-10.0f, 0.0f));
+		floor->LoadModel("BOX");
+		floor->SetScale(D3DXVECTOR3(10.0f,1.5f,10.0f));
+		floor->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+		floor->CalculationVtx();
 	}
 
 	//{// •Ç

@@ -1,7 +1,6 @@
 {
   "MODEL": [
     [ "BOX", "data\/MODEL\/box.x" ],
-    [ "CUBOID", "data\/MODEL\/cuboid.x" ],
-    [ "GATTAI", "data\/MODEL\/Fox\/gattai.x" ]
+    [ "CUBOID", "data\/MODEL\/cuboid.x" ]
   ]
 }

@@ -84,6 +84,7 @@ public:
 	/* ‘å‚«‚³Œn */
 	virtual void SetSize(const D3DXVECTOR3 &inSize) { m_size = inSize; }
 	void AddSize(const D3DXVECTOR3 &inSize) { SetSize(m_size + inSize); }
+	void MulSize(const D3DXVECTOR3 &inRatio);
 	void MulSize(const float &inRatio) { SetSize(m_size * inRatio); }
 	const D3DXVECTOR3 &GetSize() const { return m_size; }
 

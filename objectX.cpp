@@ -23,7 +23,8 @@
 //=============================================================================
 CObjectX::CObjectX(CTaskGroup::EPriority nPriority) :
 	CObject(nPriority),
-	m_pParent(nullptr)
+	m_pParent(nullptr),
+	m_scale(1.0f,1.0f,1.0f)
 {
 	//オブジェクトのタイプセット処理
 	CObject::SetType(CObject::MODEL);
@@ -40,7 +41,7 @@ CObjectX::~CObjectX()
 //=============================================================================
 // オブジェクトの初期化
 // Author : Hamada Ryuuga
-// 概要 : 値の初期化を行う
+// 概要 : 初期化を行う
 //=============================================================================
 HRESULT CObjectX::Init()
 {
@@ -50,7 +51,7 @@ HRESULT CObjectX::Init()
 //=============================================================================
 // オブジェクトの終了
 // Author : Hamada Ryuuga
-// 概要 : 更新を行う
+// 概要 : 終了を行う
 //=============================================================================
 void CObjectX::Uninit()
 {
@@ -83,13 +84,15 @@ void CObjectX::Draw()
 	// 行列初期化関数(第1引数の行列を単位行列に初期化)
 	D3DXMatrixIdentity(&m_mtxWorld);
 
+	// 大きさを反映
+	D3DXMatrixScaling(&mtxTrans, m_scale.x, m_scale.y, m_scale.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
 	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);
 
 	// 位置を反映
-	// 行列移動関数(第１引数にX,Y,Z方向の移動行列を作成)
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	if (m_pParent != nullptr)
@@ -274,6 +277,21 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 	pDevice->SetMaterial(&matDef);
 }
 
+void CObjectX::SetScale(const D3DXVECTOR3& inScale)
+{
+	m_scale = inScale;
+
+	m_MinVtx.x *= m_scale.x;
+	m_MinVtx.y *= m_scale.y;
+	m_MinVtx.z *= m_scale.z;
+
+	m_MaxVtx.x *= m_scale.x;
+	m_MaxVtx.y *= m_scale.y;
+	m_MaxVtx.z *= m_scale.z;
+
+	MulSize(m_scale);
+}
+
 //=============================================================================
 // 向きの設定
 //=============================================================================
@@ -331,6 +349,8 @@ void CObjectX::CalculationVtx()
 		m_MaxVtx.z = m_MinVtx.z;
 		m_MinVtx.z = change;
 	}
+
+	SetScale(m_scale);
 }
 
 //=============================================================================
@@ -650,16 +670,17 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	D3DXVECTOR3 thisNormalizeVecZ;
 
 	{
-		// 計算用マトリックス
-		D3DXMATRIX mtxWorld = m_mtxRot;
+		// 回転行列
+		D3DXMATRIX mtxRot = m_mtxRot;
 
 		D3DXVECTOR3 size = m_size * 0.5f;
+
 		thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &m_mtxRot);
-		D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &m_mtxRot);
-		D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &m_mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &mtxRot);
 		D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
 		D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
 		D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
@@ -676,17 +697,17 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	D3DXVECTOR3 targetNormalizeVecZ;
 
 	{
-		// 計算用マトリックス
-		D3DXMATRIX mtxWorld = inObjectX->GetMatRot();
+		// 回転行輝
+		D3DXMATRIX mtxRot = inObjectX->GetMatRot();
 
 		D3DXVECTOR3 size = inObjectX->GetSize() * 0.5f;
 
 		targetNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		targetNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		targetNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		D3DXVec3TransformCoord(&targetNormalizeVecX, &targetNormalizeVecX, &mtxWorld);
-		D3DXVec3TransformCoord(&targetNormalizeVecY, &targetNormalizeVecY, &mtxWorld);
-		D3DXVec3TransformCoord(&targetNormalizeVecZ, &targetNormalizeVecZ, &mtxWorld);
+		D3DXVec3TransformCoord(&targetNormalizeVecX, &targetNormalizeVecX, &mtxRot);
+		D3DXVec3TransformCoord(&targetNormalizeVecY, &targetNormalizeVecY, &mtxRot);
+		D3DXVec3TransformCoord(&targetNormalizeVecZ, &targetNormalizeVecZ, &mtxRot);
 		D3DXVec3Normalize(&targetNormalizeVecX, &targetNormalizeVecX);
 		D3DXVec3Normalize(&targetNormalizeVecY, &targetNormalizeVecY);
 		D3DXVec3Normalize(&targetNormalizeVecZ, &targetNormalizeVecZ);
@@ -695,9 +716,9 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		targetVecZ = targetNormalizeVecZ * size.z;
 	}
 
-	float thisRadius;
-	float targetRadius;
-	float length;
+	float thisRadius;		// 自身の投影線分の長さ
+	float targetRadius;		// 相手の投影線分の長さ
+	float length;			// 分離軸
 
 	//A.e1
 	thisRadius = D3DXVec3Length(&thisVecX);
@@ -775,6 +796,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		length = fabs(D3DXVec3Dot(&interval, &Cross));
 		if (length > thisRadius + targetRadius)
 		{
+
 			return false;
 		}
 	}
@@ -869,6 +891,28 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
+
+	auto BackLength = [interval, thisRadius, targetRadius, this, outLength]()
+	{
+		if (outLength == nullptr)
+		{
+			return;
+		}
+
+		D3DXVECTOR3 nomal;
+		float difference = D3DXVec3Dot(&interval, D3DXVec3Normalize(&nomal, &(m_move * -1.0f))) - targetRadius;
+
+		if (difference > 0)
+		{
+			*outLength = thisRadius - fabs(difference);
+		}
+		else
+		{
+			*outLength = thisRadius + fabs(difference);
+		}
+	};
+
+	BackLength();
 	return true;
 
 }

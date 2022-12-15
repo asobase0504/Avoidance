@@ -104,6 +104,15 @@ CObject * CObject::NextSameType()
 	return nullptr;
 }
 
+void CObject::MulSize(const D3DXVECTOR3 & inRatio)
+{
+	D3DXVECTOR3 size;
+	size.x = m_size.x * inRatio.x;
+	size.y = m_size.y * inRatio.y;
+	size.z = m_size.z * inRatio.z;
+	SetSize(size);
+}
+
 //=============================================================================
 // èoåªíÜÇÃçXêV
 //=============================================================================

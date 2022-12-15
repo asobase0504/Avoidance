@@ -52,7 +52,11 @@ public:
 	void SetMtxWorld(D3DXMATRIX mtxWorld) { m_mtxWorld = mtxWorld; }	// 設定
 	const D3DXMATRIX& GetMtxWorld() { return m_mtxWorld; }				// 取得
 
-	/* 回転行列 */
+	/* 大きさ倍率 */
+	void SetScale(const D3DXVECTOR3& inScale);
+	const D3DXVECTOR3& GetScale() const { return m_scale; }
+
+	/* 回転系統 */
 	void SetRot(const D3DXVECTOR3& inRot) override;
 	void SetMtxRot(const D3DXVECTOR3& inRot);
 	void SetMtxQuaternion(const D3DXQUATERNION& inQuaternion) { D3DXMatrixRotationQuaternion(&m_mtxRot, &inQuaternion); }
@@ -87,10 +91,12 @@ private:
 	//-------------------------------------------------------------------------
 	// メンバー変数
 	//-------------------------------------------------------------------------
+	D3DXVECTOR3 m_scale;		// 大きさ倍率
 	D3DXVECTOR3 m_MinVtx;		// モデルの頂点最小値
 	D3DXVECTOR3 m_MaxVtx;		// モデルの頂点最大値
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
 	D3DXMATRIX m_mtxRot;		// 回転行列
+
 	LPD3DXMESH m_pMesh;			// メッシュ情報へのポインタ
 	LPD3DXBUFFER m_pBuffMat;	// マテリアル情報へのポインタ
 	std::unordered_map<unsigned int,D3DXCOLOR> m_materialDiffuse;	// マテリアルのDiffuse
