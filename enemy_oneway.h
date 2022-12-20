@@ -17,6 +17,10 @@
 //-----------------------------------------------------------------------------
 class CEnemyOneWay : public CEnemy
 {
+private: // 定数
+	static const D3DXVECTOR3 SCALE;
+	static const D3DXVECTOR3 MOVE_POWER;
+
 public: // パブリック関数
 	CEnemyOneWay();
 	~CEnemyOneWay();

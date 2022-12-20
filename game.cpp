@@ -17,6 +17,9 @@
 /* 3DŒn“ */
 #include "camera_game.h"
 #include "light.h"
+
+#include "stage.h"
+#include "load_stage.h"
 /* ObjectŒn“ */
 #include "object_polygon3d.h"
 #include "player.h"
@@ -62,7 +65,7 @@ HRESULT CGame::Init(void)
 	{// ƒvƒŒƒCƒ„[
 		CPlayer* player = CPlayer::Create();
 		player->LoadModel("BOX");
-		player->SetPos(D3DXVECTOR3(0.0f, 15.0f, 0.0f));
+		player->SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
 		player->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
 		player->CalculationVtx();
 	}
@@ -76,44 +79,8 @@ HRESULT CGame::Init(void)
 		goal->CalculationVtx();
 	}
 
-	{// °
-		CObjectX* floor = CObjectX::Create(D3DXVECTOR3(00.0f,-10.0f, 0.0f));
-		floor->LoadModel("BOX");
-		floor->SetScale(D3DXVECTOR3(10.0f,1.5f,10.0f));
-		floor->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-		floor->CalculationVtx();
-	}
+	m_stage = LoadAll(L"data/FILE/stage.json");
 
-	//{// •Ç
-	//	CObjectPolygon3D* wall = CObjectPolygon3D::Create();
-	//	wall->SetPos(D3DXVECTOR3(75.0f, 100.0f, 75.0f));
-	//	wall->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.25f, 0.0f));
-	//	wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	//	wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-	//	wall->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-	//}
-
-	//{// •Ç
-	//	CObjectPolygon3D* wall = CObjectPolygon3D::Create();
-	//	wall->SetPos(D3DXVECTOR3(-75.0f, 100.0f, 75.0f));
-	//	wall->SetRot(D3DXVECTOR3(0.0f, -D3DX_PI * 0.25f, 0.0f));
-	//	wall->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	//	wall->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-	//	wall->SetColor(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-	//}
-
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			{// “G
-				CEnemyOneWay* enemy = new CEnemyOneWay;
-				enemy->Init();
-				enemy->SetPos(D3DXVECTOR3(-30.0f + j * 20.0f, 210.0f + i * 40.0f + j * 20.0f, -70.0f + 40.0f * i));
-				enemy->SetMove(D3DXVECTOR3(0.0f, -1.25f, 0.0f));
-			}
-		}
-	}
 	return S_OK;
 }
 
@@ -137,7 +104,7 @@ void CGame::Update(void)
 	{
 		if (player->GetIsGoal())
 		{
-			//CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_RESULT);
+			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_RESULT);
 		}
 	}
 }

@@ -164,11 +164,13 @@
     <ClCompile Include="camera_title.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="debug_proc.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemy_oneway.cpp" />
     <ClCompile Include="goal.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
+    <ClCompile Include="load_stage.cpp" />
     <ClCompile Include="object_mesh.cpp" />
     <ClCompile Include="object_polygon3d.cpp" />
     <ClCompile Include="3dpolygontemplate.cpp" />
@@ -209,6 +211,7 @@
     <ClCompile Include="result.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="sound.cpp" />
+    <ClCompile Include="stage.cpp" />
     <ClCompile Include="task.cpp" />
     <ClCompile Include="task_group.cpp" />
     <ClCompile Include="text.cpp" />
@@ -225,12 +228,14 @@
     <ClInclude Include="camera_title.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="debug_proc.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemy_oneway.h" />
     <ClInclude Include="goal.h" />
     <ClInclude Include="inputjoypad.h" />
     <ClInclude Include="inputkeydata.h" />
+    <ClInclude Include="load_stage.h" />
     <ClInclude Include="object_mesh.h" />
     <ClInclude Include="object_polygon3d.h" />
     <ClInclude Include="3dpolygontemplate.h" />
@@ -269,6 +274,7 @@
     <ClInclude Include="result.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="sound.h" />
+    <ClInclude Include="stage.h" />
     <ClInclude Include="task.h" />
     <ClInclude Include="task_group.h" />
     <ClInclude Include="text.h" />

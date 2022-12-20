@@ -74,37 +74,10 @@ void CPlayer::NormalUpdate()
 
 	CInput* input = CInput::GetKey();
 
-	static D3DXCOLOR color = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
-
-	if (m_isGoal)
+	if (input->Press(DIK_0))
 	{
-		color = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-		SetMaterialDiffuse(0, color);
-	}
-	if (!m_isGoal)
-	{
-		color = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);
-		SetMaterialDiffuse(0, color);
-	}
-	if (input->Trigger(DIK_2))
-	{
-		color = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);
-		SetMaterialDiffuse(0, color);
-	}
-	if (input->Trigger(DIK_3))
-	{
-		color = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f);
-		SetMaterialDiffuse(0, color);
-	}
-	if (input->Press(DIK_4))
-	{
-		color.r += 0.01f;
-		SetMaterialDiffuse(0, color);
-	}
-	if (input->Press(DIK_5))
-	{
-		color.r -= 0.01f;
-		SetMaterialDiffuse(0, color);
+		SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
+		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 }
 
@@ -234,22 +207,15 @@ void CPlayer::boost()
 //-----------------------------------------------------------------------------
 void CPlayer::Landing()
 {
-
 	if (OnHitPolygon())
 	{
-		SetPos(m_move * -1.0f);
+		//m_pos.y = m_posOld.y;
+		m_jumpCount = 0;
 	}
 	else
 	{
 		m_move.y -= GRAVITY;		// 重力
 	}
-
-	//// 疑似的な床表現
-	//if (m_pos.y + m_move.y <= 15.0f)
-	//{
-	//	m_jumpCount = 0;
-	//	m_move.y = 0.0f;
-	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -268,8 +234,6 @@ void CPlayer::OnHitGoal()
 		if (OBBAndOBB((CObjectX*)object, &dist))
 		{
 			m_isGoal = true;	// Goal
-			SetPos(m_posOld);
-			SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
 		}
 
 		object = next;
@@ -289,7 +253,7 @@ void CPlayer::OnHitEnemy()
 
 		if (OBBAndOBB((CObjectX*)object))
 		{
-			m_isGoal = true;	// Goal
+			//m_isGoal = true;	// Goal
 		}
 
 		object = next;
@@ -305,21 +269,23 @@ bool CPlayer::OnHitPolygon()
 	CObject* object = SearchType(CObject::EType::MODEL, CTaskGroup::EPriority::LEVEL_3D_1);
 
 	float length;
-	bool isHit = false;
 
 	while (object != nullptr)
 	{
 		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
 
-		CObjectPolygon3D* objectPolygon = (CObjectPolygon3D*)object;	// 変換
+		CObjectX* objectX = (CObjectX*)object;	// 変換
 
-		if (OBBAndPolygon(objectPolygon, &length))
+		if (OBBAndOBB(objectX, &length))
 		{
-			SetPos(m_posOld);
-			isHit = true;	// Goal
+			D3DXVECTOR3 move;
+			D3DXVec3Normalize(&move, &m_move);
+			move *= length;
+			SetMove(move);
+			return true;	// Goal
 		}
 
 		object = next;
 	}
-	return isHit;
+	return false;
 }

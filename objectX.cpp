@@ -720,6 +720,26 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	float targetRadius;		// ‘ŠŽè‚Ì“Š‰eü•ª‚Ì’·‚³
 	float length;			// •ª—£Ž²
 
+	auto BackLength = [interval, thisRadius, targetRadius, this, outLength]()
+	{
+		if (outLength == nullptr)
+		{
+			return;
+		}
+
+		D3DXVECTOR3 nomal;
+		float difference = D3DXVec3Dot(&interval, D3DXVec3Normalize(&nomal, &(m_move * -1.0f))) - targetRadius;
+
+		if (difference > 0)
+		{
+			*outLength += thisRadius - fabs(difference);
+		}
+		else
+		{
+			*outLength += thisRadius + fabs(difference);
+		}
+	};
+
 	//A.e1
 	thisRadius = D3DXVec3Length(&thisVecX);
 	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecX, &targetVecX, &targetVecY, &targetVecZ);
@@ -728,6 +748,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	{
 		return false;
 	}
+
+	BackLength();
 
 	//A.e2
 	thisRadius = D3DXVec3Length(&thisVecY);
@@ -738,6 +760,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		return false;
 	}
 
+	BackLength();
+
 	//A.e3
 	thisRadius = D3DXVec3Length(&thisVecZ);
 	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecZ, &targetVecX, &targetVecY, &targetVecZ);
@@ -746,6 +770,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	{
 		return false;
 	}
+
+	BackLength();
 
 	//B.e1
 	thisRadius = D3DXVec3Length(&targetVecX);
@@ -756,6 +782,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		return false;
 	}
 
+	BackLength();
+
 	//B.e2
 	thisRadius = D3DXVec3Length(&targetVecY);
 	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecY, &thisVecX, &thisVecY, &thisVecZ);
@@ -765,6 +793,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		return false;
 	}
 
+	BackLength();
+
 	//B.e3
 	thisRadius = D3DXVec3Length(&targetVecZ);
 	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecZ, &thisVecX, &thisVecY, &thisVecZ);
@@ -773,6 +803,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	{
 		return false;
 	}
+
+	BackLength();
 
 	//C11
 	{
@@ -786,6 +818,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
+
+	BackLength();
 
 	//C12
 	{
@@ -801,6 +835,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
+	BackLength();
+
 	//C13
 	{
 		D3DXVECTOR3 Cross;
@@ -813,6 +849,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
+
+	BackLength();
 
 	//C21
 	{
@@ -827,6 +865,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
+	BackLength();
+
 	//C22
 	{
 		D3DXVECTOR3 Cross;
@@ -839,6 +879,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
+
+	BackLength();
 
 	//C23
 	{
@@ -853,6 +895,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
+	BackLength();
+
 	//C31
 	{
 		D3DXVECTOR3 Cross;
@@ -865,6 +909,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
+
+	BackLength();
 
 	//C32
 	{
@@ -879,6 +925,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
+	BackLength();
+
 	//C33
 	{
 		D3DXVECTOR3 Cross;
@@ -892,29 +940,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
-	auto BackLength = [interval, thisRadius, targetRadius, this, outLength]()
-	{
-		if (outLength == nullptr)
-		{
-			return;
-		}
-
-		D3DXVECTOR3 nomal;
-		float difference = D3DXVec3Dot(&interval, D3DXVec3Normalize(&nomal, &(m_move * -1.0f))) - targetRadius;
-
-		if (difference > 0)
-		{
-			*outLength = thisRadius - fabs(difference);
-		}
-		else
-		{
-			*outLength = thisRadius + fabs(difference);
-		}
-	};
-
 	BackLength();
 	return true;
-
 }
 
 //=============================================================================

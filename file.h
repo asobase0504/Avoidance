@@ -58,6 +58,7 @@ struct DeepTable {
 //-----------------------------------------------------------------------------
 void OutputStatus();
 nlohmann::json LoadJson(const wchar_t* cUrl);
+void SaveJson(nlohmann::json inJson, const std::string cUrl);
 void LoadValueBundledData(nlohmann::json*, DeepTable&);
 
 #endif		// _FILE_H_

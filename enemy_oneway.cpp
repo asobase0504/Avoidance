@@ -11,6 +11,12 @@
 #include "enemy_oneway.h"
 
 //-----------------------------------------------------------------------------
+// 定数
+//-----------------------------------------------------------------------------
+const D3DXVECTOR3 CEnemyOneWay::SCALE = D3DXVECTOR3(0.5f, 0.75f, 0.5f);
+const D3DXVECTOR3 CEnemyOneWay::MOVE_POWER = D3DXVECTOR3(0.0f, -1.5f, 0.0f);
+
+//-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
 CEnemyOneWay::CEnemyOneWay()
@@ -32,7 +38,9 @@ HRESULT CEnemyOneWay::Init()
 {
 	// 現在のモーション番号の保管
 	CEnemy::Init();
-	LoadModel("CUBOID");
+	LoadModel("BOX");
+	SetScale(SCALE);
+	SetMove(MOVE_POWER);
 	return S_OK;
 }
 

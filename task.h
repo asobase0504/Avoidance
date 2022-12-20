@@ -24,6 +24,7 @@ public:
 	{
 		ROLE_OBJECT = 0,
 		ROLE_CAMERA,
+		ROLE_STAGE,
 		ROLE_MAX
 	};
 

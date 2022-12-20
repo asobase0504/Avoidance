@@ -96,3 +96,18 @@ void LoadValueBundledData(nlohmann::json* inJson, DeepTable& inTable)
 		}
 	}
 }
+
+//=============================================================================
+// Jsonファイルでの書込み
+// Author : Hamada Ryuuga
+// Author : Yuda Kaito
+//=============================================================================
+void SaveJson(nlohmann::json inJson, const std::string cUrl)
+{
+	auto jobj = inJson.dump();
+	std::ofstream writing_file;
+	const std::string pathToJSON = cUrl;
+	writing_file.open(pathToJSON, std::ios::out);
+	writing_file << jobj << std::endl;
+	writing_file.close();
+}
