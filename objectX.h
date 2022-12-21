@@ -82,8 +82,15 @@ public:
 	bool Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize);	// 当たり判定 (左右, 奥, 手前)
 	bool Collision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx);	// 当たり判定 (左右, 奥, 手前)
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pSize, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
-	bool OBBAndOBB(CObjectX* inObjectX, float* outLength = nullptr);
+	bool OBBAndOBB(CObjectX* inObjectX);
+	bool OBBAndBoxTop(CObjectX* inObjectX, float* outLength = nullptr);
+	bool OBBAndBoxDown(CObjectX* inObjectX, float* outLength = nullptr);
+	bool OBBAndBoxLeft(CObjectX* inObjectX, float* outLength = nullptr);
+	bool OBBAndBoxRight(CObjectX* inObjectX, float* outLength = nullptr);
+	bool OBBAndBoxFront(CObjectX* inObjectX, float* outLength = nullptr);
+	bool OBBAndBoxBack(CObjectX* inObjectX, float* outLength = nullptr);
 	bool OBBAndPolygon(const CObjectPolygon3D* inObjectPolgon, float* outLength = nullptr);
+	bool OBBAndPolygon(const D3DXVECTOR3& inPos, float* outLength = nullptr);
 	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = nullptr);
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
 

@@ -46,6 +46,7 @@ private: // プライベート関数
 private: // メンバー変数
 
 	D3DXQUATERNION m_quaternion;	// クオータニオン
+	D3DXQUATERNION m_quaternionOld;	// 前回クオータニオン
 	int m_jumpCount;				// ジャンプ回数
 	bool m_isGoal;
 };

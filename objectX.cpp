@@ -652,7 +652,7 @@ bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR
 //=============================================================================
 // OBBとOBBの当たり判定
 //=============================================================================
-bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
+bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 {
 	if (!inObjectX->IsCollision())
 	{
@@ -720,26 +720,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	float targetRadius;		// 相手の投影線分の長さ
 	float length;			// 分離軸
 
-	auto BackLength = [interval, thisRadius, targetRadius, this, outLength]()
-	{
-		if (outLength == nullptr)
-		{
-			return;
-		}
-
-		D3DXVECTOR3 nomal;
-		float difference = D3DXVec3Dot(&interval, D3DXVec3Normalize(&nomal, &(m_move * -1.0f))) - targetRadius;
-
-		if (difference > 0)
-		{
-			*outLength += thisRadius - fabs(difference);
-		}
-		else
-		{
-			*outLength += thisRadius + fabs(difference);
-		}
-	};
-
 	//A.e1
 	thisRadius = D3DXVec3Length(&thisVecX);
 	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecX, &targetVecX, &targetVecY, &targetVecZ);
@@ -748,8 +728,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	{
 		return false;
 	}
-
-	BackLength();
 
 	//A.e2
 	thisRadius = D3DXVec3Length(&thisVecY);
@@ -760,8 +738,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		return false;
 	}
 
-	BackLength();
-
 	//A.e3
 	thisRadius = D3DXVec3Length(&thisVecZ);
 	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecZ, &targetVecX, &targetVecY, &targetVecZ);
@@ -770,8 +746,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	{
 		return false;
 	}
-
-	BackLength();
 
 	//B.e1
 	thisRadius = D3DXVec3Length(&targetVecX);
@@ -782,8 +756,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		return false;
 	}
 
-	BackLength();
-
 	//B.e2
 	thisRadius = D3DXVec3Length(&targetVecY);
 	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecY, &thisVecX, &thisVecY, &thisVecZ);
@@ -793,8 +765,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		return false;
 	}
 
-	BackLength();
-
 	//B.e3
 	thisRadius = D3DXVec3Length(&targetVecZ);
 	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecZ, &thisVecX, &thisVecY, &thisVecZ);
@@ -803,8 +773,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 	{
 		return false;
 	}
-
-	BackLength();
 
 	//C11
 	{
@@ -819,8 +787,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
-	BackLength();
-
 	//C12
 	{
 		D3DXVECTOR3 Cross;
@@ -830,12 +796,9 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		length = fabs(D3DXVec3Dot(&interval, &Cross));
 		if (length > thisRadius + targetRadius)
 		{
-
 			return false;
 		}
 	}
-
-	BackLength();
 
 	//C13
 	{
@@ -850,8 +813,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
-	BackLength();
-
 	//C21
 	{
 		D3DXVECTOR3 Cross;
@@ -864,8 +825,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
-
-	BackLength();
 
 	//C22
 	{
@@ -880,8 +839,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
-	BackLength();
-
 	//C23
 	{
 		D3DXVECTOR3 Cross;
@@ -894,8 +851,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
-
-	BackLength();
 
 	//C31
 	{
@@ -910,8 +865,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
-	BackLength();
-
 	//C32
 	{
 		D3DXVECTOR3 Cross;
@@ -925,8 +878,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 		}
 	}
 
-	BackLength();
-
 	//C33
 	{
 		D3DXVECTOR3 Cross;
@@ -939,9 +890,128 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, float* outLength)
 			return false;
 		}
 	}
-
-	BackLength();
 	return true;
+}
+
+//=============================================================================
+// OBBとBoxの当たり判定
+//=============================================================================
+bool CObjectX::OBBAndBoxTop(CObjectX * inObjectX, float * outLength)
+{
+	if (!(inObjectX->GetPos().x + inObjectX->GetMaxVtx().x > m_pos.x ) || !(m_pos.x > inObjectX->GetPos().x + inObjectX->GetMinVtx().x))
+	{
+		return false;
+	}
+	
+	if (!(inObjectX->GetPos().z + inObjectX->GetMaxVtx().z > m_pos.z) || !(m_pos.z > inObjectX->GetPos().z + inObjectX->GetMinVtx().z))
+	{
+		return false;
+	}
+	D3DXVECTOR3 PlanePos = inObjectX->GetPos();
+	PlanePos.y += inObjectX->GetMaxVtx().y;
+
+	return OBBAndPolygon(PlanePos, outLength);
+}
+
+//=============================================================================
+// OBBとBoxの当たり判定
+//=============================================================================
+bool CObjectX::OBBAndBoxDown(CObjectX * inObjectX, float * outLength)
+{
+	if (!(inObjectX->GetPos().x + inObjectX->GetMaxVtx().x > m_pos.x) || !(m_pos.x > inObjectX->GetPos().x + inObjectX->GetMinVtx().x))
+	{
+		return false;
+	}
+
+	if (!(inObjectX->GetPos().z + inObjectX->GetMaxVtx().z > m_pos.z) || !(m_pos.z > inObjectX->GetPos().z + inObjectX->GetMinVtx().z))
+	{
+		return false;
+	}
+	D3DXVECTOR3 PlanePos = inObjectX->GetPos();
+	PlanePos.y += inObjectX->GetMinVtx().y;
+
+	return OBBAndPolygon(PlanePos, outLength);
+}
+
+//=============================================================================
+// OBBとBoxの当たり判定
+//=============================================================================
+bool CObjectX::OBBAndBoxLeft(CObjectX * inObjectX, float * outLength)
+{
+	if (!(inObjectX->GetPos().y + inObjectX->GetMaxVtx().y > m_pos.x) || !(m_pos.y > inObjectX->GetPos().y + inObjectX->GetMinVtx().y))
+	{
+		return false;
+	}
+
+	if (!(inObjectX->GetPos().z + inObjectX->GetMaxVtx().z > m_pos.z) || !(m_pos.z > inObjectX->GetPos().z + inObjectX->GetMinVtx().z))
+	{
+		return false;
+	}
+	D3DXVECTOR3 PlanePos = inObjectX->GetPos();
+	PlanePos.y += inObjectX->GetMinVtx().x;
+
+	return OBBAndPolygon(PlanePos, outLength);
+}
+
+//=============================================================================
+// OBBとBoxの当たり判定
+//=============================================================================
+bool CObjectX::OBBAndBoxRight(CObjectX * inObjectX, float * outLength)
+{
+	if (!(inObjectX->GetPos().y + inObjectX->GetMaxVtx().y > m_pos.x) || !(m_pos.y > inObjectX->GetPos().y + inObjectX->GetMinVtx().y))
+	{
+		return false;
+	}
+
+	if (!(inObjectX->GetPos().z + inObjectX->GetMaxVtx().z > m_pos.z) || !(m_pos.z > inObjectX->GetPos().z + inObjectX->GetMinVtx().z))
+	{
+		return false;
+	}
+	D3DXVECTOR3 PlanePos = inObjectX->GetPos();
+	PlanePos.x += inObjectX->GetMaxVtx().x;
+
+	return OBBAndPolygon(PlanePos, outLength);
+}
+
+//=============================================================================
+// OBBとBoxの当たり判定
+//=============================================================================
+bool CObjectX::OBBAndBoxFront(CObjectX * inObjectX, float * outLength)
+{
+	if (!(inObjectX->GetPos().x + inObjectX->GetMaxVtx().x > m_pos.x) || !(m_pos.x > inObjectX->GetPos().x + inObjectX->GetMinVtx().x))
+	{
+		return false;
+	}
+
+	if (!(inObjectX->GetPos().y + inObjectX->GetMaxVtx().y > m_pos.z) || !(m_pos.y > inObjectX->GetPos().y + inObjectX->GetMinVtx().y))
+	{
+		return false;
+	}
+
+	D3DXVECTOR3 PlanePos = inObjectX->GetPos();
+	PlanePos.z += inObjectX->GetMaxVtx().z;
+
+	return OBBAndPolygon(PlanePos, outLength);
+}
+
+//=============================================================================
+// OBBとBoxの当たり判定
+//=============================================================================
+bool CObjectX::OBBAndBoxBack(CObjectX * inObjectX, float * outLength)
+{
+	if (!(inObjectX->GetPos().x + inObjectX->GetMaxVtx().x > m_pos.x) || !(m_pos.x > inObjectX->GetPos().x + inObjectX->GetMinVtx().x))
+	{
+		return false;
+	}
+
+	if (!(inObjectX->GetPos().y + inObjectX->GetMaxVtx().y > m_pos.z) || !(m_pos.y > inObjectX->GetPos().y + inObjectX->GetMinVtx().y))
+	{
+		return false;
+	}
+	D3DXVECTOR3 PlanePos = inObjectX->GetPos();
+	PlanePos.z += inObjectX->GetMinVtx().z;
+
+	return OBBAndPolygon(PlanePos, outLength);
 }
 
 //=============================================================================
@@ -976,6 +1046,60 @@ bool CObjectX::OBBAndPolygon(const CObjectPolygon3D * inObjectPolgon, float* out
 	D3DXVECTOR3 PlanePos = inObjectPolgon->GetPos();
 
 	float dist = D3DXVec3Dot(&(ObbPos - PlanePos), &polygonNormal);
+
+	// 戻し距離を算出
+	if (outLength != nullptr)
+	{
+		if (dist > 0)
+		{
+			*outLength = r - fabs(dist);
+		}
+		else
+		{
+			*outLength = r + fabs(dist);
+		}
+	}
+
+	// 衝突判定
+	if (fabs(dist) - r < 0.0f)
+	{
+		return true; // 衝突している
+	}
+
+	return false; // 衝突していない
+}
+
+//=============================================================================
+// OBBと平行の当たり判定
+//=============================================================================
+bool CObjectX::OBBAndPolygon(const D3DXVECTOR3 & inPos, float * outLength)
+{
+	// 平面の法線に対するOBBの射影線の長さを算出
+	float r = 0.0f;		// 近接距離
+	D3DXVECTOR3 polygonNormal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);	// 平面の法線ベクトル
+
+	// X軸
+	D3DXVECTOR3 thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+	D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &m_mtxRot);
+	D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
+	r += fabs(D3DXVec3Dot(&(thisNormalizeVecX * (this->GetSize().x * 0.5f)), &polygonNormal));
+
+	// Y軸
+	D3DXVECTOR3 thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &m_mtxRot);
+	D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
+	r += fabs(D3DXVec3Dot(&(thisNormalizeVecY * (this->GetSize().y * 0.5f)), &polygonNormal));
+
+	// Z軸
+	D3DXVECTOR3 thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+	D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &m_mtxRot);
+	D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
+	r += fabs(D3DXVec3Dot(&(thisNormalizeVecZ * (this->GetSize().z * 0.5f)), &polygonNormal));
+
+	// 平面とOBBの距離を算出
+	D3DXVECTOR3 ObbPos = this->GetPos();
+
+	float dist = D3DXVec3Dot(&(ObbPos - inPos), &polygonNormal);
 
 	// 戻し距離を算出
 	if (outLength != nullptr)

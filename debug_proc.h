@@ -44,7 +44,7 @@ private:
 	// 静的メンバ変数
 	//--------------------------------------------------------------------
 	static LPD3DXFONT	m_pFont;			// フォント情報
-	static char			m_aStr[0xfff];		// 登録文字列
+	static std::string	m_aStr;		// 登録文字列
 };
 
 #endif

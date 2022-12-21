@@ -27,4 +27,7 @@
 // json
 #include "nlohmann/json.hpp"
 
+// デバッグ用
+#include "debug_proc.h"
+
 #endif // !PRECOMPILE_H_

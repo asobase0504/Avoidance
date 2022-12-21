@@ -14,19 +14,21 @@
 #include "collision.h"
 #include "object_polygon3d.h"
 
+#include "color.h"
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
 const float CPlayer::SPEED = 6.5f;			// 移動量
 const float CPlayer::ATTENUATION = 0.50f;	// 移動減衰係数
 const float CPlayer::JUMPING_POWER = 1.5f;	// 跳躍力
-const float CPlayer::GRAVITY = 0.95f;		// 重力
+const float CPlayer::GRAVITY = 0.75f;		// 重力
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
 CPlayer::CPlayer() :
 	m_quaternion(D3DXQUATERNION(0.0f,0.0,0.0f,1.0f)),
+	m_quaternionOld(D3DXQUATERNION(0.0f, 0.0, 0.0f, 1.0f)),
 	m_jumpCount(0),
 	m_isGoal(false)
 {
@@ -65,6 +67,7 @@ void CPlayer::Uninit()
 //-----------------------------------------------------------------------------
 void CPlayer::NormalUpdate()
 {
+	m_quaternionOld = m_quaternion;
 	Move();		// 移動
 	boost();	// 突進
 	Jump();		// ジャンプ
@@ -79,6 +82,11 @@ void CPlayer::NormalUpdate()
 		SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
 		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
+
+	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
+	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
+	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
+	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
 }
 
 //-----------------------------------------------------------------------------
@@ -164,12 +172,6 @@ void CPlayer::Move()
 	D3DXQuaternionNormalize(&m_quaternion, &m_quaternion);
 
 	SetMtxQuaternion(m_quaternion);
-
-	D3DXMATRIX mtrixMR = GetMatRot();
-	D3DXMATRIX mtrixQ;
-	D3DXMatrixRotationQuaternion(&mtrixQ, &m_quaternion);
-	D3DXMATRIX mtrixR;
-	D3DXMatrixRotationYawPitchRoll(&mtrixR, m_rot.y, m_rot.x, m_rot.z);	// 行列回転関数
 }
 
 //-----------------------------------------------------------------------------
@@ -210,7 +212,6 @@ void CPlayer::Landing()
 	if (OnHitPolygon())
 	{
 		//m_pos.y = m_posOld.y;
-		m_jumpCount = 0;
 	}
 	else
 	{
@@ -231,7 +232,7 @@ void CPlayer::OnHitGoal()
 	{
 		CObject* next = object->NextSameType();
 		
-		if (OBBAndOBB((CObjectX*)object, &dist))
+		if (OBBAndOBB((CObjectX*)object))
 		{
 			m_isGoal = true;	// Goal
 		}
@@ -268,7 +269,9 @@ bool CPlayer::OnHitPolygon()
 	// 最初に見つけた指定したタイプのobjectを持ってくる
 	CObject* object = SearchType(CObject::EType::MODEL, CTaskGroup::EPriority::LEVEL_3D_1);
 
-	float length;
+	float length = 0.0f;
+
+	bool hit = false;
 
 	while (object != nullptr)
 	{
@@ -276,16 +279,77 @@ bool CPlayer::OnHitPolygon()
 
 		CObjectX* objectX = (CObjectX*)object;	// 変換
 
-		if (OBBAndOBB(objectX, &length))
+		objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+		if (OBBAndOBB(objectX))
 		{
-			D3DXVECTOR3 move;
-			D3DXVec3Normalize(&move, &m_move);
-			move *= length;
-			SetMove(move);
-			return true;	// Goal
-		}
+			objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
+			D3DXVECTOR3 move = m_posOld - m_pos;
+			CDebugProc::Print("dist : %.2f,%.2f,%.2f\n", move.x, move.y, move.z);
 
+			if (D3DXVec3Length(&(m_posOld - m_pos)) == 0.0f)
+			{
+				AddMove(m_move);
+			}
+			else
+			{
+				AddMove(m_posOld - m_pos);
+			}
+			AddPos(GetMove());
+			SetMtxQuaternion(m_quaternionOld);
+			if (m_move.y < -20.0f)
+			{
+				m_move.y = 0.0f;
+			}
+			hit = true;
+		}
+		//if (OBBAndBoxTop(objectX, &length) || OBBAndBoxDown(objectX, &length))
+		//{
+		//	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
+		//	m_pos.y = m_posOld.y;
+		//	D3DXVECTOR3 move;
+		//	D3DXVec3Normalize(&move, &m_move);
+		//	move.y *= -1.0f;
+		//	move.y *= length;
+		//	if (move.y < 0.1f)
+		//	{
+		//		move.y = 0.0f;
+		//	}
+		//	m_move.y = move.y;
+		//	m_jumpCount = 0;
+		//}
+		//if (OBBAndBoxLeft(objectX, &length) || OBBAndBoxRight(objectX, &length))
+		//{
+		//	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
+
+		//	m_pos.x = m_posOld.x;
+		//	D3DXVECTOR3 move;
+		//	D3DXVec3Normalize(&move, &m_move);
+		//	move.x *= -1.0f;
+		//	move.x *= length;
+		//	if (move.x < 0.1f)
+		//	{
+		//		move.x = 0.0f;
+		//	}
+		//	m_move.x = move.x;
+		//	SetMove(m_move);
+		//	AddPos(m_move);
+		//	m_jumpCount = 0;
+		//}
+		//if (OBBAndBoxFront(objectX, &length) || OBBAndBoxBack(objectX, &length))
+		//{
+		//	D3DXVECTOR3 move;
+		//	D3DXVec3Normalize(&move, &m_move);
+		//	move.z *= -1.0f;
+		//	move.z *= length;
+		//	if (move.z < 0.1f)
+		//	{
+		//		move.z = 0.0f;
+		//	}
+		//	m_move.z = move.z;
+		//	SetMove(m_move);
+		//	m_jumpCount = 0;
+		//}
 		object = next;
 	}
-	return false;
+	return hit;
 }

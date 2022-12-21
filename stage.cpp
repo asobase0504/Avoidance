@@ -109,7 +109,7 @@ void CStage::SetFloor(const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot, const D3
 	objectX->SetScale(scale);
 	m_scale = scale.x;
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-	objectX->CalculationVtx();
+	//objectX->CalculationVtx();
 
 	m_floor = objectX;
 }
@@ -124,7 +124,7 @@ void CStage::SetWall(int index, const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-	objectX->CalculationVtx();
+	//objectX->CalculationVtx();
 
 	m_wall[index] = objectX;
 }
@@ -139,7 +139,7 @@ void CStage::AddFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DX
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
-	objectX->CalculationVtx();
+	//objectX->CalculationVtx();
 
 	m_midairFloor.emplace(m_midairFloor.size(), objectX);
 }

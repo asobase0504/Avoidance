@@ -14,6 +14,7 @@
 #include "game.h"
 #include "application.h"
 #include "task_group.h"
+#include "debug_proc.h"
 
 //=============================================================================
 // 静的メンバー変数の宣言
@@ -114,9 +115,9 @@ HRESULT CRenderer::Init(HWND hWnd, bool bWindow)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 #ifdef _DEBUG
-	// デバッグ情報表示用フォントの生成
-	D3DXCreateFont(m_pD3DDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
-		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, _T("Terminal"), &m_pFont);
+
+	m_debugProc = new CDebugProc;
+	m_debugProc->Init();
 #endif
 	return S_OK;
 }
@@ -128,10 +129,11 @@ void CRenderer::Uninit()
 {
 #ifdef _DEBUG
 	// デバッグ情報表示用フォントの破棄
-	if (m_pFont != nullptr)
+	if (m_debugProc != nullptr)
 	{
-		m_pFont->Release();
-		m_pFont = nullptr;
+		m_debugProc->Uninit();
+		delete m_debugProc;
+		m_debugProc = nullptr;
 	}
 #endif // _DEBUG
 
@@ -155,6 +157,8 @@ void CRenderer::Uninit()
 //=============================================================================
 void CRenderer::Update()
 {
+	// FPS表示
+	CDebugProc::Print(_T("FPS : %d\n"), GetTime());
 	CApplication::GetInstance()->GetTaskGroup()->Update();
 }
 
@@ -172,8 +176,7 @@ void CRenderer::Draw()
 		CApplication::GetInstance()->GetTaskGroup()->Draw();
 
 #ifdef _DEBUG
-		// FPS表示
-		DrawFPS();
+		CDebugProc::Draw();
 #endif // _DEBUG
 
 		// Direct3Dによる描画の終了
@@ -183,20 +186,3 @@ void CRenderer::Draw()
 	// バックバッファとフロントバッファの入れ替え
 	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
-
-#ifdef _DEBUG
-//=============================================================================
-// FPS表示
-//=============================================================================
-void  CRenderer::DrawFPS()
-{
-	int time = GetTime();
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	TCHAR str[256];
-
-	wsprintf(str, _T("FPS : %d\n"), time);
-
-	// テキスト描画
-	m_pFont->DrawText(NULL, str, -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff));
-}
-#endif // _DEBUG

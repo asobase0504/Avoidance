@@ -42,6 +42,10 @@ void CObject::Update()
 {
 	m_posOld = m_pos;
 
+	// ˆÚ“®
+	AddPos(GetMove());
+	AddRot(GetMoveRot());
+
 	switch (m_updateStatus)
 	{
 	case EUpdateStatus::POP:
@@ -57,10 +61,6 @@ void CObject::Update()
 		assert(false);
 		break;
 	}
-
-	// ˆÚ“®
-	AddPos(GetMove());
-	AddRot(GetMoveRot());
 }
 
 //=============================================================================

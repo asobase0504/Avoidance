@@ -14,7 +14,7 @@
 // 定数
 //-----------------------------------------------------------------------------
 const D3DXVECTOR3 CEnemyOneWay::SCALE = D3DXVECTOR3(0.5f, 0.75f, 0.5f);
-const D3DXVECTOR3 CEnemyOneWay::MOVE_POWER = D3DXVECTOR3(0.0f, -1.5f, 0.0f);
+const D3DXVECTOR3 CEnemyOneWay::MOVE_POWER = D3DXVECTOR3(0.0f, -3.5f, 0.0f);
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
