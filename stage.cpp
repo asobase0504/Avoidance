@@ -12,6 +12,8 @@
 #include "color.h"
 #include "enemy.h"
 #include "enemy_oneway.h"
+#include "player.h"
+#include "plain.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -36,12 +38,12 @@ HRESULT CStage::Init()
 	m_startCnt = 0;
 
 	{// ゴール
-		CGoal* goal = CGoal::Create();
-		goal->LoadModel("BOX");
-		goal->SetPos(D3DXVECTOR3(60.0f, 15.0f, 0.0f));
-		goal->SetRot(D3DXVECTOR3(D3DX_PI * 0.25f, D3DX_PI * 0.25f, D3DX_PI * 0.25f));
-		goal->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
-		goal->CalculationVtx();
+		m_goal = CGoal::Create();
+		m_goal->LoadModel("BOX");
+		m_goal->SetPos(D3DXVECTOR3(60.0f, 15.0f, 0.0f));
+		m_goal->SetRot(D3DXVECTOR3(D3DX_PI * 0.25f, D3DX_PI * 0.25f, D3DX_PI * 0.25f));
+		m_goal->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
+		m_goal->CalculationVtx();
 	}
 
 	return S_OK;
@@ -69,6 +71,33 @@ void CStage::Update()
 			PopEnemy(m_enemy[i].type, m_enemy[i].pos, m_enemy[i].rot);
 		}
 	}
+
+	CPlayer* player = (CPlayer*)CObject::SearchType(CObject::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1);
+	bool isGoal = false;
+
+	if (player != nullptr)
+	{
+		if (player->GetIsGoal())
+		{
+			isGoal = true;
+		}
+	}
+
+	if (isGoal)
+	{
+		m_goal->SetUpdateStatus(CObject::EUpdateStatus::END);
+
+		CPlain* object = (CPlain*)CObject::SearchType(CObject::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
+
+		while (object != nullptr)
+		{
+			CPlain* next = (CPlain*)object->NextSameType();
+
+			object->SetUpdateStatus(CObject::EUpdateStatus::END);
+			object = next;
+		}
+	}
+
 	m_startCnt++;
 }
 
@@ -103,8 +132,9 @@ void CStage::SetScale(const float inScale)
 //-----------------------------------------------------------------------------
 void CStage::SetFloor(const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot, const D3DXVECTOR3 & scale)
 {
-	CObjectX* objectX = CObjectX::Create(pos);
+	CPlain* objectX = CPlain::Create();
 	objectX->LoadModel("BOX");
+	objectX->SetPos(pos);
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
 	m_scale = scale.x;
@@ -119,8 +149,9 @@ void CStage::SetFloor(const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot, const D3
 //-----------------------------------------------------------------------------
 void CStage::SetWall(int index, const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot, const D3DXVECTOR3 & scale)
 {
-	CObjectX* objectX = CObjectX::Create(pos);
+	CPlain* objectX = CPlain::Create();
 	objectX->LoadModel("BOX");
+	objectX->SetPos(pos);
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
@@ -134,8 +165,9 @@ void CStage::SetWall(int index, const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot
 //-----------------------------------------------------------------------------
 void CStage::AddFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale)
 {
-	CObjectX* objectX = CObjectX::Create(pos);
+	CPlain* objectX = CPlain::Create();
 	objectX->LoadModel("BOX");
+	objectX->SetPos(pos);
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));

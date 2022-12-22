@@ -13,6 +13,5 @@
 class CStage;
 
 CStage* LoadAll(const wchar_t* filename, const D3DXVECTOR3& inPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-void SaveAll(CStage* inStage, const std::string& filename);
 
 #endif

@@ -70,15 +70,6 @@ HRESULT CGame::Init(void)
 		player->CalculationVtx();
 	}
 
-	{// ƒS[ƒ‹
-		CGoal* goal = CGoal::Create();
-		goal->LoadModel("BOX");
-		goal->SetPos(D3DXVECTOR3(60.0f, 15.0f, 0.0f));
-		goal->SetRot(D3DXVECTOR3(D3DX_PI * 0.25f, D3DX_PI * 0.25f, D3DX_PI * 0.25f));
-		goal->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
-		goal->CalculationVtx();
-	}
-
 	m_stage = LoadAll(L"data/FILE/stage.json");
 
 	return S_OK;
@@ -98,15 +89,6 @@ void CGame::Uninit(void)
 //-----------------------------------------------------------------------------
 void CGame::Update(void)
 {
-	CPlayer* player = (CPlayer*)CObject::SearchType(CObject::PLAYER,CTaskGroup::EPriority::LEVEL_3D_1);
-
-	if (player != nullptr)
-	{
-		if (player->GetIsGoal())
-		{
-			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_RESULT);
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------

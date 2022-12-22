@@ -27,6 +27,7 @@ public:
 		GOAL,
 		MODE,
 		MODEL,
+		PLAIN,
 		PAUSE,
 		POLYGON,
 		MAX,

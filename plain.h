@@ -4,8 +4,8 @@
 // Author:Yuda Kaito
 //
 //=============================================================================
-#ifndef _GOAL_H_
-#define _GOAL_H_
+#ifndef _PLAIN_H_
+#define _PLAIN_H_
 
 //-----------------------------------------------------------------------------
 // include
@@ -13,17 +13,11 @@
 #include "motion.h"
 #include "objectX.h"
 
-class CGoal : public CObjectX
+class CPlain : public CObjectX
 {
-private: // 定数
-	static const float SPEED;			// スピード
-	static const float ATTENUATION;		// 減衰係数
-	static const float JUMPING_POWER;	// 跳躍力
-	static const float GRAVITY;			// 重力
-
 public: // パブリック関数
-	CGoal();
-	~CGoal();
+	CPlain();
+	~CPlain();
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
@@ -31,11 +25,12 @@ public: // パブリック関数
 	void EndUpdate() override;		// 更新
 	void Draw() override;			// 描画
 
-	static CGoal* Create();	// 生成
+	static CPlain* Create();	// 生成
 
 private: // プライベート関数
 
 private: // メンバー変数
 	int m_endCnt;
+	bool begin;
 };
 #endif

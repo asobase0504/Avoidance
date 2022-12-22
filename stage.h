@@ -19,6 +19,8 @@
 //-----------------------------------------------------------------------------
 class CObjectX;
 class CEnemy;
+class CGoal;
+class CPlain;
 
 class CStage : public CTask
 {
@@ -48,13 +50,10 @@ public: // パブリック関数
 	static CStage* Create();	// 生成
 
 	void SetFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
-	CObjectX* GetFloor() { return m_floor; }
 
 	void SetWall(int index, const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
-	std::vector<CObjectX*> GetWall() { return std::vector<CObjectX*>(std::begin(m_wall), std::end(m_wall)); }
 
 	void AddFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
-	std::unordered_map<int, CObjectX*> GetMidairFloor() { return m_midairFloor; }
 
 	void AddEnemy(const int type, const D3DXVECTOR3& inPos, const D3DXVECTOR3& inRot, const int inFream);
 	void PopEnemy(const int type, const D3DXVECTOR3& inPos, const D3DXVECTOR3& inRot);
@@ -62,10 +61,11 @@ public: // パブリック関数
 
 private: // プライベート関数
 private: // メンバー変数
-	CObjectX* m_floor;
-	CObjectX* m_wall[4];
+	CGoal* m_goal;
+	CPlain* m_floor;
+	CPlain* m_wall[4];
 	float m_scale;
-	std::unordered_map<int, CObjectX*> m_midairFloor;
+	std::unordered_map<int, CPlain*> m_midairFloor;
 	std::unordered_map<int, SEnemyPop> m_enemy;
 	int m_startCnt;
 };

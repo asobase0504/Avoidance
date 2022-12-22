@@ -201,6 +201,7 @@
     <ClCompile Include="particle_manager.cpp" />
     <ClCompile Include="parts.cpp" />
     <ClCompile Include="pause.cpp" />
+    <ClCompile Include="plain.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -266,6 +267,7 @@
     <ClInclude Include="particle_manager.h" />
     <ClInclude Include="parts.h" />
     <ClInclude Include="pause.h" />
+    <ClInclude Include="plain.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="ranking.h" />

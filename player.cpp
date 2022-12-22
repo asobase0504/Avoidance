@@ -267,7 +267,7 @@ void CPlayer::OnHitEnemy()
 bool CPlayer::OnHitPolygon()
 {
 	// 最初に見つけた指定したタイプのobjectを持ってくる
-	CObject* object = SearchType(CObject::EType::MODEL, CTaskGroup::EPriority::LEVEL_3D_1);
+	CObject* object = SearchType(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
 
 	float length = 0.0f;
 
