@@ -40,7 +40,9 @@ namespace
 const int SCREEN_WIDTH = 1280;	// スクリーンの幅
 const int SCREEN_HEIGHT = 720;	// スクリーンの高さ
 
+#ifdef _DEBUG
 int GetTime(void);
+#endif // _DEBUG
 
 //=============================================================================
 // 前方宣言

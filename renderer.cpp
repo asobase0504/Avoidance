@@ -158,7 +158,10 @@ void CRenderer::Uninit()
 void CRenderer::Update()
 {
 	// FPS•\Ž¦
+#ifdef _DEBUG
 	CDebugProc::Print(_T("FPS : %d\n"), GetTime());
+#endif _DEBUG
+
 	CApplication::GetInstance()->GetTaskGroup()->Update();
 }
 

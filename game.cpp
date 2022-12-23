@@ -35,7 +35,10 @@
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CGame::CGame()
+CGame::CGame():
+	m_stage(nullptr),
+	m_stageNext(nullptr),
+	m_section(0)
 {
 }
 
@@ -51,6 +54,8 @@ CGame::~CGame()
 //-----------------------------------------------------------------------------
 HRESULT CGame::Init(void)
 {
+	m_section = 0;
+
 	// ライト
 	CLight* light = new CLight;
 	light->Init();
@@ -93,17 +98,19 @@ void CGame::Update(void)
 {
 	if (m_stage->IsEnd())
 	{
+		m_section++;
 		m_stage->Release();
 		m_stage = m_stageNext;
-		D3DXVECTOR3 pos = m_stage->GetPos();
 		m_stage->SetStart(true);
 
-		if (pos.y < -4200.0f)
+		if (m_section > 3)
 		{
+			m_section = 0;
 			m_stageNext = LoadAll(L"data/FILE/stage.json", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		}
 		else
 		{
+			D3DXVECTOR3 pos = m_stage->GetPos();
 			m_stageNext = LoadAll(L"data/FILE/stage.json", D3DXVECTOR3(0.0f, pos.y - 1200.0f, 0.0f));
 		}
 	}

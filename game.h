@@ -34,5 +34,6 @@ public:
 private:
 	CStage* m_stage;		// 今のステージ
 	CStage* m_stageNext;	// 次のステージ
+	int m_section;			// 1面のステージ数
 };
 #endif
