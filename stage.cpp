@@ -18,7 +18,10 @@
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CStage::CStage() : CTask(CTaskGroup::EPriority::LEVEL_SYSTEM)
+CStage::CStage() :
+	CTask(CTaskGroup::EPriority::LEVEL_SYSTEM),
+	m_isStart(false),
+	m_isEnd(false)
 {
 }
 
@@ -37,15 +40,6 @@ HRESULT CStage::Init()
 	SetRole(ROLE_STAGE);
 	m_startCnt = 0;
 
-	{// ゴール
-		m_goal = CGoal::Create();
-		m_goal->LoadModel("BOX");
-		m_goal->SetPos(D3DXVECTOR3(60.0f, 15.0f, 0.0f));
-		m_goal->SetRot(D3DXVECTOR3(D3DX_PI * 0.25f, D3DX_PI * 0.25f, D3DX_PI * 0.25f));
-		m_goal->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
-		m_goal->CalculationVtx();
-	}
-
 	return S_OK;
 }
 
@@ -62,6 +56,11 @@ void CStage::Uninit()
 //-----------------------------------------------------------------------------
 void CStage::Update()
 {
+	if (!m_isStart)
+	{
+		return;
+	}
+
 	CTask::Update();
 
 	for (int i = 0; i < m_enemy.size(); i++)
@@ -72,30 +71,21 @@ void CStage::Update()
 		}
 	}
 
-	CPlayer* player = (CPlayer*)CObject::SearchType(CObject::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1);
-	bool isGoal = false;
-
-	if (player != nullptr)
-	{
-		if (player->GetIsGoal())
-		{
-			isGoal = true;
-		}
-	}
-
-	if (isGoal)
+	if (m_goal->IsGoal())
 	{
 		m_goal->SetUpdateStatus(CObject::EUpdateStatus::END);
+		m_floor->SetUpdateStatus(CObject::EUpdateStatus::END);
 
-		CPlain* object = (CPlain*)CObject::SearchType(CObject::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
-
-		while (object != nullptr)
+		for (int i = 0; i < 4; i++)
 		{
-			CPlain* next = (CPlain*)object->NextSameType();
-
-			object->SetUpdateStatus(CObject::EUpdateStatus::END);
-			object = next;
+			m_wall[i]->SetUpdateStatus(CObject::EUpdateStatus::END);
 		}
+
+		for (int i = 0; i < m_midairFloor.size(); i++)
+		{
+			m_midairFloor[i]->SetUpdateStatus(CObject::EUpdateStatus::END);
+		}
+		m_isEnd = true;
 	}
 
 	m_startCnt++;
@@ -223,4 +213,17 @@ CStage* CStage::Create()
 	}
 
 	return stage;
+}
+
+//-----------------------------------------------------------------------------
+// Goalの設定
+//-----------------------------------------------------------------------------
+void CStage::SetGoal(const D3DXVECTOR3 & pos)
+{
+	m_goal = CGoal::Create();
+	m_goal->LoadModel("BOX");
+	m_goal->SetPos(pos);
+	m_goal->SetRot(D3DXVECTOR3(D3DX_PI * 0.25f, D3DX_PI * 0.25f, D3DX_PI * 0.25f));
+	m_goal->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
+	m_goal->CalculationVtx();
 }

@@ -33,9 +33,13 @@ public: // パブリック関数
 
 	static CGoal* Create();	// 生成
 
+	void Goal(bool goal) { m_isGoal = goal; }
+	bool IsGoal() { return m_isGoal; }
+
 private: // プライベート関数
 
 private: // メンバー変数
 	int m_endCnt;
+	bool m_isGoal;
 };
 #endif

@@ -13,6 +13,7 @@
 #include "utility.h"
 #include "collision.h"
 #include "object_polygon3d.h"
+#include "goal.h"
 
 #include "color.h"
 //-----------------------------------------------------------------------------
@@ -81,6 +82,15 @@ void CPlayer::NormalUpdate()
 	{
 		SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
 		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+	if (input->Press(DIK_9))
+	{
+		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+
+	if (m_pos.y < -5000.0f)
+	{
+		SetPos(D3DXVECTOR3(m_pos.x, 1200.0f, m_pos.z));
 	}
 
 	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
@@ -234,7 +244,8 @@ void CPlayer::OnHitGoal()
 		
 		if (OBBAndOBB((CObjectX*)object))
 		{
-			m_isGoal = true;	// Goal
+			CGoal* goal = (CGoal*)object;	// Goal
+			goal->Goal(true);
 		}
 
 		object = next;

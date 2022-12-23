@@ -70,13 +70,8 @@ void CCameraGame::Update()
 	}
 
 	m_posV.x = m_posR.x - sinf(m_rot.y) * m_fDistance;
+	m_posV.y = CObject::SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1)->GetPos().y + 200.0f;
 	m_posV.z = m_posR.z - cosf(m_rot.y) * m_fDistance;
 
 	m_posR = CObject::SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1)->GetPos();
-
-	/*
-	D3DXVECTOR3 distPos = m_posR - m_posV;
-	D3DXVec3Normalize(&distPos, &distPos);
-	m_posR += distPos * 20.0f;
-	*/
 }

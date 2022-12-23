@@ -71,6 +71,8 @@ HRESULT CGame::Init(void)
 	}
 
 	m_stage = LoadAll(L"data/FILE/stage.json");
+	m_stage->SetStart(true);
+	m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
 
 	return S_OK;
 }
@@ -89,6 +91,22 @@ void CGame::Uninit(void)
 //-----------------------------------------------------------------------------
 void CGame::Update(void)
 {
+	if (m_stage->IsEnd())
+	{
+		m_stage->Release();
+		m_stage = m_stageNext;
+		D3DXVECTOR3 pos = m_stage->GetPos();
+		m_stage->SetStart(true);
+
+		if (pos.y < -4200.0f)
+		{
+			m_stageNext = LoadAll(L"data/FILE/stage.json", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		}
+		else
+		{
+			m_stageNext = LoadAll(L"data/FILE/stage.json", D3DXVECTOR3(0.0f, pos.y - 1200.0f, 0.0f));
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

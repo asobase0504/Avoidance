@@ -32,6 +32,7 @@ public:
 	void Draw() override;
 
 private:
-	CStage* m_stage;
+	CStage* m_stage;		// 今のステージ
+	CStage* m_stageNext;	// 次のステージ
 };
 #endif
