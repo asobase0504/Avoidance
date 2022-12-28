@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 // 静的メンバー変数の初期化
 //-----------------------------------------------------------------------------
-CApplication * CApplication::m_pApplication = nullptr;
+CApplication* CApplication::m_pApplication = nullptr;
 const D3DXVECTOR3 CApplication::CENTER_POS = D3DXVECTOR3((float)SCREEN_WIDTH * 0.5f, (float)SCREEN_HEIGHT * 0.5f, 0.0f);
 
 //=============================================================================
@@ -38,11 +38,7 @@ const D3DXVECTOR3 CApplication::CENTER_POS = D3DXVECTOR3((float)SCREEN_WIDTH * 0
 //=============================================================================
 CApplication * CApplication::GetInstance()
 {
-	if (m_pApplication == nullptr)
-	{
-		m_pApplication = new CApplication;
-	}
-	return m_pApplication;
+	return m_pApplication != nullptr ? m_pApplication : m_pApplication = new CApplication;
 }
 
 //=============================================================================
@@ -53,7 +49,7 @@ CApplication::CApplication() :
 	m_pRenderer(nullptr),
 	m_pTaskGroup(nullptr),
 	m_pFade(nullptr),
-	m_pGame(nullptr),
+	m_pMode(nullptr),
 	m_pSound(nullptr)
 {
 }
@@ -183,7 +179,7 @@ void CApplication::Update()
 {
 	//入力処理の更新処理
 	CInput::GetKey()->Update();
-	m_pGame->Update();
+	m_pMode->Update();
 	m_pRenderer->Update();
 }
 
@@ -209,26 +205,26 @@ void CApplication::SetMode(MODE mode)
 	switch (mode)
 	{
 	case CApplication::MODE_TITLE:
-		m_pGame = new CTitle;
+		m_pMode = new CTitle;
 		break;
 	case CApplication::MODE_GAME:
-		m_pGame = new CGame;
+		m_pMode = new CGame;
 		break;
 	case CApplication::MODE_RESULT:
-		m_pGame = new CResult;
+		m_pMode = new CResult;
 		break;
 	case CApplication::MODE_NAMESET:
-		m_pGame = new CNameSet;
+		m_pMode = new CNameSet;
 		break;
 	case CApplication::MODE_TUTORIAL:
-		m_pGame = new CTutorial;
+		m_pMode = new CTutorial;
 		break;
 	default:
 		break;
 	}
 
 	// 初期化処理
-	if (FAILED(m_pGame->Init()))	//画面サイズ
+	if (FAILED(m_pMode->Init()))	//画面サイズ
 	{//初期化処理が失敗した場合
 		return ;
 	}

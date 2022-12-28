@@ -69,14 +69,10 @@ public:
 	// Getter
 	LPDIRECT3DDEVICE9 GetDevice() { return m_pD3DDevice; }
 
-private:	// プライベート関数
-#ifdef _DEBUG
-	void DrawFPS();
-#endif // _DEBUG
-
 private:	// メンバー変数
 	LPDIRECT3D9 m_pD3D;				// Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9 m_pD3DDevice;	// Deviceオブジェクト
+
 #ifdef _DEBUG
 	CDebugProc* m_debugProc;
 #endif // _DEBUG

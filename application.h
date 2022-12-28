@@ -49,13 +49,12 @@ public:
 		MODE_MAX
 	};
 
+/* シングルトン */
 private: // 静的メンバー変数
 	static CApplication* m_pApplication;
-
 public: // 静的関数
 	static CApplication* GetInstance();
-
-private: // シングルトン
+private:
 	CApplication();
 
 public:	// メンバー関数
@@ -71,19 +70,19 @@ public:	// メンバー関数
 	CTaskGroup* GetTaskGroup() { return m_pTaskGroup; }
 	CObjectXGroup* GetObjectXGroup() { return m_pObjectXGroup; }
 	CFade* GetFade() { return m_pFade; }
-	MODE* GetMode() { return &m_mode; }
+
 	void SetMode(CApplication::MODE inMode);
+	MODE* GetMode() { return &m_mode; }
+
 	CSound* GetSound() { return m_pSound; }
 	CColor* GetColor() { return m_color; }
-
-
 
 private:
 	CTexture* m_pTexture;
 	CRenderer* m_pRenderer;
 	CTaskGroup* m_pTaskGroup;
 	CFade* m_pFade;
-	CMode* m_pGame;
+	CMode* m_pMode;
 	CSound* m_pSound;
 	CColor* m_color;
 	CObjectXGroup* m_pObjectXGroup;
