@@ -170,6 +170,7 @@
     <ClCompile Include="enemy_oneway.cpp" />
     <ClCompile Include="goal.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
+    <ClCompile Include="line.cpp" />
     <ClCompile Include="load_stage.cpp" />
     <ClCompile Include="object_mesh.cpp" />
     <ClCompile Include="object_polygon3d.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="goal.h" />
     <ClInclude Include="inputjoypad.h" />
     <ClInclude Include="inputkeydata.h" />
+    <ClInclude Include="line.h" />
     <ClInclude Include="load_stage.h" />
     <ClInclude Include="object_mesh.h" />
     <ClInclude Include="object_polygon3d.h" />

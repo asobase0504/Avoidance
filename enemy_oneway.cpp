@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 #include <assert.h>
 #include "enemy_oneway.h"
+#include "line.h"
 
 //-----------------------------------------------------------------------------
 // ’è”
@@ -41,6 +42,7 @@ HRESULT CEnemyOneWay::Init()
 	LoadModel("BOX");
 	SetScale(SCALE);
 	SetMove(MOVE_POWER);
+	m_guideLine = CLine::Create();
 	return S_OK;
 }
 
@@ -58,5 +60,23 @@ void CEnemyOneWay::Uninit()
 void CEnemyOneWay::NormalUpdate()
 {
 	CEnemy::NormalUpdate();
+}
+
+//-----------------------------------------------------------------------------
+// I—¹XV
+//-----------------------------------------------------------------------------
+void CEnemyOneWay::EndUpdate()
+{
+	CEnemy::EndUpdate();
+	m_guideLine->Release();
+}
+
+//-----------------------------------------------------------------------------
+// •`‰æ
+//-----------------------------------------------------------------------------
+void CEnemyOneWay::Draw()
+{
+	CEnemy::Draw();
+	m_guideLine->SetLine(m_pos, m_rot, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -700.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 }
 

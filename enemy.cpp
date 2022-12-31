@@ -52,9 +52,9 @@ void CEnemy::Uninit()
 //-----------------------------------------------------------------------------
 void CEnemy::NormalUpdate()
 {
-	if (m_pos.y < 0.0f)
+	if (m_pos.y < -5000.0f)
 	{
-		Release();
+		SetUpdateStatus(EUpdateStatus::END);
 	}
 }
 

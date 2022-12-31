@@ -81,10 +81,10 @@ void CColor::SetTheme(int idx)
 
 		D3DXCOLOR color;
 
-		color.r = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[0];	// 赤色の設定
-		color.g = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[1];	// 緑色の設定
-		color.b = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[2];	// 青色の設定
-		color.a = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor)[3];	// 透明色の設定
+		color.r = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor).at(0);	// 赤色の設定
+		color.g = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor).at(1);	// 緑色の設定
+		color.b = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor).at(2);	// 青色の設定
+		color.a = colorFile["TYPE"].at(inIndex)["COLOR"].at(inColor).at(3);	// 透明色の設定
 
 		return color;
 	};

@@ -157,10 +157,8 @@ void CObject2d::NormalUpdate()
 //=============================================================================
 void CObject2d::Draw()
 {
-	LPDIRECT3DDEVICE9 pDevice;		//デバイスへのポインタ
-
-	 //デバイスの取得
-	pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();		//デバイスへのポインタ
 
 	//頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
