@@ -3,6 +3,7 @@
 // ì¸óÕèàóù [input.cpp]
 // Author1 : KOZUNA HIROHITO
 // Author2 : YUDA KAITO
+// Author3 : KARASAKI YUTO
 //
 //=============================================================================
 
