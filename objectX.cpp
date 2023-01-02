@@ -659,236 +659,213 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		return false;
 	}
 
-	// •Ï”éŒ¾
-	D3DXVECTOR3 interval = GetPos() - inObjectX->GetPos();
+	// ‰ñ“]s—ñ
+	D3DXMATRIX mtxThisRot = m_mtxRot;
+	mtxThisRot._11 = m_mtxRot._11;
+	mtxThisRot._12 = m_mtxRot._21;
+	mtxThisRot._13 = m_mtxRot._31;
+	mtxThisRot._21 = m_mtxRot._12;
+	mtxThisRot._22 = m_mtxRot._22;
+	mtxThisRot._23 = m_mtxRot._32;
+	mtxThisRot._31 = m_mtxRot._13;
+	mtxThisRot._32 = m_mtxRot._23;
+	mtxThisRot._33 = m_mtxRot._33;
 
-	D3DXVECTOR3 thisVecX;
-	D3DXVECTOR3 thisVecY;
-	D3DXVECTOR3 thisVecZ;
-	D3DXVECTOR3 thisNormalizeVecX;
-	D3DXVECTOR3 thisNormalizeVecY;
-	D3DXVECTOR3 thisNormalizeVecZ;
+	D3DXMATRIX mtx = mtxThisRot * inObjectX->GetMatRot();
+	D3DXMATRIX mtxAds;
+	mtxAds._11 = fabs(mtx._11);
+	mtxAds._12 = fabs(mtx._21);
+	mtxAds._13 = fabs(mtx._31);
+	mtxAds._21 = fabs(mtx._12);
+	mtxAds._22 = fabs(mtx._22);
+	mtxAds._23 = fabs(mtx._32);
+	mtxAds._31 = fabs(mtx._13);
+	mtxAds._32 = fabs(mtx._23);
+	mtxAds._33 = fabs(mtx._33);
 
+	const float etc = 1.0e-6;	// ‚ß‚Á‚¿‚á¬‚³‚È”Žš(100–œ•ª‚Ì1)
+	bool parallel = false;
+
+	if (mtxAds._11 + etc >= 1.0f ||
+		mtxAds._12 + etc >= 1.0f || 
+		mtxAds._13 + etc >= 1.0f || 
+		mtxAds._21 + etc >= 1.0f || 
+		mtxAds._22 + etc >= 1.0f || 
+		mtxAds._23 + etc >= 1.0f || 
+		mtxAds._31 + etc >= 1.0f || 
+		mtxAds._32 + etc >= 1.0f || 
+		mtxAds._33 + etc >= 1.0f)
 	{
-		// ‰ñ“]s—ñ
-		D3DXMATRIX mtxRot = m_mtxRot;
-
-		D3DXVECTOR3 size = m_size * 0.5f;
-
-		thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-		thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &mtxRot);
-		D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &mtxRot);
-		D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &mtxRot);
-		D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
-		D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
-		D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
-		thisVecX = thisNormalizeVecX * size.x;
-		thisVecY = thisNormalizeVecY * size.y;
-		thisVecZ = thisNormalizeVecZ * size.z;
+		parallel = true;
 	}
 
-	D3DXVECTOR3 targetVecX;
-	D3DXVECTOR3 targetVecY;
-	D3DXVECTOR3 targetVecZ;
-	D3DXVECTOR3 targetNormalizeVecX;
-	D3DXVECTOR3 targetNormalizeVecY;
-	D3DXVECTOR3 targetNormalizeVecZ;
+	D3DXVECTOR3 interval;
+	D3DXVECTOR3 pos = (GetPos() - inObjectX->GetPos());
+	D3DXVec3TransformCoord(&interval, &pos, &m_mtxRot);
 
+	float s;
+
+	D3DXVECTOR3 thisScale = m_scale;
+	D3DXVECTOR3 targetScale = inObjectX->GetScale();
+	float aMax = -FLT_MAX;
+	float bMax = -FLT_MAX;
+	float eMax = -FLT_MAX;
+	int aAxis = ~0;
+	int bAxis = ~0;
+	int eAxis = ~0;
+	D3DXVECTOR3 nA;
+	D3DXVECTOR3 nB;
+	D3DXVECTOR3 nE;
+
+	auto TrackFaceAxis = [](int* axis,int nCnt,float s,float* max,const D3DXVECTOR3& normal, D3DXVECTOR3* axisNormal)
 	{
-		// ‰ñ“]s‹P
-		D3DXMATRIX mtxRot = inObjectX->GetMatRot();
+		if (s > 0.0f)
+		{
+			return true;
+		}
 
-		D3DXVECTOR3 size = inObjectX->GetSize() * 0.5f;
+		if (s > *max)
+		{
+			*max = s;
+			*axis = nCnt;
+			*axisNormal = normal;
+		}
 
-		targetNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-		targetNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		targetNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		D3DXVec3TransformCoord(&targetNormalizeVecX, &targetNormalizeVecX, &mtxRot);
-		D3DXVec3TransformCoord(&targetNormalizeVecY, &targetNormalizeVecY, &mtxRot);
-		D3DXVec3TransformCoord(&targetNormalizeVecZ, &targetNormalizeVecZ, &mtxRot);
-		D3DXVec3Normalize(&targetNormalizeVecX, &targetNormalizeVecX);
-		D3DXVec3Normalize(&targetNormalizeVecY, &targetNormalizeVecY);
-		D3DXVec3Normalize(&targetNormalizeVecZ, &targetNormalizeVecZ);
-		targetVecX = targetNormalizeVecX * size.x;
-		targetVecY = targetNormalizeVecY * size.y;
-		targetVecZ = targetNormalizeVecZ * size.z;
-	}
-
-	float thisRadius;		// Ž©g‚Ì“Š‰eü•ª‚Ì’·‚³
-	float targetRadius;		// ‘ŠŽè‚Ì“Š‰eü•ª‚Ì’·‚³
-	float length;			// •ª—£Ž²
+		return false;
+	};
 
 	//A.e1
-	thisRadius = D3DXVec3Length(&thisVecX);
-	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecX, &targetVecX, &targetVecY, &targetVecZ);
-	length = fabs(D3DXVec3Dot(&interval, &thisNormalizeVecX));
-	if (length > thisRadius + targetRadius)
+	s = fabs(interval.x) - (thisScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._12, mtxAds._13), &targetScale));
+	if (TrackFaceAxis(&aAxis, 0, s, &aMax, D3DXVECTOR3(m_mtxRot._11, m_mtxRot._12, m_mtxRot._13), &nA))
 	{
 		return false;
 	}
 
 	//A.e2
-	thisRadius = D3DXVec3Length(&thisVecY);
-	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecY, &targetVecX, &targetVecY, &targetVecZ);
-	length = fabs(D3DXVec3Dot(&interval, &thisNormalizeVecY));
-	if (length > thisRadius + targetRadius)
+	s = fabs(interval.y) - (thisScale.y + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._21, mtxAds._22, mtxAds._23), &targetScale));
+	if (TrackFaceAxis(&aAxis, 1, s, &aMax, D3DXVECTOR3(m_mtxRot._21, m_mtxRot._22, m_mtxRot._23), &nA))
 	{
 		return false;
 	}
 
 	//A.e3
-	thisRadius = D3DXVec3Length(&thisVecZ);
-	targetRadius = LenSegOnSeparateAxis(&thisNormalizeVecZ, &targetVecX, &targetVecY, &targetVecZ);
-	length = fabs(D3DXVec3Dot(&interval, &thisNormalizeVecZ));
-	if (length > thisRadius + targetRadius)
+	s = fabs(interval.z) - (thisScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._31, mtxAds._32, mtxAds._33), &targetScale));
+	if (TrackFaceAxis(&aAxis, 2, s, &aMax, D3DXVECTOR3(m_mtxRot._31, m_mtxRot._32, m_mtxRot._33), &nA))
 	{
 		return false;
 	}
 
+	D3DXMATRIX targetMtxRot = inObjectX->GetMatRot();
+
 	//B.e1
-	thisRadius = D3DXVec3Length(&targetVecX);
-	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecX, &thisVecX, &thisVecY, &thisVecZ);
-	length = fabs(D3DXVec3Dot(&interval, &targetNormalizeVecX));
-	if (length > thisRadius + targetRadius)
+	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._11, mtx._12, mtx._13))) - (targetScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._12, mtxAds._13), &thisScale));
+	if (TrackFaceAxis(&bAxis, 3, s, &bMax, D3DXVECTOR3(targetMtxRot._11, targetMtxRot._12, targetMtxRot._13), &nB))
 	{
 		return false;
 	}
 
 	//B.e2
-	thisRadius = D3DXVec3Length(&targetVecY);
-	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecY, &thisVecX, &thisVecY, &thisVecZ);
-	length = fabs(D3DXVec3Dot(&interval, &targetNormalizeVecY));
-	if (length > thisRadius + targetRadius)
+	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._21, mtx._22, mtx._23))) - (targetScale.y + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._21, mtxAds._22, mtxAds._23), &thisScale));
+	if (TrackFaceAxis(&bAxis, 4, s, &bMax, D3DXVECTOR3(targetMtxRot._21, targetMtxRot._22, targetMtxRot._23), &nB))
 	{
 		return false;
 	}
 
 	//B.e3
-	thisRadius = D3DXVec3Length(&targetVecZ);
-	targetRadius = LenSegOnSeparateAxis(&targetNormalizeVecZ, &thisVecX, &thisVecY, &thisVecZ);
-	length = fabs(D3DXVec3Dot(&interval, &targetNormalizeVecZ));
-	if (length > thisRadius + targetRadius)
+	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._31, mtx._32, mtx._33))) - (targetScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._31, mtxAds._32, mtxAds._33),&thisScale));
+	if (TrackFaceAxis(&bAxis, 5, s, &bMax, D3DXVECTOR3(targetMtxRot._31, targetMtxRot._32, targetMtxRot._33), &nB))
 	{
 		return false;
 	}
 
-	//C11
+	if (!parallel)
 	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecX, &targetNormalizeVecX);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecY, &thisVecZ);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecY, &targetVecZ);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
-			return false;
-		}
-	}
+		// Edge axis checks
+		float thisRadius;
+		float targetRadius;
 
-	//C12
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecX, &targetNormalizeVecY);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecY, &thisVecZ);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecZ);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
+		auto TrackEdgeAxis = [](int* axis, int nCnt, float s, float* max, const D3DXVECTOR3& normal, D3DXVECTOR3* axisNormal)
 		{
-			return false;
-		}
-	}
+			if (s > 0.0f)
+			{
+				return true;
+			}
 
-	//C13
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecX, &targetNormalizeVecZ);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecY, &thisVecZ);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecY);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
-			return false;
-		}
-	}
+			float i = 1.0f / D3DXVec3Length(&normal);
+			s *= i;
 
-	//C21
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecY, &targetNormalizeVecX);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecZ);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecY, &targetVecZ);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
-			return false;
-		}
-	}
+			if (s > *max)
+			{
+				*max = s;
+				*axis = nCnt;
+				*axisNormal = normal * i;
+			}
 
-	//C22
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecY, &targetNormalizeVecY);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecZ);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecZ);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
 			return false;
-		}
-	}
+		};
 
-	//C23
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecY, &targetNormalizeVecZ);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecZ);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecY);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
+		//C11
+		thisRadius = thisScale.y * mtxAds._13 + thisScale.z * mtxAds._12;
+		targetRadius = targetScale.y * mtxAds._31 + targetScale.z * mtxAds._21;
+		s = fabs(interval.z * mtx._12 - interval.y * mtx._13) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 6, s, &eMax, D3DXVECTOR3(0.0f, -mtx._13, mtx._12), &nE))
 			return false;
-		}
-	}
 
-	//C31
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecZ, &targetNormalizeVecX);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecY);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecY, &targetVecZ);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
+		//C12
+		thisRadius = thisScale.y * mtxAds._23 + thisScale.z * mtxAds._22;
+		targetRadius = targetScale.x * mtxAds._31 + targetScale.z * mtxAds._11;
+		s = fabs(interval.z * mtx._22 - interval.y * mtx._23) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 7, s, &eMax, D3DXVECTOR3(0.0f, -mtx._23, mtx._22), &nE))
 			return false;
-		}
-	}
 
-	//C32
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecZ, &targetNormalizeVecY);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecY);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecZ);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
+		//C13
+		thisRadius = thisScale.y * mtxAds._33 + thisScale.z * mtxAds._32;
+		targetRadius = targetScale.x * mtxAds._21 + targetScale.y * mtxAds._11;
+		s = fabs(interval.z * mtx._32 - interval.y * mtx._33) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 8, s, &eMax, D3DXVECTOR3(0.0f, -mtx._33, mtx._32), &nE))
 			return false;
-		}
-	}
 
-	//C33
-	{
-		D3DXVECTOR3 Cross;
-		D3DXVec3Cross(&Cross, &thisNormalizeVecZ, &targetNormalizeVecZ);
-		thisRadius = LenSegOnSeparateAxis(&Cross, &thisVecX, &thisVecY);
-		targetRadius = LenSegOnSeparateAxis(&Cross, &targetVecX, &targetVecY);
-		length = fabs(D3DXVec3Dot(&interval, &Cross));
-		if (length > thisRadius + targetRadius)
-		{
+		//C21
+		thisRadius = thisScale.x * mtxAds._13 + thisScale.z * mtxAds._11;
+		targetRadius = targetScale.y * mtxAds._31 + targetScale.z * mtxAds._22;
+		s = fabs(interval.x * mtx._13 - interval.z * mtx._11) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 9, s, &eMax, D3DXVECTOR3(mtx._13, 0.0f, -mtx._11), &nE))
 			return false;
-		}
+
+		//C22
+		thisRadius = thisScale.x * mtxAds._23 + thisScale.z * mtxAds._21;
+		targetRadius = targetScale.x * mtxAds._32 + targetScale.z * mtxAds._12;
+		s = fabs(interval.x * mtx._23 - interval.z * mtx._21) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 10, s, &eMax, D3DXVECTOR3(mtx._23, 0.0f, -mtx._21), &nE))
+			return false;
+
+		//C23
+		thisRadius = thisScale.x * mtxAds._33 + thisScale.z * mtxAds._31;
+		targetRadius = targetScale.x * mtxAds._22 + targetScale.y * mtxAds._12;
+		s = fabs(interval.x * mtx._33 - interval.z * mtx._31) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 11, s, &eMax, D3DXVECTOR3(mtx._33, 0.0f, -mtx._31), &nE))
+			return false;
+
+		//C31
+		thisRadius = thisScale.x * mtxAds._12 + thisScale.y * mtxAds._11;
+		targetRadius = targetScale.y * mtxAds._33 + targetScale.z * mtxAds._23;
+		s = fabs(interval.y * mtx._11 - interval.x * mtx._12) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 12, s, &eMax, D3DXVECTOR3(-mtx._13, mtx._12, 0.0f), &nE))
+			return false;
+
+		//C32
+		thisRadius = thisScale.x * mtxAds._22 + thisScale.y * mtxAds._21;
+		targetRadius = targetScale.x * mtxAds._33 + targetScale.z * mtxAds._13;
+		s = fabs(interval.y * mtx._21 - interval.x * mtx._22) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 13, s, &eMax, D3DXVECTOR3(-mtx._22, mtx._21, 0.0f), &nE))
+			return false;
+
+		//C33
+		thisRadius = thisScale.x * mtxAds._32 + thisScale.y * mtxAds._31;
+		targetRadius = targetScale.x * mtxAds._23 + targetScale.y * mtxAds._13;
+		s = fabs(interval.y * mtx._31 - interval.x * mtx._32) - (thisRadius + targetRadius);
+		if (TrackEdgeAxis(&eAxis, 14, s, &eMax, D3DXVECTOR3(-mtx._32, mtx._31, 0.0f), &nE))
+			return false;
 	}
 	return true;
 }
