@@ -14,6 +14,7 @@
 //*****************************************************************************
 #include "inputkeydata.h"
 #include "DirectInput.h"
+#include "mouse.h"
 #include <vector>
 
 //----------------------------------------------------------------------------
@@ -21,12 +22,18 @@
 //----------------------------------------------------------------------------
 class CInputKeyboard;
 class CInputJoyPad;
+class CMouse;
 
 //----------------------------------------------------------------------------
 //クラス定義
 //----------------------------------------------------------------------------
 class CInput
 {
+public:
+	//*インプットが必要な時呼び出す
+	static CInput *GetKey() { return m_pInput; }		//プレイやトリガーなどのアドレスの取得
+private:
+	static CInput *m_pInput;	// このクラスの情報
 public:
 
 	CInput();
@@ -38,16 +45,13 @@ public:
 	void Uninit();									// 入力処理全部の終了処理
 	void Update();									// 入力処理全部の更新処理
 
-	//*インプットが必要な時呼び出す
-	static CInput *GetKey() { return m_pInput; }		//プレイやトリガーなどのアドレスの取得
-
 	// 全てのデバイス
 	bool Press(STAN_DART_INPUT_KEY key) { return KeyChackAll(key, 1); }	// 総合プレス
 	bool Trigger(STAN_DART_INPUT_KEY key) { return KeyChackAll(key, 2); }	// 総合トリガー
 	bool Release(STAN_DART_INPUT_KEY key) { return KeyChackAll(key, 3); }	// 総合リリース
 
 	// 入力しているデバイスを指定
-	bool Press(STAN_DART_INPUT_KEY key, int nNum) { return KeyChackNum(key, 1, nNum); }	// 総合プレス
+	bool Press(STAN_DART_INPUT_KEY key, int nNum) { return KeyChackNum(key, 1, nNum); }		// 総合プレス
 	bool Trigger(STAN_DART_INPUT_KEY key, int nNum) { return KeyChackNum(key, 2, nNum); }	// 総合トリガー
 	bool Release(STAN_DART_INPUT_KEY key, int nNum) { return KeyChackNum(key, 3, nNum); }	// 総合リリース
 
@@ -56,22 +60,29 @@ public:
 	std::vector<int> TriggerDevice(STAN_DART_INPUT_KEY key);	// 総合トリガー
 	std::vector<int> ReleaseDevice(STAN_DART_INPUT_KEY key);	// 総合リリース
 
-	bool Press(int nKey);	// キーボードプレス
-	bool Trigger(int nkey);	// キーボードトリガー
-	bool Release(int nkey);	// キーボードリリース
+	/* Keyboard */
+	bool Press(int nKey);	// プレス
+	bool Trigger(int nkey);	// トリガー
+	bool Release(int nkey);	// リリース
 
-	bool Press(DirectJoypad key);		// ジョイパットプレス
-	bool Trigger(DirectJoypad key);		// ジョイパットトリガー
-	bool Release(DirectJoypad key);		// ジョイパッドリリース
-	bool Press(DirectJoypad key, int nNum);		// ジョイパットプレス
-	bool Trigger(DirectJoypad key, int nNum);	// ジョイパットトリガー
-	bool Release(DirectJoypad key, int nNum);	// ジョイパッドリリース
+	/* JoyPad */
+	bool Press(DirectJoypad key);				// プレス
+	bool Press(DirectJoypad key, int nNum);		// プレス
+	bool Trigger(DirectJoypad key);				// トリガー
+	bool Trigger(DirectJoypad key, int nNum);	// トリガー
+	bool Release(DirectJoypad key);				// リリース
+	bool Release(DirectJoypad key, int nNum);	// リリース
 
 	D3DXVECTOR3 VectorMoveKey();	// 十字キー式のベクトル取得
-	D3DXVECTOR3 VectorMoveJoyStick(int nNum = 0, bool bleftandright = false); //ジョイスティックのベクトル取得
-	
-	// Getter
+	D3DXVECTOR3 VectorMoveJoyStick(int nNum = 0, bool bleftandright = false);	// ジョイスティックのベクトル取得
+
+	// 繋がってるJoyPadの数
 	int GetAcceptJoyPadCount();
+
+	/* Mouse */
+	bool Press(CMouse::MOUSE_KEY key) { return m_mouse->GetPress(key); }		// プレス
+	bool Trigger(CMouse::MOUSE_KEY key) { return m_mouse->GetTrigger(key); }	// トリガー
+	bool Release(CMouse::MOUSE_KEY key) { return m_mouse->GetRelease(key); }	// リリース
 
 private:
 	bool KeyChackAll(STAN_DART_INPUT_KEY key, int type);			// 全デバイスの入力を確認
@@ -79,9 +90,9 @@ private:
 
 private:
 
-	CInputKeyboard *m_pKeyboard;	// キーボードの情報
-	CInputJoyPad *m_pJoyPad;		// ジョイパッドの情報
-	static CInput *m_pInput;		// このクラスの情報
+	CInputKeyboard* m_pKeyboard;	// キーボードの情報
+	CInputJoyPad* m_pJoyPad;		// ジョイパッドの情報
+	CMouse* m_mouse;				// マウス
 };
 
 #endif

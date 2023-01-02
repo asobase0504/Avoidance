@@ -265,6 +265,9 @@
     <ClCompile Include="line.cpp">
       <Filter>00_Cord\02_Object</Filter>
     </ClCompile>
+    <ClCompile Include="mouse.cpp">
+      <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -455,6 +458,9 @@
     </ClInclude>
     <ClInclude Include="line.h">
       <Filter>00_Cord\02_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse.h">
+      <Filter>00_Cord\01_System\00_Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

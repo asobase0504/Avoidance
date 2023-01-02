@@ -1,8 +1,7 @@
 //=============================================================================
 //
-// 入力処理 [inputkeyboard.h]
+// XInputを使用したコントローラー処理
 // Author1 : KOZUNA HIROHITO
-// 
 //
 //=============================================================================
 #ifndef _INPUTCONTROLLER_H_		//このマクロ定義がされなかったら
@@ -23,9 +22,9 @@
 #undef new
 #include <d3dx9.h>
 #pragma pop_macro("new")
-#define	 DIRECTINPUT_VERSION (0x0800)						//ビルド時の警告対策用マクロ(この位置から動かさない)
-#include <Xinput.h>				  //ジョイパット処理
-#include <dinput.h>				  //入力処理に必要
+#define	 DIRECTINPUT_VERSION (0x0800)		//ビルド時の警告対策用マクロ(この位置から動かさない)
+#include <Xinput.h>							//ジョイパット処理
+#include <dinput.h>							//入力処理に必要
 
 //----------------------------------------------------------------------------
 //クラス定義
@@ -33,8 +32,8 @@
 class CInputController
 {
 private:
-	static const int NUM_KEY_MAX = 256;	//キーの最大数（キーボード）
-	static const int PLAYER_MAX = 4;		//プレイヤーの最大人数
+	static const int NUM_KEY_MAX = 256;		// キーの最大数（キーボード）
+	static const int PLAYER_MAX = 4;		// プレイヤーの最大人数
 public:
 
 	//キー種類(ジョイパッド)

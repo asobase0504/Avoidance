@@ -51,14 +51,16 @@ void CCameraGame::Uninit()
 //-----------------------------------------------------------------------------
 void CCameraGame::Update()
 {
+	D3DXVECTOR3 move(0.0f,0.0f,0.0f);
+
 	// Ž‹“_Šp“x‚Ì‰ñ“]
 	if (CInput::GetKey()->Press(DIK_Q))
 	{
-		m_rot.y += -(0.05f);	// ‰ñ“]—Ê
+		m_rot.y += -0.05f;		// ‰ñ“]—Ê
 	}
 	if (CInput::GetKey()->Press(DIK_E))
 	{
-		m_rot.y += 0.05f;	// ‰ñ“]—Ê
+		m_rot.y += 0.05f;		// ‰ñ“]—Ê
 	}
 	if (CInput::GetKey()->Press(DIK_R))
 	{

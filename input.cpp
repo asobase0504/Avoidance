@@ -64,6 +64,14 @@ HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
+	//マウスの生成
+	m_mouse = new CMouse;
+
+	//マウスの初期化処理
+	if (FAILED(m_mouse->Init(hInstance, hWnd)))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -108,6 +116,8 @@ void CInput::Update()
 	m_pKeyboard->Update();
 	//ジョイパッドの更新
 	m_pJoyPad->Update();
+	//マウスの更新
+	m_mouse->Update();
 }
 
 //*************************************************************************************
@@ -116,7 +126,11 @@ void CInput::Update()
 CInput *CInput::Create()
 {
 	//Inputの自己生成
-	m_pInput = new CInput;
+	if (m_pInput == nullptr)
+	{
+		m_pInput = new CInput;
+	}
+
 	return m_pInput;
 }
 

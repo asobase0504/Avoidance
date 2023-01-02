@@ -4,7 +4,6 @@
 // Author1 : KOZUNA HIROHITO
 //
 //=============================================================================
-
 #ifndef _INPUTJOYPAD_H_		//このマクロ定義がされなかったら
 #define _INPUTJOYPAD_H_		//2重インクルード防止のマクロ定義
 
@@ -79,8 +78,8 @@ public:
 	int GetCross(int nNum = 0) { return m_JoyPadData[nNum].nCrossPressRot; }	//ジョイパッドの十字キーの押されている方向(例　45°など)
 
 private:
-	SJoyPad m_JoyPadData[JOYPAD_DATA_MAX];		//ジョイパッドのひとつに必要な情報の構造体
-	DirectJoypad m_AllOldKey;					//全ジョイパッド共通の前回されたキー
-	int m_nJoyNumCnt;							//現在接続の接続数
+	SJoyPad m_JoyPadData[JOYPAD_DATA_MAX];	// ジョイパッドのひとつに必要な情報の構造体
+	DirectJoypad m_AllOldKey;				// 全ジョイパッド共通の前回されたキー
+	int m_nJoyNumCnt;						// 現在接続の接続数
 };
 #endif
