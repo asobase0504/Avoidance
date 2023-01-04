@@ -6,8 +6,10 @@
 //=============================================================================
 #include <assert.h>
 #include "player_afterimage.h"
+#include "utility.h"
 
-const int CPlayerAfterimage::MAX_LIFE = 50;
+const int CPlayerAfterimage::MAX_LIFE = 120;
+const float CPlayerAfterimage::ALPHA_COLOR = 0.45f;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -33,7 +35,7 @@ HRESULT CPlayerAfterimage::Init()
 	LoadModel("BOX");
 
 	m_life = MAX_LIFE;
-	SetColorAlpha(0.45f);
+	SetColorAlpha(ALPHA_COLOR);
 
 	return S_OK;
 }
@@ -53,7 +55,7 @@ void CPlayerAfterimage::NormalUpdate()
 {
 	m_life--;
 
-	float scale = (float)m_life / (float)MAX_LIFE;
+	float scale = ease::InSine((float)m_life / (float)MAX_LIFE);
 
 	SetScale(D3DXVECTOR3(scale, scale, scale));
 	if (m_life <= 0)

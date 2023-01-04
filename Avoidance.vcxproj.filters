@@ -17,9 +17,6 @@
     <Filter Include="00_Cord\02_Object">
       <UniqueIdentifier>{26276af0-11f7-4f23-aa68-0ba0442fe6fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\02_Object\00_Templeate">
-      <UniqueIdentifier>{4d7fd24e-a1f9-4a99-9cc9-c6db6ab29039}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00_Cord\01_System\00_Input">
       <UniqueIdentifier>{90ecc76b-9aa3-4ffa-bd60-12eb8866581f}</UniqueIdentifier>
     </Filter>
@@ -114,12 +111,6 @@
     </ClCompile>
     <ClCompile Include="text.cpp">
       <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
-    </ClCompile>
-    <ClCompile Include="2dpolygontemplate.cpp">
-      <Filter>00_Cord\02_Object\00_Templeate</Filter>
-    </ClCompile>
-    <ClCompile Include="3dpolygontemplate.cpp">
-      <Filter>00_Cord\02_Object\00_Templeate</Filter>
     </ClCompile>
     <ClCompile Include="nameset.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
@@ -308,12 +299,6 @@
     </ClInclude>
     <ClInclude Include="text.h">
       <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
-    </ClInclude>
-    <ClInclude Include="2dpolygontemplate.h">
-      <Filter>00_Cord\02_Object\00_Templeate</Filter>
-    </ClInclude>
-    <ClInclude Include="3dpolygontemplate.h">
-      <Filter>00_Cord\02_Object\00_Templeate</Filter>
     </ClInclude>
     <ClInclude Include="nameset.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>

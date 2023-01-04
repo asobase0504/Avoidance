@@ -101,7 +101,7 @@ void CPlayer::NormalUpdate()
 
 	static int time = 0;
 	time++;
-	if (time % 5 == 0)
+	if (time % 1 == 0)
 	{
 		CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
 		afterimage->SetMtxQuaternion(m_quaternion);

@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 #include "application.h"
 #include "title_logo.h"
+#include "utility.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -35,7 +36,7 @@ HRESULT CTitleLogo::Init()
 	SetPos(pos);
 	SetTexture("TITLE_LOGO");
 	m_count = 0;
-	m_rateSizeX = 0.35f;
+	m_rateSizeX = 0.01f;
 	m_rateSizeY = 0.01f;
 
 	return S_OK;
@@ -59,22 +60,11 @@ void CTitleLogo::PopUpdate()
 		return;
 	}
 
-	auto easeOutBack = [](float cnt)
-	{
-		const float c1 = 1.70158f;
-		const float c3 = c1 + 1.0f;
-
-		return 1.0f + c3 * powf(cnt - 1.0f, 3.0f) + c1 * pow(cnt - 1.0f, 2.0f);
-	};
-
-	if (m_rateSizeX > 0.25f)
-	{
-		m_rateSizeX -= easeOutBack(0.075f) * 0.025f;
-	}
+	m_rateSizeX = ease::OutSine(m_rateSizeX / 0.25f) * 0.25f;
 
 	if (m_rateSizeY < 0.25f)
 	{
-		m_rateSizeY += easeOutBack(0.075f) * 0.025f;
+		m_rateSizeY += ease::OutSine(0.075f) * 0.025f;
 	}
 
 	SetSize(D3DXVECTOR3(1376 * m_rateSizeX, 256 * m_rateSizeY, 0.0f));

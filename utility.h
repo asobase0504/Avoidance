@@ -115,22 +115,6 @@ D3DXVECTOR3 ScreenCastWorld(const D3DXVECTOR3 &screenPos,			// スクリーン座標
 //--------------------------------------------------
 D3DXMATRIX *GiftMtx(D3DXMATRIX *pOut, const D3DXVECTOR3& inPos, const D3DXVECTOR3& inRot);
 
-//--------------------------------------------------
-// ScreenCastWorld
-// Author : Hamada Ryuuga
-// 引数1  : float X		// 時間
-// 返値  : float / 計算結果
-//--------------------------------------------------
-float easeInSine(float X);
-
-//--------------------------------------------------
-// easeInQuad
-// Author : Hamada Ryuuga
-// 引数1  : float X		// 時間
-// 返値  : float / 計算結果
-//--------------------------------------------------
-float easeInQuad(float X);
-
 // 算出系統
 //=============================================================================
 // 2Dの外積
@@ -149,4 +133,61 @@ float Vec2Cross(D3DXVECTOR3* v1, D3DXVECTOR3* v2);
 float Vec2Dot(D3DXVECTOR3* v1, D3DXVECTOR3* v2);
 
 D3DXVECTOR3 ConvertQuaternionfromRadian(const D3DXQUATERNION& inQuaternion);
+
+
+//--------------------------------------------------
+// Author : Hamada Ryuuga
+// Author : Yuda Kaito
+// 引数1  : float X		// 時間
+// 返値  : float / 計算結果
+//--------------------------------------------------
+namespace ease
+{
+// 正弦で算出
+float InSine(float x);
+float OutSine(float x);
+float InOutSine(float x);
+
+// 2の累乗で算出
+float InQuad(float x);
+float OutQuad(float x);
+float InOutQuad(float x);
+
+// 3の累乗で算出
+float InCubic(float x);
+float OutCubic(float x);
+float InOutCubic(float x);
+
+// 4の累乗で算出
+float InQuart(float x);
+//float OutQuart(float x);
+//float InOutQuart(float x);
+
+// 5の累乗で算出
+float InQuint(float x);
+//float OutQuint(float x);
+//float InOutQuint(float x);
+
+// 指数関数で算出
+float InExpo(float x);
+//float OutExpo(float x);
+//float InOutExpo(float x);
+
+float InCirc(float x);
+//float OutCirc(float x);
+//float InOutCirc(float x);
+
+float InBack(float x, float s = 1.70158f);
+//float OutBack(float x);
+//float InOutBack(float x);
+
+float InElastic(float x, float c = (2.f * D3DX_PI) / 3.f);
+float OutElastic(float x, float c = (2.f * D3DX_PI) / 3.f);
+float InOutElastic(float x, float c = (2.f * D3DX_PI) / 4.5f);
+
+float OutBounce(float x, float n = 7.5625f, float d = 2.75f);
+float InBounce(float x, float n = 7.5625f, float d = 2.75f);
+float InOutBounce(float x, float n = 7.5625f, float d = 2.75f);
+}
+
 #endif // !_UTILITY_H_

@@ -81,7 +81,7 @@ HRESULT CGame::Init(void)
 		CPlayer* player = CPlayer::Create();
 		player->LoadModel("BOX");
 		player->SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
-		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0);
+		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2);
 		player->SetMaterialDiffuse(0, color);
 		player->CalculationVtx();
 	}
@@ -89,6 +89,9 @@ HRESULT CGame::Init(void)
 	m_stage = LoadAll(L"data/FILE/stage.json");
 	m_stage->SetStart(true);
 	m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
+
+	// マウスの位置ロック
+	CInput::GetKey()->GetMouse()->UseSetPosLock(true);
 
 	return S_OK;
 }

@@ -158,7 +158,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2dpolygontemplate.cpp" />
     <ClCompile Include="camera_game.cpp" />
     <ClCompile Include="camera_quaternion.cpp" />
     <ClCompile Include="camera_title.cpp" />
@@ -175,7 +174,6 @@
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="object_mesh.cpp" />
     <ClCompile Include="object_polygon3d.cpp" />
-    <ClCompile Include="3dpolygontemplate.cpp" />
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="fade.cpp" />
@@ -226,7 +224,6 @@
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="2dpolygontemplate.h" />
     <ClInclude Include="camera_game.h" />
     <ClInclude Include="camera_quaternion.h" />
     <ClInclude Include="camera_title.h" />
@@ -244,7 +241,6 @@
     <ClInclude Include="mouse.h" />
     <ClInclude Include="object_mesh.h" />
     <ClInclude Include="object_polygon3d.h" />
-    <ClInclude Include="3dpolygontemplate.h" />
     <ClInclude Include="bg.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="fade.h" />
