@@ -23,6 +23,7 @@
 CMouse::CMouse()
 {
 	m_device = nullptr;
+	m_isPosLock = false;
 	memset(&m_aKeyState, 0, sizeof(m_aKeyState));
 	memset(&m_aKeyStateTrigger, 0, sizeof(m_aKeyStateTrigger));
 	memset(&m_aKeyStateRelease, 0, sizeof(m_aKeyStateRelease));
@@ -120,7 +121,10 @@ void CMouse::Update(void)
 		m_device->Acquire();
 	}
 
-	SetMouseCenterPos();
+	if (m_isPosLock)
+	{
+		SetCursorPosLock();
+	}
 }
 
 //=============================================================================
@@ -189,7 +193,12 @@ D3DXVECTOR3 CMouse::GetMouseCursorMove(void)
 	return D3DXVECTOR3((float)(m_aKeyState.lX), (float)(m_aKeyState.lY), (float)(m_aKeyState.lZ));
 }
 
-void CMouse::SetMouseCenterPos()
+//=============================================================================
+// カーソルのロック
+// Author : YudaKaito
+// 概要 : カーソルの位置をロックする。
+//=============================================================================
+void CMouse::SetCursorPosLock()
 {
 	D3DXVECTOR2 pos;
 

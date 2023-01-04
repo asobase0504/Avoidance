@@ -182,6 +182,17 @@ void CApplication::Update()
 	CInput::GetKey()->Update();
 	m_pMode->Update();
 	m_pRenderer->Update();
+
+#ifdef _DEBUG
+	static bool isLock = false;
+	CDebugProc::Print("マウスカーソルの位置ロック 【 1 】  : %s", isLock ? "ON" : "OFF");
+	if (CInput::GetKey()->Trigger(DIK_1))
+	{
+		isLock = !isLock;
+		CInput::GetKey()->GetMouse()->UseSetPosLock(isLock);
+	}
+#endif // _DEBUG
+
 }
 
 //=============================================================================

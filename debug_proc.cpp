@@ -54,7 +54,7 @@ void CDebugProc::Draw(void)
 	RECT rect = { 0, 0, 1280, 720 };
 
 	// テキスト描画
-	m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0x00, 0xff, 0xff));
+	m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0x00, 0xff));
 	m_aStr.clear();
 }
 

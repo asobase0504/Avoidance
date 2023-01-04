@@ -783,7 +783,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 
 	if (!parallel)
 	{
-		// Edge axis checks
 		float thisRadius;
 		float targetRadius;
 
