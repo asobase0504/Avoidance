@@ -122,12 +122,10 @@ const D3DXVECTOR3 & CCamera::VectorCombinedRot(const D3DXVECTOR3& inVector)
 	D3DXVec3Normalize(&vector, &vector);
 
 	D3DXMATRIX mtxRot;
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y,m_rot.x,m_rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 	D3DXVec3TransformCoord(&vector, &vector, &mtxRot);
 
-	// move ÇÃí∑Ç≥ÇÕ 1 Ç…Ç»ÇÈÅB
-	//vector.x = vector.x * c - vector.z * s;
-	//vector.z = vector.x * s + vector.z * c;
+	vector.y = 0.0f;
 
 	D3DXVec3Normalize(&vector, &vector);
 

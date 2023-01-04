@@ -75,7 +75,8 @@ public:
 
 	/* マテリアル関係 */
 	void SetMaterialDiffuse(unsigned int index, const D3DXCOLOR& inColor);
-	
+	const D3DXCOLOR& GetMaterialDiffuse(unsigned int index) { return m_materialDiffuse.at(index); }
+
 	/* 透明度 */
 	void SetColorAlpha(float inAlpha) { m_colorAlpha = inAlpha; }
 

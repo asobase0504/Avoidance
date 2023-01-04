@@ -1,25 +1,24 @@
 //=============================================================================
 //
-// プレイヤー設定ヘッター
+// プレイヤーの残像ヘッター
 // Author:Yuda Kaito
 //
 //=============================================================================
-#ifndef _GOAL_H_
-#define _GOAL_H_
+#ifndef _PLAYER_AFTERIMAGE_H_
+#define _PLAYER_AFTERIMAGE_H_
 
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "motion.h"
 #include "objectX.h"
 
-class CGoal : public CObjectX
+class CPlayerAfterimage : public CObjectX
 {
 private: // 定数
-
+	static const int MAX_LIFE;
 public: // パブリック関数
-	CGoal();
-	~CGoal();
+	CPlayerAfterimage();
+	~CPlayerAfterimage();
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
@@ -27,15 +26,10 @@ public: // パブリック関数
 	void EndUpdate() override;		// 更新
 	void Draw() override;			// 描画
 
-	static CGoal* Create();	// 生成
-
-	void Goal(bool goal) { m_isGoal = goal; }
-	bool IsGoal() { return m_isGoal; }
-
-private: // プライベート関数
+	static CPlayerAfterimage* Create(const D3DXVECTOR3& inPos);	// 生成
 
 private: // メンバー変数
-	int m_endCnt;
-	bool m_isGoal;
+	int m_life;	// 寿命
 };
 #endif
+#pragma once

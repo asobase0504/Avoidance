@@ -268,6 +268,9 @@
     <ClCompile Include="mouse.cpp">
       <Filter>00_Cord\01_System\00_Input</Filter>
     </ClCompile>
+    <ClCompile Include="player_afterimage.cpp">
+      <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -461,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="mouse.h">
       <Filter>00_Cord\01_System\00_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="player_afterimage.h">
+      <Filter>00_Cord\02_Object\03_ObjectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,7 @@
 #include "utility.h"
 #include "collision.h"
 #include "object_polygon3d.h"
+#include "player_afterimage.h"
 #include "goal.h"
 
 #include "color.h"
@@ -20,7 +21,7 @@
 // ’è”
 //-----------------------------------------------------------------------------
 const float CPlayer::SPEED = 6.5f;			// ˆÚ“®—Ê
-const float CPlayer::ATTENUATION = 0.50f;	// ˆÚ“®Œ¸ŠŒW”
+const float CPlayer::ATTENUATION = 0.25f;	// ˆÚ“®Œ¸ŠŒW”
 const float CPlayer::JUMPING_POWER = 1.5f;	// ’µ–ô—Í
 const float CPlayer::GRAVITY = 0.75f;		// d—Í
 
@@ -72,7 +73,7 @@ void CPlayer::NormalUpdate()
 	Move();		// ˆÚ“®
 	boost();	// “Ëi
 	Jump();		// ƒWƒƒƒ“ƒv
-	Landing();	// —Ž‰º
+	//Landing();	// —Ž‰º
 	OnHitGoal();	// Goal‚Æ‚Ì“–‚½‚è”»’è
 	OnHitEnemy();
 
@@ -97,6 +98,15 @@ void CPlayer::NormalUpdate()
 	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
 	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
+
+	static int time = 0;
+	time++;
+	if (time % 5 == 0)
+	{
+		CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
+		afterimage->SetMtxQuaternion(m_quaternion);
+		afterimage->SetMaterialDiffuse(0,GetMaterialDiffuse(0));
+	}
 }
 
 //-----------------------------------------------------------------------------
