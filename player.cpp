@@ -225,7 +225,7 @@ void CPlayer::Landing()
 	}
 	else
 	{
-		m_move.y -= GRAVITY;		// 重力
+		m_move.y -= GRAVITY;	// 重力
 	}
 }
 
@@ -235,8 +235,6 @@ void CPlayer::Landing()
 void CPlayer::OnHitGoal()
 {
 	CObject* object = SearchType(CObject::EType::GOAL, CTaskGroup::EPriority::LEVEL_3D_1);
-
-	float dist = 0.0f;
 
 	while (object != nullptr)
 	{
@@ -280,8 +278,6 @@ bool CPlayer::OnHitPolygon()
 	// 最初に見つけた指定したタイプのobjectを持ってくる
 	CObject* object = SearchType(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
 
-	float length = 0.0f;
-
 	bool hit = false;
 
 	while (object != nullptr)
@@ -290,10 +286,8 @@ bool CPlayer::OnHitPolygon()
 
 		CObjectX* objectX = (CObjectX*)object;	// 変換
 
-		objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
 		if (OBBAndOBB(objectX))
 		{
-			objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
 			D3DXVECTOR3 move = m_posOld - m_pos;
 			CDebugProc::Print("dist : %.2f,%.2f,%.2f\n", move.x, move.y, move.z);
 
@@ -305,61 +299,16 @@ bool CPlayer::OnHitPolygon()
 			{
 				AddMove(m_posOld - m_pos);
 			}
+
 			AddPos(GetMove());
 			SetMtxQuaternion(m_quaternionOld);
+
 			if (m_move.y < -20.0f)
 			{
 				m_move.y = 0.0f;
 			}
 			hit = true;
 		}
-		//if (OBBAndBoxTop(objectX, &length) || OBBAndBoxDown(objectX, &length))
-		//{
-		//	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
-		//	m_pos.y = m_posOld.y;
-		//	D3DXVECTOR3 move;
-		//	D3DXVec3Normalize(&move, &m_move);
-		//	move.y *= -1.0f;
-		//	move.y *= length;
-		//	if (move.y < 0.1f)
-		//	{
-		//		move.y = 0.0f;
-		//	}
-		//	m_move.y = move.y;
-		//	m_jumpCount = 0;
-		//}
-		//if (OBBAndBoxLeft(objectX, &length) || OBBAndBoxRight(objectX, &length))
-		//{
-		//	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
-
-		//	m_pos.x = m_posOld.x;
-		//	D3DXVECTOR3 move;
-		//	D3DXVec3Normalize(&move, &m_move);
-		//	move.x *= -1.0f;
-		//	move.x *= length;
-		//	if (move.x < 0.1f)
-		//	{
-		//		move.x = 0.0f;
-		//	}
-		//	m_move.x = move.x;
-		//	SetMove(m_move);
-		//	AddPos(m_move);
-		//	m_jumpCount = 0;
-		//}
-		//if (OBBAndBoxFront(objectX, &length) || OBBAndBoxBack(objectX, &length))
-		//{
-		//	D3DXVECTOR3 move;
-		//	D3DXVec3Normalize(&move, &m_move);
-		//	move.z *= -1.0f;
-		//	move.z *= length;
-		//	if (move.z < 0.1f)
-		//	{
-		//		move.z = 0.0f;
-		//	}
-		//	m_move.z = move.z;
-		//	SetMove(m_move);
-		//	m_jumpCount = 0;
-		//}
 		object = next;
 	}
 	return hit;

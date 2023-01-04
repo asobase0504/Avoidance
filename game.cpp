@@ -81,7 +81,8 @@ HRESULT CGame::Init(void)
 		CPlayer* player = CPlayer::Create();
 		player->LoadModel("BOX");
 		player->SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
-		player->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
+		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0);
+		player->SetMaterialDiffuse(0, color);
 		player->CalculationVtx();
 	}
 

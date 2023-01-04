@@ -75,6 +75,9 @@ public:
 
 	/* マテリアル関係 */
 	void SetMaterialDiffuse(unsigned int index, const D3DXCOLOR& inColor);
+	
+	/* 透明度 */
+	void SetColorAlpha(float inAlpha) { m_colorAlpha = inAlpha; }
 
 	/* 当たり判定 */
 	void SetCollisionFlag(bool inFlag) { m_isCollision = inFlag; }	// 当たり判定の有無を設定
@@ -111,5 +114,6 @@ private:
 
 	CObjectX *m_pParent;		// 親モデルの情報
 	bool m_isCollision;			// 当たり判定が必要か
+	float m_colorAlpha;			// 透明度
 };
 #endif

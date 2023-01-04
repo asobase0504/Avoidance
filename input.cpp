@@ -56,10 +56,10 @@ HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 		return E_FAIL;
 	}
 
-	//ジョイパッドの生成
+	//DirectXジョイパッドの生成
 	m_pJoyPad = new CInputJoyPad;
 
-	//ジョイパッドの初期化処理
+	//DirectXジョイパッドの初期化処理
 	if (FAILED(m_pJoyPad->Init(hInstance, hWnd)))
 	{
 		return E_FAIL;
@@ -89,12 +89,20 @@ void CInput::Uninit()
 		m_pKeyboard = nullptr;
 	}
 
-	//ジョイパッドの破棄
+	//DirectXジョイパッドの破棄
 	if (m_pJoyPad != nullptr)
 	{
 		m_pJoyPad->Uninit();
 		delete m_pJoyPad;
 		m_pJoyPad = nullptr;
+	}
+
+	//マウスの破棄
+	if (m_mouse != nullptr)
+	{
+		m_mouse->Uninit();
+		delete m_mouse;
+		m_mouse = nullptr;
 	}
 
 	//DirectInputオブジェクトの破棄

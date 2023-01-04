@@ -24,7 +24,8 @@
 CObjectX::CObjectX(CTaskGroup::EPriority nPriority) :
 	CObject(nPriority),
 	m_pParent(nullptr),
-	m_scale(1.0f,1.0f,1.0f)
+	m_scale(1.0f,1.0f,1.0f),
+	m_colorAlpha(1.0f)
 {
 	//オブジェクトのタイプセット処理
 	CObject::SetType(CObject::MODEL);
@@ -126,6 +127,8 @@ void CObjectX::Draw()
 			{
 				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];
 			}
+
+			pMat[nCntMat].MatD3D.Diffuse.a = m_colorAlpha;
 
 			// マテリアルの設定
 			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
