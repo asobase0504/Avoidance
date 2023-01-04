@@ -80,6 +80,7 @@ public:
 	int GetAcceptJoyPadCount();
 
 	/* Mouse */
+	CMouse* GetMouse() { return m_mouse; }	// マウス全体の取得
 	bool Press(CMouse::MOUSE_KEY key) { return m_mouse->GetPress(key); }		// プレス
 	bool Trigger(CMouse::MOUSE_KEY key) { return m_mouse->GetTrigger(key); }	// トリガー
 	bool Release(CMouse::MOUSE_KEY key) { return m_mouse->GetRelease(key); }	// リリース

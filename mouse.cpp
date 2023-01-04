@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 #include "mouse.h"
+#include "renderer.h" // スクリーンの大きさを取得するため
 
 //=============================================================================
 // コンストラクタ
@@ -118,6 +119,8 @@ void CMouse::Update(void)
 		// マウスへのアクセス権を獲得
 		m_device->Acquire();
 	}
+
+	SetMouseCenterPos();
 }
 
 //=============================================================================
@@ -155,7 +158,7 @@ bool CMouse::GetRelease(MOUSE_KEY nKey)
 // Author : 唐﨑結斗
 // 概要 : マウスカーソルの位置を取得し、数値を返す
 //=============================================================================
-D3DXVECTOR3 CMouse::GetMouseCursor(void)
+D3DXVECTOR3 CMouse::GetMouseCursorPos()
 {
 	// スクリーン座標上のマウスカーソルの位置の取得
 	GetCursorPos(&m_mouseCursor);
@@ -171,7 +174,7 @@ D3DXVECTOR3 CMouse::GetMouseCursor(void)
 // Author : 唐﨑結斗
 // 概要 : マウスホイールの移動量の数値を返す
 //=============================================================================
-int CMouse::GetMouseWheel(void)
+int CMouse::GetWheelPower(void)
 {
 	return (int)m_aKeyState.lZ;
 }
@@ -181,7 +184,27 @@ int CMouse::GetMouseWheel(void)
 // Author : 唐﨑結斗
 // 概要 : マウスの移動量の数値を返す
 //=============================================================================
-D3DXVECTOR3 CMouse::GetMouseMove(void)
+D3DXVECTOR3 CMouse::GetMouseCursorMove(void)
 {
 	return D3DXVECTOR3((float)(m_aKeyState.lX), (float)(m_aKeyState.lY), (float)(m_aKeyState.lZ));
+}
+
+void CMouse::SetMouseCenterPos()
+{
+	D3DXVECTOR2 pos;
+
+	pos.x = SCREEN_WIDTH / 2;
+	pos.y = SCREEN_HEIGHT / 2;
+
+	WINDOWINFO windowInfo;
+
+	//ウィンドウの位置を取得
+	windowInfo.cbSize = sizeof(WINDOWINFO);
+	GetWindowInfo(m_hWnd, &windowInfo);
+
+	//マウスの移動先の絶対座標（モニター左上からの座標）
+	pos.x += windowInfo.rcWindow.left;
+	pos.y += windowInfo.rcWindow.top + 35; //ウィンドウのタイトルバーの分（35px）をプラス
+
+	SetCursorPos(pos.x, pos.y);
 }

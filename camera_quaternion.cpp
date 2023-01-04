@@ -379,7 +379,7 @@
 //	CMouse *pMouse = CApplication::GetMouse();
 //
 //	// 回転のベクトルを設定。
-//	m_rotMove = D3DXVECTOR3(pMouse->GetMouseMove().y, pMouse->GetMouseMove().x, pMouse->GetMouseMove().z);
+//	m_rotMove = D3DXVECTOR3(pMouse->GetCursorMove().y, pMouse->GetCursorMove().x, pMouse->GetCursorMove().z);
 //
 //	// クリックの情報を保管
 //	bool hasLeftClick = pMouse->GetPress(CMouse::MOUSE_KEY_LEFT);

@@ -54,10 +54,13 @@ public:
 	bool GetPress(MOUSE_KEY nKey);							// プレス情報の取得
 	bool GetTrigger(MOUSE_KEY nKey);						// トリガー情報の取得
 	bool GetRelease(MOUSE_KEY nKey);						// リリース情報の取得
-	D3DXVECTOR3 GetMouseCursor(void);						// マウスカーソルのスクリーン座標の取得
-	int GetMouseWheel(void);								// マウスのホイールの動き処理
-	D3DXVECTOR3 GetMouseMove(void);							// マウスの移動量を出力処理
-	void SetShowCursor(bool bShow) { ShowCursor(bShow); }	// マウスカーソルの表示
+	int GetWheelPower(void);								// マウスのホイールの動き処理
+
+	// カーソル
+	D3DXVECTOR3 GetMouseCursorPos(void);					// スクリーン座標の取得
+	D3DXVECTOR3 GetMouseCursorMove(void);					// 移動量を出力処理
+	void SetShowCursor(bool bShow) { ShowCursor(bShow); }	// 表示の有無
+	void SetMouseCenterPos();
 
 private:
 	//--------------------------------------------------------------------

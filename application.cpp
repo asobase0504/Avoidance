@@ -87,6 +87,7 @@ HRESULT CApplication::Init(HWND hWnd, HINSTANCE hInstance)
 	{
 		return E_FAIL;
 	}
+	CInput::GetKey()->GetMouse()->SetShowCursor(false);
 
 	// ‰¹Šyˆ—‚Ì‰Šú‰»ˆ—
 	m_pSound = new CSound;

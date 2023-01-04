@@ -44,7 +44,6 @@ protected:
 	D3DXVECTOR3 m_posRDest;		// 目的地からの差
 	D3DXVECTOR3 m_vecU;			// ベクトル
 	D3DXVECTOR3 m_rot;			// 位置回転
-	D3DVIEWPORT9 m_viewport;	//
 	D3DXMATRIX m_MtxProject;	// プロジェクションマトリックス
 	D3DXMATRIX m_MtxView;		// ビューマトリックス
 	int m_Type;

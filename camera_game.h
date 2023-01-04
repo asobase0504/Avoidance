@@ -24,6 +24,8 @@ public:
 	HRESULT Init() override;
 	void Uninit() override;
 	void Update() override;
+
+	void Rotate();
 private:
 	float m_fDistance;			// ‹——£
 };
