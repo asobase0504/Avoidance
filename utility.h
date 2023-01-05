@@ -139,7 +139,7 @@ D3DXVECTOR3 ConvertQuaternionfromRadian(const D3DXQUATERNION& inQuaternion);
 // Author : Hamada Ryuuga
 // Author : Yuda Kaito
 // 引数1  : float X		// 時間
-// 返値  : float / 計算結果
+// 返値  : float		// 計算結果
 //--------------------------------------------------
 namespace ease
 {

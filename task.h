@@ -24,6 +24,7 @@ public:
 	{
 		ROLE_OBJECT = 0,
 		ROLE_CAMERA,
+		ROLE_LIGHT,
 		ROLE_STAGE,
 		ROLE_MAX
 	};
@@ -56,7 +57,12 @@ public:
 	void SetRole(const ERole& inJobRole) { m_role = inJobRole; }
 	const ERole& GetRole() const { return m_role; }
 
+	// 優先順位
+	int GetPriority() { return m_priority; }
+
 private:
+	int m_priority;
+
 	CTask* m_prev;		// 前のタスク
 	CTask* m_next;		// 後のタスク
 

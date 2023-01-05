@@ -40,9 +40,9 @@ public:
 
 	/* 描画 */
 	void Draw() override;
-	void Draw(const D3DXQUATERNION& quaternion);	// 回転をクオータニオン
-	void Draw(D3DXMATRIX mtxParent);				// 親子関係
-	void Projection();								// 平行投影処理
+	void DrawMaterial();
+	void Draw(D3DXMATRIX mtxParent);	// 親子関係
+	void Projection();					// 平行投影処理
 
 	/* 生成処理 */
 	static CObjectX *Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority = CTaskGroup::LEVEL_3D_1);
@@ -116,5 +116,17 @@ private:
 	CObjectX *m_pParent;		// 親モデルの情報
 	bool m_isCollision;			// 当たり判定が必要か
 	float m_colorAlpha;			// 透明度
+
+	//=========================================
+	//ハンドル一覧
+	//=========================================
+	IDirect3DTexture9	*pTex0 = NULL;				// テクスチャ保存用
+	D3DXHANDLE			m_hmWVP;					// ワールド～射影行列
+	D3DXHANDLE			m_hmWIT;					// ローカル - ワールド変換行列
+	D3DXHANDLE			m_hvLightDir;				// ライトの方向
+	D3DXHANDLE			m_hvCol;					// 頂点色
+	D3DXHANDLE			m_hvEyePos;					// 視点の位置
+	D3DXHANDLE			m_hTechnique;				// テクニック
+	D3DXHANDLE			m_hTexture;					// テクスチャ
 };
 #endif

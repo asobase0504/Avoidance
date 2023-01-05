@@ -91,7 +91,7 @@ void CCamera::Set(int Type)
 			D3DXToRadian(90.0f),
 			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
 			10.0f,
-			10000.0f);
+			20000.0f);
 	}
 	else
 	{

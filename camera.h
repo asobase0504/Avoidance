@@ -19,7 +19,6 @@
 //=============================================================================
 class CCamera : public CTask
 {
-
 public:
 	CCamera(CTaskGroup::EPriority inPriority = CTaskGroup::LEVEL_3D_1);
 	~CCamera() override;

@@ -21,6 +21,8 @@
 //=============================================================================
 CRenderer* CRenderer::m_renderer = nullptr;
 
+LPD3DXEFFECT pEffect;		// シェーダー
+
 //=============================================================================
 // シングルトンでのインスタンスの取得
 //=============================================================================
@@ -112,6 +114,9 @@ HRESULT CRenderer::Init(HWND hWnd, bool bWindow)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+
+	D3DXCreateEffectFromFile(m_pD3DDevice, "Effect.fx", NULL, NULL, 0, NULL, &pEffect, nullptr);
+
 
 #ifdef _DEBUG
 

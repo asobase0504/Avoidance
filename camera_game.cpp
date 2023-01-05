@@ -11,6 +11,7 @@
 #include "input.h"
 #include "object.h"
 #include "debug_proc.h"
+#include "utility.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -63,17 +64,18 @@ void CCameraGame::Update()
 	D3DXMATRIX mtxWorld;
 	D3DXMATRIX mtxRot, mtxTrans;
 
-	D3DXMatrixIdentity(&mtxWorld);										// 行列初期化関数
+	D3DXMatrixIdentity(&mtxWorld);	// 行列初期化関数
 
 	// 向きの反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);		// 行列回転関数
 	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);						// 行列掛け算関数 
 
 	// 位置を反映
-	D3DXVECTOR3 pos = CObject::SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1)->GetPos();
-	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);			// 行列移動関数
-	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);			// 行列掛け算関数
+	D3DXVECTOR3 pos = CObject::SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1)->GetPos();	// プレイヤーを検索
+	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);	// 行列移動関数
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);	// 行列掛け算関数
 
+	// D3DXVECTOR3に反映
 	D3DXVec3TransformCoord(&m_posV, &m_posV, &mtxWorld);
 	D3DXVec3TransformCoord(&m_posR, &m_posR, &mtxWorld);
 }
@@ -119,14 +121,9 @@ void CCameraGame::Rotate()
 
 	CDebugProc::Print("m_rot : %.2f,%.2f,%.2f\n", m_rot.x, m_rot.y, m_rot.z);
 
-	if (m_rot.y < -D3DX_PI)
-	{// 向きが-D3DX_PI未満の時
-		m_rot.y += D3DX_PI * 2;
-	}
-	if (m_rot.y > D3DX_PI)
-	{// 向きがD3DX_PI以上の時
-		m_rot.y -= D3DX_PI * 2;
-	}
+	// 正規化
+	NormalizeAngle(m_rot.y);
+
 	if (m_rot.x < -D3DX_PI * 0.5f + 0.1f)
 	{// 向きが-D3DX_PI未満の時
 		m_rot.x = -D3DX_PI * 0.5f + 0.1f;

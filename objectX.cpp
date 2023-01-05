@@ -16,6 +16,8 @@
 #include "main.h"
 #include "texture.h"
 #include "utility.h"
+#include "camera.h"
+#include "light.h"
 #include <assert.h>
 
 //=============================================================================
@@ -46,6 +48,19 @@ CObjectX::~CObjectX()
 //=============================================================================
 HRESULT CObjectX::Init()
 {
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
+
+	extern LPD3DXEFFECT pEffect;		// シェーダー
+
+	m_hTechnique = pEffect->GetTechniqueByName("Diffuse");			// エフェクト
+	m_hTexture = pEffect->GetParameterByName(NULL, "Tex");			// テクスチャ
+	m_hmWVP = pEffect->GetParameterByName(NULL, "mWVP");			// ローカル-射影変換行列
+	m_hmWIT = pEffect->GetParameterByName(NULL, "mWIT");			// ローカル-ワールド変換行列
+	m_hvLightDir = pEffect->GetParameterByName(NULL, "vLightDir");	// ライトの方向
+	m_hvCol = pEffect->GetParameterByName(NULL, "vColor");			// 頂点カラー
+	m_hvEyePos = pEffect->GetParameterByName(NULL, "vEyePos");
+
 	return S_OK;
 }
 
@@ -76,8 +91,6 @@ void CObjectX::NormalUpdate()
 //=============================================================================
 void CObjectX::Draw()
 {
-	GiftMtx(&m_mtxWorld, m_pos, m_rot);	// マトリックスの設定
-
 	// 計算用マトリックス
 	D3DXMATRIX mtxTrans;
 
@@ -107,106 +120,152 @@ void CObjectX::Draw()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
+//	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
 	// ワールドマトリックスの設定（ワールド座標行列の設定）
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	// 現在のマテリアルを保持
-	D3DMATERIAL9 matDef;
-	pDevice->GetMaterial(&matDef);
-
-	if (m_pBuffMat != nullptr)
-	{
-		// マテリアルデータへのポインタを取得
-		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-		D3DXCOLOR diffuse;
-
-		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
-		{
-			diffuse = pMat[nCntMat].MatD3D.Diffuse;
-			if (m_materialDiffuse.count(nCntMat) != 0)
-			{
-				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];
-			}
-
-			pMat[nCntMat].MatD3D.Diffuse.a = m_colorAlpha;
-
-			// マテリアルの設定
-			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-
-			// モデルパーツの描画
-			m_pMesh->DrawSubset(nCntMat);
-
-			pMat[nCntMat].MatD3D.Diffuse = diffuse;
-		}
-	}
-
-	// 保持していたマテリアルを戻す
-	pDevice->SetMaterial(&matDef);
+	DrawMaterial();
 }
 
 //=============================================================================
-// クオータニオンを使用した描画
-// Author : Yuda Kaito
+// 描画
+// Author : Hamada Ryuga
 // 概要 : 描画を行う
 //=============================================================================
-void CObjectX::Draw(const D3DXQUATERNION& quaternion)
+void CObjectX::DrawMaterial()
 {
 	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
-	D3DXMATRIX mtxTrans, mtxParent;		// 計算用マトリックス
-
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	// クォータニオンの使用した姿勢の設定
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);		// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
-
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);	// (※行列移動関数(第1引数にx,y,z方向の移動行列を作成))
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-	if (m_pParent != nullptr)
-	{
-		mtxParent = m_pParent->GetMtxWorld();
-
-		// 行列掛け算関数
-		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
-	}
-
-	// ワールドマトリックスの設定（ワールド座標行列の設定）
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-	// 現在のマテリアルを保持
+	// 現在のマテリアル保存用
 	D3DMATERIAL9 matDef;
-	pDevice->GetMaterial(&matDef);
+	// マテリアルデータへのポインタ
+	D3DXMATERIAL* pMat;
 
-	if (m_pBuffMat != nullptr)
+	CCamera* pCamera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, GetPriority());
+
+	D3DMATRIX viewMatrix = pCamera->GetMtxView();
+	D3DMATRIX projMatrix = pCamera->GetMtxProje();
+
+	D3DXMATRIX mtxRot, mtxTrans, mtxScale;
+
+	CLight* lightClass = (CLight*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());	// カメラ情報
+	D3DLIGHT9 light = lightClass->GetLight(0);
+
+	D3DXMATRIX m, mT, mR, mView, mProj;
+	D3DXVECTOR4 v, light_pos;
+
+	extern LPD3DXEFFECT pEffect;		// シェーダー
+
+	//==================================================================================
+	if (pEffect != NULL)
 	{
-		// マテリアルデータへのポインタを取得
-		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+		//-------------------------------------------------
+		// シェーダの設定
+		//-------------------------------------------------
+		pEffect->SetTechnique(m_hTechnique);
+		pEffect->Begin(NULL, 0);
+		pEffect->BeginPass(0);
+		//pDevice->SetFVF(FVF_VERTEX_3D);
+
+		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		//pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+
+		D3DXMatrixTranslation(&m, 1.0f, 0.0f, 0.0f);
+
+		D3DXMatrixRotationY(&mR, 0.0f);
+		D3DXMatrixTranslation(&mT, 1.0f, 1.2f, 0.0f);
+
+		//位置を反映
+		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+
+		// ローカル-射影変換行列
+		D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
+		D3DXMatrixTranspose(&m, &m);
+		pEffect->SetMatrix(m_hmWIT, &m);
+
+		// ローカル-射影変換行列
+		m = m_mtxWorld * viewMatrix * projMatrix;
+		pEffect->SetMatrix(m_hmWVP, &m);
+
+		// ライトの方向
+		light_pos = D3DXVECTOR4(light.Direction.x, light.Direction.y, light.Direction.z, 0);
+
+		D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
+		D3DXVec4Transform(&v, &-light_pos, &m);
+
+		D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);
+
+		//環境光の大きさ
+		v.w = -0.8f;
+		pEffect->SetVector(m_hvLightDir, &v);
+
+		// 視点
+		m = m_mtxWorld *viewMatrix;
+		D3DXMatrixInverse(&m, NULL, &m);
+
+		//環境光
+		v = D3DXVECTOR4(0, 0, 0, 1);
+
+		//マテリアルデータのポインタを取得する
+		pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+
+		D3DMATERIAL9 *pMtrl = &pMat->MatD3D;
+
+		D3DXVec4Transform(&v, &v, &m);
+
+		//視点をシェーダーに渡す
+		pEffect->SetVector(m_hvEyePos, &v);
+
 		D3DXCOLOR diffuse;
 
 		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 		{
-			diffuse = pMat[nCntMat].MatD3D.Diffuse;
+			// モデルの色の設定 
+			v = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+
+			diffuse = pMat[nCntMat].MatD3D.Diffuse;	// ディフューズを保存
 			if (m_materialDiffuse.count(nCntMat) != 0)
 			{
-				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];
+				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];	// ディフューズに指定した色を代入
 			}
 
-			// マテリアルの設定
-			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+			pMat[nCntMat].MatD3D.Diffuse.a = m_colorAlpha;	// モデルの透明度を設定
 
-			// モデルパーツの描画
+			if (CTexture::GetInstance()->GetTexture(m_textureKey) != nullptr)
+			{// テクスチャの適応
+				pTex0 = CTexture::GetInstance()->GetTexture(m_textureKey);
+			}
+
+			pEffect->SetVector(m_hvCol, &v);
+
+			// テクスチャの設定
+			pEffect->SetTexture(m_hTexture, pTex0);
+
+			//モデルパーツの描画
 			m_pMesh->DrawSubset(nCntMat);
 
-			pMat[nCntMat].MatD3D.Diffuse = diffuse;
+			pMat[nCntMat].MatD3D.Diffuse = diffuse;	// ディフューズを元に戻す
+			pMtrl++;
 		}
+
+		pEffect->EndPass();
+		pEffect->End();
 	}
+
+	//=========================================
+
+	// 現在のマテリアルを保持
+	pDevice->GetMaterial(&matDef);
 
 	// 保持していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
+
+	// ライトを有効
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	//==================================================================================
 }
 
 //=============================================================================
@@ -352,8 +411,6 @@ void CObjectX::CalculationVtx()
 		m_MaxVtx.z = m_MinVtx.z;
 		m_MinVtx.z = change;
 	}
-
-	SetScale(m_scale);
 }
 
 //=============================================================================
@@ -662,7 +719,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		return false;
 	}
 
-	// 回転行列
+	// 逆行列
 	D3DXMATRIX mtxThisRot = m_mtxRot;
 	mtxThisRot._11 = m_mtxRot._11;
 	mtxThisRot._12 = m_mtxRot._21;
@@ -674,7 +731,10 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 	mtxThisRot._32 = m_mtxRot._23;
 	mtxThisRot._33 = m_mtxRot._33;
 
+	// 自身とターゲットの向きを合成
 	D3DXMATRIX mtx = mtxThisRot * inObjectX->GetMatRot();
+
+	// 絶対値
 	D3DXMATRIX mtxAds;
 	mtxAds._11 = fabs(mtx._11);
 	mtxAds._12 = fabs(mtx._21);
@@ -686,7 +746,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 	mtxAds._32 = fabs(mtx._23);
 	mtxAds._33 = fabs(mtx._33);
 
-	const float etc = 1.0e-6;	// めっちゃ小さな数字(100万分の1)
+	const float etc = 1.0e-6f;	// めっちゃ小さな数字(100万分の1)
 	bool parallel = false;
 
 	if (mtxAds._11 + etc >= 1.0f ||
@@ -706,10 +766,40 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 	D3DXVECTOR3 pos = (GetPos() - inObjectX->GetPos());
 	D3DXVec3TransformCoord(&interval, &pos, &m_mtxRot);
 
+	bool debug = false;
+
+	if (D3DXVec3Length(&pos) < 100.0f)
+	{
+		debug = false;
+	}
+
+	if (debug)
+	{
+		//CDebugProc::Print("mtxAds : %.2f,%.2f,%.2f   %.2f,%.2f,%.2f  %.2f,%.2f,%.2f│ ", mtxAds._11, mtxAds._12, mtxAds._13, mtxAds._21, mtxAds._22, mtxAds._23, mtxAds._31, mtxAds._32, mtxAds._33);
+		CDebugProc::Print("pos : %.2f,%.2f,%.2f │ ", pos.x, pos.y, pos.z);
+		CDebugProc::Print("interval : %.2f,%.2f,%.2f │", interval.x, interval.y, interval.z);
+	}
+
 	float s;
 
-	D3DXVECTOR3 thisScale = m_scale;
-	D3DXVECTOR3 targetScale = inObjectX->GetScale();
+	D3DXVECTOR3 thisScale = m_MaxVtx;
+	{
+		D3DXVECTOR3 scale = m_scale * 0.5f;
+		thisScale.x *= scale.x;
+		thisScale.y *= scale.y;
+		thisScale.z *= scale.z;
+		//CDebugProc::Print("thisScale : %.2f,%.2f,%.2f │", thisScale.x, thisScale.y, thisScale.z);
+	}
+
+	D3DXVECTOR3 targetScale = inObjectX->GetMaxVtx();
+	{
+		D3DXVECTOR3 scale = inObjectX->GetScale() * 0.5f;
+		targetScale.x *= scale.x;
+		targetScale.y *= scale.y;
+		targetScale.z *= scale.z;
+		CDebugProc::Print("targetScale : %.2f,%.2f,%.2f │", targetScale.x, targetScale.y, targetScale.z);
+	}
+
 	float aMax = -FLT_MAX;
 	float bMax = -FLT_MAX;
 	float eMax = -FLT_MAX;
@@ -737,24 +827,32 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		return false;
 	};
 
+
 	//A.e1
-	s = fabs(interval.x) - (thisScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._12, mtxAds._13), &targetScale));
+	s = fabs(interval.x) - (thisScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._21, mtxAds._31), &targetScale));
+	if (debug)CDebugProc::Print("%s",parallel ? "│ parallel" : "");
 	if (TrackFaceAxis(&aAxis, 0, s, &aMax, D3DXVECTOR3(m_mtxRot._11, m_mtxRot._12, m_mtxRot._13), &nA))
 	{
+		if (debug)CDebugProc::Print("s : %.2f", s);
+		if (debug)CDebugProc::Print("│A.e1\n");
 		return false;
 	}
 
 	//A.e2
-	s = fabs(interval.y) - (thisScale.y + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._21, mtxAds._22, mtxAds._23), &targetScale));
+	s = fabs(interval.y) - (thisScale.y + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._12, mtxAds._22, mtxAds._32), &targetScale));
 	if (TrackFaceAxis(&aAxis, 1, s, &aMax, D3DXVECTOR3(m_mtxRot._21, m_mtxRot._22, m_mtxRot._23), &nA))
 	{
+		if (debug)CDebugProc::Print("s : %.2f", s);
+		if (debug)CDebugProc::Print("│ A.e2\n");
 		return false;
 	}
 
 	//A.e3
-	s = fabs(interval.z) - (thisScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._31, mtxAds._32, mtxAds._33), &targetScale));
+	s = fabs(interval.z) - (thisScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._13, mtxAds._23, mtxAds._33), &targetScale));
 	if (TrackFaceAxis(&aAxis, 2, s, &aMax, D3DXVECTOR3(m_mtxRot._31, m_mtxRot._32, m_mtxRot._33), &nA))
 	{
+		if (debug)CDebugProc::Print("s : %.2f", s);
+		if (debug)CDebugProc::Print("│ A.e3\n");
 		return false;
 	}
 
@@ -764,6 +862,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._11, mtx._12, mtx._13))) - (targetScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._12, mtxAds._13), &thisScale));
 	if (TrackFaceAxis(&bAxis, 3, s, &bMax, D3DXVECTOR3(targetMtxRot._11, targetMtxRot._12, targetMtxRot._13), &nB))
 	{
+		if (debug)CDebugProc::Print("s : %.2f", s);
+		if (debug)CDebugProc::Print("│ B.e1\n");
 		return false;
 	}
 
@@ -771,6 +871,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._21, mtx._22, mtx._23))) - (targetScale.y + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._21, mtxAds._22, mtxAds._23), &thisScale));
 	if (TrackFaceAxis(&bAxis, 4, s, &bMax, D3DXVECTOR3(targetMtxRot._21, targetMtxRot._22, targetMtxRot._23), &nB))
 	{
+		if (debug)CDebugProc::Print("s : %.2f", s);
+		if (debug)CDebugProc::Print("│ B.e2\n");
 		return false;
 	}
 
@@ -778,6 +880,10 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._31, mtx._32, mtx._33))) - (targetScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._31, mtxAds._32, mtxAds._33),&thisScale));
 	if (TrackFaceAxis(&bAxis, 5, s, &bMax, D3DXVECTOR3(targetMtxRot._31, targetMtxRot._32, targetMtxRot._33), &nB))
 	{
+		if (debug)CDebugProc::Print("a : %.2f", fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._31, mtx._32, mtx._33))));
+		if (debug)CDebugProc::Print("b : %.2f", (targetScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._31, mtxAds._32, mtxAds._33), &thisScale)));
+		if (debug)CDebugProc::Print("s : %.2f", s);
+		if (debug)CDebugProc::Print("│ B.e3\n");
 		return false;
 	}
 
@@ -811,64 +917,103 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		targetRadius = targetScale.y * mtxAds._31 + targetScale.z * mtxAds._21;
 		s = fabs(interval.z * mtx._12 - interval.y * mtx._13) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 6, s, &eMax, D3DXVECTOR3(0.0f, -mtx._13, mtx._12), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C11\n");
 			return false;
+		}
 
 		//C12
 		thisRadius = thisScale.y * mtxAds._23 + thisScale.z * mtxAds._22;
 		targetRadius = targetScale.x * mtxAds._31 + targetScale.z * mtxAds._11;
 		s = fabs(interval.z * mtx._22 - interval.y * mtx._23) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 7, s, &eMax, D3DXVECTOR3(0.0f, -mtx._23, mtx._22), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C12\n");
 			return false;
+		}
 
 		//C13
 		thisRadius = thisScale.y * mtxAds._33 + thisScale.z * mtxAds._32;
 		targetRadius = targetScale.x * mtxAds._21 + targetScale.y * mtxAds._11;
 		s = fabs(interval.z * mtx._32 - interval.y * mtx._33) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 8, s, &eMax, D3DXVECTOR3(0.0f, -mtx._33, mtx._32), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C13\n");
 			return false;
+		}
 
 		//C21
 		thisRadius = thisScale.x * mtxAds._13 + thisScale.z * mtxAds._11;
 		targetRadius = targetScale.y * mtxAds._31 + targetScale.z * mtxAds._22;
 		s = fabs(interval.x * mtx._13 - interval.z * mtx._11) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 9, s, &eMax, D3DXVECTOR3(mtx._13, 0.0f, -mtx._11), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C21\n");
 			return false;
+		}
 
 		//C22
 		thisRadius = thisScale.x * mtxAds._23 + thisScale.z * mtxAds._21;
 		targetRadius = targetScale.x * mtxAds._32 + targetScale.z * mtxAds._12;
 		s = fabs(interval.x * mtx._23 - interval.z * mtx._21) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 10, s, &eMax, D3DXVECTOR3(mtx._23, 0.0f, -mtx._21), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C22\n");
 			return false;
+		}
 
 		//C23
 		thisRadius = thisScale.x * mtxAds._33 + thisScale.z * mtxAds._31;
 		targetRadius = targetScale.x * mtxAds._22 + targetScale.y * mtxAds._12;
 		s = fabs(interval.x * mtx._33 - interval.z * mtx._31) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 11, s, &eMax, D3DXVECTOR3(mtx._33, 0.0f, -mtx._31), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C23\n");
 			return false;
+		}
 
 		//C31
 		thisRadius = thisScale.x * mtxAds._12 + thisScale.y * mtxAds._11;
 		targetRadius = targetScale.y * mtxAds._33 + targetScale.z * mtxAds._23;
 		s = fabs(interval.y * mtx._11 - interval.x * mtx._12) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 12, s, &eMax, D3DXVECTOR3(-mtx._13, mtx._12, 0.0f), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C31\n");
 			return false;
+		}
 
 		//C32
 		thisRadius = thisScale.x * mtxAds._22 + thisScale.y * mtxAds._21;
 		targetRadius = targetScale.x * mtxAds._33 + targetScale.z * mtxAds._13;
 		s = fabs(interval.y * mtx._21 - interval.x * mtx._22) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 13, s, &eMax, D3DXVECTOR3(-mtx._22, mtx._21, 0.0f), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C32\n");
 			return false;
+		}
 
 		//C33
 		thisRadius = thisScale.x * mtxAds._32 + thisScale.y * mtxAds._31;
 		targetRadius = targetScale.x * mtxAds._23 + targetScale.y * mtxAds._13;
 		s = fabs(interval.y * mtx._31 - interval.x * mtx._32) - (thisRadius + targetRadius);
 		if (TrackEdgeAxis(&eAxis, 14, s, &eMax, D3DXVECTOR3(-mtx._32, mtx._31, 0.0f), &nE))
+		{
+			if (debug)CDebugProc::Print("s : %.2f", s);
+			if (debug)CDebugProc::Print("│ C33\n");
 			return false;
+		}
 	}
+
+	if (debug)CDebugProc::Print("s : %.2f", s);
+	if (debug)CDebugProc::Print("│ ★Hit★\n");
 	return true;
 }
 

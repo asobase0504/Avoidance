@@ -73,7 +73,7 @@ void CPlayer::NormalUpdate()
 	Move();		// 移動
 	boost();	// 突進
 	Jump();		// ジャンプ
-	//Landing();	// 落下
+	Landing();	// 落下
 	OnHitGoal();	// Goalとの当たり判定
 	OnHitEnemy();
 
@@ -101,7 +101,7 @@ void CPlayer::NormalUpdate()
 
 	static int time = 0;
 	time++;
-	if (time % 1 == 0)
+	if (time % 2 == 0)
 	{
 		CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
 		afterimage->SetMtxQuaternion(m_quaternion);
@@ -247,7 +247,7 @@ void CPlayer::Landing()
 	}
 	else
 	{
-		m_move.y -= GRAVITY;	// 重力
+		//m_move.y -= GRAVITY;	// 重力
 	}
 }
 
@@ -262,11 +262,11 @@ void CPlayer::OnHitGoal()
 	{
 		CObject* next = object->NextSameType();
 		
-		if (OBBAndOBB((CObjectX*)object))
-		{
-			CGoal* goal = (CGoal*)object;	// Goal
-			goal->Goal(true);
-		}
+		//if (OBBAndOBB((CObjectX*)object))
+		//{
+		//	CGoal* goal = (CGoal*)object;	// Goal
+		//	goal->Goal(true);
+		//}
 
 		object = next;
 	}
@@ -283,7 +283,7 @@ void CPlayer::OnHitEnemy()
 	{
 		CObject* next = object->NextSameType();
 
-		if (OBBAndOBB((CObjectX*)object))
+		//if (OBBAndOBB((CObjectX*)object))
 		{
 			//m_isGoal = true;	// Goal
 		}
@@ -310,26 +310,6 @@ bool CPlayer::OnHitPolygon()
 
 		if (OBBAndOBB(objectX))
 		{
-			D3DXVECTOR3 move = m_posOld - m_pos;
-			CDebugProc::Print("dist : %.2f,%.2f,%.2f\n", move.x, move.y, move.z);
-
-			if (D3DXVec3Length(&(m_posOld - m_pos)) == 0.0f)
-			{
-				AddMove(m_move);
-			}
-			else
-			{
-				AddMove(m_posOld - m_pos);
-			}
-
-			AddPos(GetMove());
-			SetMtxQuaternion(m_quaternionOld);
-
-			if (m_move.y < -20.0f)
-			{
-				m_move.y = 0.0f;
-			}
-			hit = true;
 		}
 		object = next;
 	}

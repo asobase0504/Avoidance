@@ -1,49 +1,51 @@
 //=============================================================================
 //
-// プレイヤーの残像設定
+// 背景に動くBoxヘッダー
 // Author:Yuda Kaito
 //
 //=============================================================================
+//-----------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------
 #include <assert.h>
-#include "player_afterimage.h"
+#include "bg_box.h"
+#include "application.h"
+#include "color.h"
 #include "utility.h"
-
-const int CPlayerAfterimage::MAX_LIFE = 120;
-const float CPlayerAfterimage::ALPHA_COLOR = 0.45f;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CPlayerAfterimage::CPlayerAfterimage()
+CBgBox::CBgBox()
 {
+	SetType(CObject::EType::PLAYER);
 }
 
 //-----------------------------------------------------------------------------
 // デストラクタ
 //-----------------------------------------------------------------------------
-CPlayerAfterimage::~CPlayerAfterimage()
+CBgBox::~CBgBox()
 {
 }
 
 //-----------------------------------------------------------------------------
 // 初期化
 //-----------------------------------------------------------------------------
-HRESULT CPlayerAfterimage::Init()
+HRESULT CBgBox::Init()
 {
 	// 現在のモーション番号の保管
 	CObjectX::Init();
+	SetType(CObject::NONE);
 	LoadModel("BOX");
-
-	m_life = MAX_LIFE;
-	SetColorAlpha(ALPHA_COLOR);
-
+	SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+	SetMove(D3DXVECTOR3(0.0f,FloatRandam(15.0f,3.0f),0.0f));
 	return S_OK;
 }
 
 //-----------------------------------------------------------------------------
 // 終了
 //-----------------------------------------------------------------------------
-void CPlayerAfterimage::Uninit()
+void CBgBox::Uninit()
 {
 	CObjectX::Uninit();
 }
@@ -51,31 +53,18 @@ void CPlayerAfterimage::Uninit()
 //-----------------------------------------------------------------------------
 // 更新
 //-----------------------------------------------------------------------------
-void CPlayerAfterimage::NormalUpdate()
+void CBgBox::NormalUpdate()
 {
-	m_life--;
-
-	float scale = ease::InElastic((float)m_life / (float)MAX_LIFE);
-
-	SetScale(D3DXVECTOR3(scale, scale, scale));
-	if (m_life <= 0)
+	if (m_pos.y > 5000.0f)
 	{
-		SetUpdateStatus(CObject::EUpdateStatus::END);
+		SetUpdateStatus(EUpdateStatus::END);
 	}
-}
-
-//-----------------------------------------------------------------------------
-// 更新
-//-----------------------------------------------------------------------------
-void CPlayerAfterimage::EndUpdate()
-{
-	Release();
 }
 
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
-void CPlayerAfterimage::Draw()
+void CBgBox::Draw()
 {
 	CObjectX::Draw();
 }
@@ -83,15 +72,14 @@ void CPlayerAfterimage::Draw()
 //-----------------------------------------------------------------------------
 // 生成
 //-----------------------------------------------------------------------------
-CPlayerAfterimage* CPlayerAfterimage::Create(const D3DXVECTOR3& inPos)
+CBgBox* CBgBox::Create()
 {
-	CPlayerAfterimage* objectX = new CPlayerAfterimage;
+	CBgBox* box = new CBgBox;
 
-	if (objectX != nullptr)
+	if (box != nullptr)
 	{
-		objectX->Init();
-		objectX->SetPos(inPos);
+		box->Init();
 	}
 
-	return objectX;
+	return box;
 }

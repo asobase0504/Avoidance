@@ -14,6 +14,7 @@
 #include "sound.h"
 #include "input.h"
 #include "color.h"
+#include "utility.h"
 
 /* 3D系統 */
 #include "camera_game.h"
@@ -26,6 +27,7 @@
 #include "player.h"
 #include "goal.h"
 #include "pause.h"
+#include "bg_box.h"
 
 /* Enemy系統 */
 #include "enemy_oneway.h"
@@ -57,6 +59,7 @@ CGame::~CGame()
 HRESULT CGame::Init(void)
 {
 	m_section = 0;
+	CApplication::GetInstance()->GetColor()->SetTheme(3);
 
 	// ライト
 	CLight* light = new CLight;
@@ -80,7 +83,7 @@ HRESULT CGame::Init(void)
 	{// プレイヤー
 		CPlayer* player = CPlayer::Create();
 		player->LoadModel("BOX");
-		player->SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
+		player->SetPos(D3DXVECTOR3(0.0f, 60.0f, 0.0f));
 		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2);
 		player->SetMaterialDiffuse(0, color);
 		player->CalculationVtx();
@@ -88,7 +91,7 @@ HRESULT CGame::Init(void)
 
 	m_stage = LoadAll(L"data/FILE/stage.json");
 	m_stage->SetStart(true);
-	m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
+	//m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
 
 	// マウスの位置ロック
 	CInput::GetKey()->GetMouse()->UseSetPosLock(true);
@@ -134,6 +137,36 @@ void CGame::Update(void)
 	{
 		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
 	}
+
+	//static int cnt = 0;
+	//cnt++;
+	//if(cnt % 45 == 0)
+	//{
+	//	cnt = 0;
+	//	{
+	//		CBgBox* box = CBgBox::Create();
+	//		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
+	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	//	}
+
+	//	{
+	//		CBgBox* box = CBgBox::Create();
+	//		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
+	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	//	}
+
+	//	{
+	//		CBgBox* box = CBgBox::Create();
+	//		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
+	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	//	}
+
+	//	{
+	//		CBgBox* box = CBgBox::Create();
+	//		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
+	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	//	}
+	//}
 }
 
 //-----------------------------------------------------------------------------

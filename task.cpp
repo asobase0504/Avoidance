@@ -21,6 +21,7 @@ CTask::CTask(CTaskGroup::EPriority inPriority, CTaskGroup::EPushMethod inMethod)
 	m_isDeleted(false),
 	m_isProtect(false)
 {
+	m_priority = inPriority;
 
 	// タスクグループに自身を登録する
 	switch (inMethod)

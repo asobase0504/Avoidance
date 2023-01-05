@@ -41,7 +41,6 @@ HRESULT CEnemyOneWay::Init()
 	CEnemy::Init();
 	LoadModel("BOX");
 	SetScale(SCALE);
-	SetMove(MOVE_POWER);
 	m_guideLine = CLine::Create();
 	return S_OK;
 }
@@ -59,6 +58,7 @@ void CEnemyOneWay::Uninit()
 //-----------------------------------------------------------------------------
 void CEnemyOneWay::NormalUpdate()
 {
+	SetMove(MOVE_POWER);
 	CEnemy::NormalUpdate();
 }
 
@@ -78,5 +78,19 @@ void CEnemyOneWay::Draw()
 {
 	CEnemy::Draw();
 	m_guideLine->SetLine(m_pos, m_rot, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -700.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+}
+
+//-----------------------------------------------------------------------------
+// à⁄ìÆó ÇÃê›íË
+//-----------------------------------------------------------------------------
+void CEnemyOneWay::SetMove(const D3DXVECTOR3 & inMove)
+{
+	D3DXMATRIX mtxRot;
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);		// çsóÒâÒì]ä÷êî
+
+	D3DXVECTOR3 move = inMove;
+	D3DXVec3TransformCoord(&move, &move, &mtxRot);
+
+	CObjectX::SetMove(move);
 }
 

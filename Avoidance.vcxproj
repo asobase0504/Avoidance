@@ -158,6 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bg_box.cpp" />
     <ClCompile Include="camera_game.cpp" />
     <ClCompile Include="camera_quaternion.cpp" />
     <ClCompile Include="camera_title.cpp" />
@@ -224,6 +225,7 @@
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bg_box.h" />
     <ClInclude Include="camera_game.h" />
     <ClInclude Include="camera_quaternion.h" />
     <ClInclude Include="camera_title.h" />

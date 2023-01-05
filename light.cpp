@@ -17,6 +17,7 @@
 CLight::CLight(CTaskGroup::EPriority inPriority) :
 	CTask(inPriority, CTaskGroup::EPushMethod::PUSH_TOP)
 {
+	SetRole(ROLE_LIGHT);
 }
 
 //=============================================================================

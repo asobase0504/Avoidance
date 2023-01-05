@@ -262,6 +262,9 @@
     <ClCompile Include="player_afterimage.cpp">
       <Filter>00_Cord\02_Object\03_ObjectX</Filter>
     </ClCompile>
+    <ClCompile Include="bg_box.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -452,6 +455,9 @@
     </ClInclude>
     <ClInclude Include="player_afterimage.h">
       <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClInclude>
+    <ClInclude Include="bg_box.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
