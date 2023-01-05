@@ -74,7 +74,7 @@ public:
 	bool GetTriggerAll();								// オールトリガー処理	（キー指定なし、プレイヤー指定なし）
 	bool GetReleaseAll();								// オールリリース処理	（キー指定なし、プレイヤー指定なし）
 
-	D3DXVECTOR3 GetJoyStickData(int nNum, bool bleftandright = false);			//ジョイスティックの傾き値を返す(true  = 右、false = 左)
+	D3DXVECTOR3 GetJoyStickData(bool bleftandright, int nNum = 0);			//ジョイスティックの傾き値を返す(true  = 右、false = 左)
 	int GetCross(int nNum = 0) { return m_JoyPadData[nNum].nCrossPressRot; }	//ジョイパッドの十字キーの押されている方向(例　45°など)
 
 private:

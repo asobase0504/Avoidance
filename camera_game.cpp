@@ -10,6 +10,7 @@
 #include "camera_game.h"
 #include "input.h"
 #include "object.h"
+#include "debug_proc.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -83,24 +84,40 @@ void CCameraGame::Update()
 void CCameraGame::Rotate()
 {
 	// 入力情報の取得
-	const float MIN_MOUSE_MOVED = 1.0f;	// デッドゾーン
+	const float MIN_MOUSE_MOVED = 0.0f;	// デッドゾーン
 
 	D3DXVECTOR3 rollDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	D3DXVECTOR3 cursorMove = CInput::GetKey()->GetMouse()->GetMouseCursorMove();
-	D3DXVECTOR3 move = D3DXVECTOR3(cursorMove.y, cursorMove.x, cursorMove.z);
+	D3DXVECTOR3 joyPadMove = CInput::GetKey()->VectorMoveJoyStick(true);
+	D3DXVECTOR3 move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	CDebugProc::Print("CursorMove : %.2f,%.2f,%.2f\n", cursorMove.x, cursorMove.y, cursorMove.z);
+	CDebugProc::Print("JoyPadMove : %.2f,%.2f,%.2f\n", joyPadMove.x, joyPadMove.y, joyPadMove.z);
+
+	if (D3DXVec3Length(&joyPadMove) == 0.0f)
+	{ // JoyPadの入力がなかった場合カーソルの移動量を代入
+		move = D3DXVECTOR3(cursorMove.y, cursorMove.x, cursorMove.z) * 0.1f;
+	}
+	else
+	{ // JoyPadの入力があった場合
+		move = D3DXVECTOR3(joyPadMove.y, joyPadMove.x, joyPadMove.z) * 1.5f;
+	}
 
 	if (D3DXVec3Length(&move) > MIN_MOUSE_MOVED || D3DXVec3Length(&move) < -MIN_MOUSE_MOVED)
 	{
 		// マウスの移動方向のノーマライズ
-		D3DXVec3Normalize(&move, &move);
+		//D3DXVec3Normalize(&move, &move);
 
 		// 移動方向の算出
-		rollDir = move * (D3DX_PI / 180.0f);
+		rollDir += move * (D3DX_PI / 180.0f);
 	}
 
 	// 回転
 	m_rot += rollDir * 2.0f;
+	m_rot.z = 0.0f;
+
+	CDebugProc::Print("m_rot : %.2f,%.2f,%.2f\n", m_rot.x, m_rot.y, m_rot.z);
 
 	if (m_rot.y < -D3DX_PI)
 	{// 向きが-D3DX_PI未満の時

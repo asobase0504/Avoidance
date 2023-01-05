@@ -10,6 +10,7 @@
 //インクルードファイル
 //-----------------------------------------------------------------------------
 #include "inputjoypad.h"
+#include "debug_proc.h"
 
 //*************************************************************************************
 //コンストラクタ
@@ -543,19 +544,18 @@ bool CInputJoyPad::GetReleaseAll()
 }
 
 //ジョイスティックの値を返す
-D3DXVECTOR3 CInputJoyPad::GetJoyStickData(int nNum,bool bleftandright)
+D3DXVECTOR3 CInputJoyPad::GetJoyStickData(bool bleftandright, int nNum)
 {
 	if (bleftandright)
 	{//スティックの右左(true  = 右、false = 左)
-		if (m_JoyPadData[nNum].aKeyState.lRz != 0
-			|| m_JoyPadData[nNum].aKeyState.lZ != 0)
+		if (m_JoyPadData[nNum].aKeyState.lRx != 0
+			|| m_JoyPadData[nNum].aKeyState.lRy != 0)
 		{
-			return D3DXVECTOR3((float)m_JoyPadData[nNum].aKeyState.lZ, (float)m_JoyPadData[nNum].aKeyState.lRz, 0.0f);
+			return D3DXVECTOR3((float)m_JoyPadData[nNum].aKeyState.lRx, (float)m_JoyPadData[nNum].aKeyState.lRy, 0.0f);
 		}
 
 		return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	}
-
 
 	if (m_JoyPadData[nNum].aKeyState.lY != 0 
 		|| m_JoyPadData[nNum].aKeyState.lX != 0)

@@ -545,7 +545,7 @@ D3DXVECTOR3 CInput::VectorMoveKey()
 //*************************************************************************************
 //ジョイスティックのベクトル
 //*************************************************************************************
-D3DXVECTOR3 CInput::VectorMoveJoyStick(int nNum, bool bleftandright)
+D3DXVECTOR3 CInput::VectorMoveJoyStick(bool bleftandright, int nNum)
 {
 	D3DXVECTOR3 VectorMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	if (m_pJoyPad->GetJoyPadNumMax() == 0)
@@ -553,7 +553,7 @@ D3DXVECTOR3 CInput::VectorMoveJoyStick(int nNum, bool bleftandright)
 		return VectorMove;
 	}
 
-	VectorMove = m_pJoyPad->GetJoyStickData(nNum, bleftandright);
+	VectorMove = m_pJoyPad->GetJoyStickData(bleftandright, nNum);
 	//長さ１のベクトル変換
 	D3DXVec3Normalize(&VectorMove, &VectorMove);
 	return VectorMove;

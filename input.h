@@ -74,7 +74,7 @@ public:
 	bool Release(DirectJoypad key, int nNum);	// リリース
 
 	D3DXVECTOR3 VectorMoveKey();	// 十字キー式のベクトル取得
-	D3DXVECTOR3 VectorMoveJoyStick(int nNum = 0, bool bleftandright = false);	// ジョイスティックのベクトル取得
+	D3DXVECTOR3 VectorMoveJoyStick(bool bleftandright,int nNum = 0);	// ジョイスティックのベクトル取得
 
 	// 繋がってるJoyPadの数
 	int GetAcceptJoyPadCount();
