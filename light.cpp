@@ -39,9 +39,6 @@ HRESULT CLight::Init(void)
 	// ライトの設定
 	D3DXCOLOR color(1.0f, 1.0f, 1.0f, 1.0f);
 	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(-0.5f, -0.5f, 0.2f), 0);
-	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(0.2f, -0.34f, 0.2f), 1);
-	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(-0.0f, -0.0f, 0.3f), 2);
-	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(-0.0f, 0.5f, -0.3f), 3);
 
 	// デバイスへのポインタの取得
 	CApplication::GetInstance()->GetRenderer()->GetDevice()->SetRenderState(D3DRS_AMBIENT, color);

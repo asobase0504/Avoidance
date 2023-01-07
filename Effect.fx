@@ -46,7 +46,7 @@ sampler Samp = sampler_state
 VS_OUTPUT VS(
 	float4 Pos    : POSITION,	// ローカル位置座標
 	float4 Normal : NORMAL,		// 法線ベクトル
-	float2 Tex : TEXCOORD		//テクスチャの法線ベクトル
+	float2 Tex : TEXCOORD		// テクスチャの法線ベクトル
 ) {
 	VS_OUTPUT Out = (VS_OUTPUT)0;		// 出力データ
 
@@ -100,13 +100,11 @@ float4 PS(VS_OUTPUT In) : COLOR
 	float gnc = g - LH;
 	float cgpc = LH*gpc - 1;
 	float cgnc = LH*gnc + 1;
-	float F = 0.5f * gnc * gnc * (1 + cgpc*cgpc / (cgnc*cgnc)) / (gpc*gpc);
+	float F = 0.5f * gnc * gnc * (1 + cgpc * cgpc / (cgnc * cgnc)) / (gpc * gpc);
 
-	// 金属の色
-	float4 ks = { 1.0f,1.0f,1.0f, 1.0f };
+	float4 Ambient = { 0.0f,0.0f,0.0f, 1.0f };
 
-	return (In.Color * tex2D(Samp, In.Tex))		// 拡散光＋環境光
-		+ ks * max(0,F * D * G / NV);			// 鏡面反射光
+	return In.Color + Ambient;		// 拡散光＋環境光(テクスチャの色)
 }
 
 // -------------------------------------------------------------

@@ -265,6 +265,12 @@
     <ClCompile Include="bg_box.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
     </ClCompile>
+    <ClCompile Include="mouse_object.cpp">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_effect.cpp">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -458,6 +464,12 @@
     </ClInclude>
     <ClInclude Include="bg_box.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_object.h">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_effect.h">
+      <Filter>00_Cord\02_Object\02_Object2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

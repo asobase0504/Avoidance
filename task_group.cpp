@@ -118,9 +118,6 @@ void CTaskGroup::Draw()
 				}
 				now = next;
 			}
-
-			// Direct3D‚É‚æ‚é•`‰æ‚ÌI—¹
-			//CRenderer::GetInstance()->GetDevice()->EndScene();
 		}
 	}
 }

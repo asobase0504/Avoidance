@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // オブジェクトX処理 [objectX.cpp]
-// Author : KADO TAKUMA
+// Author : Yuda Kaito
 //
 //=============================================================================
 
@@ -43,7 +43,7 @@ CObjectX::~CObjectX()
 
 //=============================================================================
 // オブジェクトの初期化
-// Author : Hamada Ryuuga
+// Author : Yuda Kaito
 // 概要 : 初期化を行う
 //=============================================================================
 HRESULT CObjectX::Init()
@@ -66,7 +66,7 @@ HRESULT CObjectX::Init()
 
 //=============================================================================
 // オブジェクトの終了
-// Author : Hamada Ryuuga
+// Author : Yuda Kaito
 // 概要 : 終了を行う
 //=============================================================================
 void CObjectX::Uninit()
@@ -86,7 +86,7 @@ void CObjectX::NormalUpdate()
 
 //=============================================================================
 // 描画
-// Author : Hamada Ryuga
+// Author : Yuda Kaito
 // 概要 : 描画を行う
 //=============================================================================
 void CObjectX::Draw()
@@ -120,8 +120,6 @@ void CObjectX::Draw()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
-//	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-
 	// ワールドマトリックスの設定（ワールド座標行列の設定）
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
@@ -130,55 +128,36 @@ void CObjectX::Draw()
 
 //=============================================================================
 // 描画
-// Author : Hamada Ryuga
+// Author : Yuda Kaito
 // 概要 : 描画を行う
 //=============================================================================
 void CObjectX::DrawMaterial()
 {
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
-
-	// 現在のマテリアル保存用
-	D3DMATERIAL9 matDef;
-	// マテリアルデータへのポインタ
-	D3DXMATERIAL* pMat;
-
-	CCamera* pCamera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, GetPriority());
-
-	D3DMATRIX viewMatrix = pCamera->GetMtxView();
-	D3DMATRIX projMatrix = pCamera->GetMtxProje();
-
-	D3DXMATRIX mtxRot, mtxTrans, mtxScale;
-
-	CLight* lightClass = (CLight*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());	// カメラ情報
-	D3DLIGHT9 light = lightClass->GetLight(0);
-
-	D3DXMATRIX m, mT, mR, mView, mProj;
-	D3DXVECTOR4 v, light_pos;
-
 	extern LPD3DXEFFECT pEffect;		// シェーダー
 
 	//==================================================================================
 	if (pEffect != NULL)
 	{
+		CCamera* pCamera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, GetPriority());
+
+		D3DMATRIX viewMatrix = pCamera->GetMtxView();
+		D3DMATRIX projMatrix = pCamera->GetMtxProje();
+
+		CLight* lightClass = (CLight*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());	// カメラ情報
+		D3DLIGHT9 light = lightClass->GetLight(0);
+
+		D3DXVECTOR4 v, light_pos;
+
+		D3DXMATRIX m;
+
 		//-------------------------------------------------
 		// シェーダの設定
 		//-------------------------------------------------
 		pEffect->SetTechnique(m_hTechnique);
 		pEffect->Begin(NULL, 0);
 		pEffect->BeginPass(0);
-		//pDevice->SetFVF(FVF_VERTEX_3D);
-
-		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-		//pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 
 		D3DXMatrixTranslation(&m, 1.0f, 0.0f, 0.0f);
-
-		D3DXMatrixRotationY(&mR, 0.0f);
-		D3DXMatrixTranslation(&mT, 1.0f, 1.2f, 0.0f);
-
-		//位置を反映
-		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
 		// ローカル-射影変換行列
 		D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
@@ -209,7 +188,7 @@ void CObjectX::DrawMaterial()
 		v = D3DXVECTOR4(0, 0, 0, 1);
 
 		//マテリアルデータのポインタを取得する
-		pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
 
 		D3DMATERIAL9 *pMtrl = &pMat->MatD3D;
 
@@ -218,27 +197,34 @@ void CObjectX::DrawMaterial()
 		//視点をシェーダーに渡す
 		pEffect->SetVector(m_hvEyePos, &v);
 
-		D3DXCOLOR diffuse;
-
 		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 		{
 			// モデルの色の設定 
-			v = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-
-			diffuse = pMat[nCntMat].MatD3D.Diffuse;	// ディフューズを保存
-			if (m_materialDiffuse.count(nCntMat) != 0)
 			{
-				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];	// ディフューズに指定した色を代入
-			}
+				D3DXVECTOR4 Diffuse;
+				if (m_materialDiffuse.count(nCntMat) != 0)
+				{
+					Diffuse = D3DXVECTOR4(m_materialDiffuse[nCntMat].r, m_materialDiffuse[nCntMat].g, m_materialDiffuse[nCntMat].b, m_materialDiffuse[nCntMat].a);
+				}
+				else
+				{
+					Diffuse = D3DXVECTOR4(pMat[nCntMat].MatD3D.Diffuse.r, pMat[nCntMat].MatD3D.Diffuse.g, pMat[nCntMat].MatD3D.Diffuse.b, pMat[nCntMat].MatD3D.Diffuse.a);
+				}
 
-			pMat[nCntMat].MatD3D.Diffuse.a = m_colorAlpha;	// モデルの透明度を設定
+				// モデルの透明度を設定
+				/*
+				// ※現在適応されません。
+				// 原因：.fxファイルにてAmbientColorのalpha値を1.0fに固定しているため
+				*/
+				Diffuse.w = m_colorAlpha;
+
+				pEffect->SetVector(m_hvCol, &Diffuse);
+			}
 
 			if (CTexture::GetInstance()->GetTexture(m_textureKey) != nullptr)
 			{// テクスチャの適応
 				pTex0 = CTexture::GetInstance()->GetTexture(m_textureKey);
 			}
-
-			pEffect->SetVector(m_hvCol, &v);
 
 			// テクスチャの設定
 			pEffect->SetTexture(m_hTexture, pTex0);
@@ -246,31 +232,22 @@ void CObjectX::DrawMaterial()
 			//モデルパーツの描画
 			m_pMesh->DrawSubset(nCntMat);
 
-			pMat[nCntMat].MatD3D.Diffuse = diffuse;	// ディフューズを元に戻す
 			pMtrl++;
 		}
 
 		pEffect->EndPass();
 		pEffect->End();
 	}
-
-	//=========================================
-
-	// 現在のマテリアルを保持
-	pDevice->GetMaterial(&matDef);
-
-	// 保持していたマテリアルを戻す
-	pDevice->SetMaterial(&matDef);
-
-	// ライトを有効
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-
-	//==================================================================================
+	else
+	{
+		assert(false);
+	}
 }
 
 //=============================================================================
 // 親子関係のある描画
 // Author : 唐﨑結斗
+// Author : Yuda Kaito
 // 概要 : 描画を行う
 //=============================================================================
 void CObjectX::Draw(D3DXMATRIX mtxParent)
@@ -301,14 +278,14 @@ void CObjectX::Draw(D3DXMATRIX mtxParent)
 	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
-	// テクスチャポインタの取得
-	CTexture *pTexture = CApplication::GetInstance()->GetTexture();
-
 	if (m_pBuffMat != nullptr)
 	{
 		// マテリアルデータへのポインタを取得
 		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
 		D3DXCOLOR diffuse;
+
+		// テクスチャポインタの取得
+		CTexture *pTexture = CApplication::GetInstance()->GetTexture();
 
 		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 		{// マテリアルの設定
@@ -356,6 +333,7 @@ void CObjectX::SetScale(const D3DXVECTOR3& inScale)
 
 //=============================================================================
 // 向きの設定
+// Author : Yuda Kaito
 //=============================================================================
 void CObjectX::SetRot(const D3DXVECTOR3 & inRot)
 {
@@ -368,6 +346,7 @@ void CObjectX::SetRot(const D3DXVECTOR3 & inRot)
 
 //=============================================================================
 // 頂点最大小値の計算処理
+// Author : Yuda Kaito
 //=============================================================================
 void CObjectX::SetMtxRot(const D3DXVECTOR3 & inRot)
 {
@@ -378,6 +357,7 @@ void CObjectX::SetMtxRot(const D3DXVECTOR3 & inRot)
 
 //=============================================================================
 // 頂点最大小値の計算処理
+// Author : Yuda Kaito
 //=============================================================================
 void CObjectX::CalculationVtx()
 {
@@ -415,6 +395,7 @@ void CObjectX::CalculationVtx()
 
 //=============================================================================
 // 生成処理
+// Author : Yuda Kaito
 //=============================================================================
 CObjectX * CObjectX::Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority)
 {
@@ -441,6 +422,7 @@ CObjectX * CObjectX::Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority)
 
 //=============================================================================
 // モデルの読み込み
+// Author : Yuda Kaito
 //=============================================================================
 void CObjectX::LoadModel(const char *aFileName)
 {
@@ -455,6 +437,7 @@ void CObjectX::LoadModel(const char *aFileName)
 
 //=============================================================================
 // 平行投影処理
+// Author : Yuda Kaito
 //=============================================================================
 void CObjectX::Projection(void)
 {
@@ -522,6 +505,7 @@ void CObjectX::Projection(void)
 
 //=============================================================================
 // 色味（拡散反射光）の設定
+// Author : Yuda Kaito
 //=============================================================================
 void CObjectX::SetMaterialDiffuse(unsigned int index, const D3DXCOLOR & inColor)
 {
@@ -544,6 +528,7 @@ void CObjectX::SetMaterialDiffuse(unsigned int index, const D3DXCOLOR & inColor)
 
 //=============================================================================
 // 当たり判定 (左右,奥,手前)
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize)
 {
@@ -604,6 +589,7 @@ bool CObjectX::Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, co
 
 //=============================================================================
 // 当たり判定 (左右,奥,手前)
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::Collision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * inMaxVtx, D3DXVECTOR3 * inMinVtx)
 {
@@ -679,6 +665,7 @@ bool CObjectX::Collision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 
 
 //=============================================================================
 // 当たり判定 (上側)
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * pSize, D3DXVECTOR3 * pMove)
 {
@@ -711,6 +698,7 @@ bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR
 
 //=============================================================================
 // OBBとOBBの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 {
@@ -766,12 +754,14 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 	D3DXVECTOR3 pos = (GetPos() - inObjectX->GetPos());
 	D3DXVec3TransformCoord(&interval, &pos, &m_mtxRot);
 
-	bool debug = false;
+	bool debug = true;
 
 	if (D3DXVec3Length(&pos) < 100.0f)
 	{
-		debug = false;
+		debug = true;
 	}
+
+	debug = true;
 
 	if (debug)
 	{
@@ -823,10 +813,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 			*axis = nCnt;
 			*axisNormal = normal;
 		}
-
 		return false;
 	};
-
 
 	//A.e1
 	s = fabs(interval.x) - (thisScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._21, mtxAds._31), &targetScale));
@@ -1019,6 +1007,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 
 //=============================================================================
 // OBBとBoxの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndBoxTop(CObjectX * inObjectX, float * outLength)
 {
@@ -1039,6 +1028,7 @@ bool CObjectX::OBBAndBoxTop(CObjectX * inObjectX, float * outLength)
 
 //=============================================================================
 // OBBとBoxの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndBoxDown(CObjectX * inObjectX, float * outLength)
 {
@@ -1059,6 +1049,7 @@ bool CObjectX::OBBAndBoxDown(CObjectX * inObjectX, float * outLength)
 
 //=============================================================================
 // OBBとBoxの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndBoxLeft(CObjectX * inObjectX, float * outLength)
 {
@@ -1079,6 +1070,7 @@ bool CObjectX::OBBAndBoxLeft(CObjectX * inObjectX, float * outLength)
 
 //=============================================================================
 // OBBとBoxの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndBoxRight(CObjectX * inObjectX, float * outLength)
 {
@@ -1099,6 +1091,7 @@ bool CObjectX::OBBAndBoxRight(CObjectX * inObjectX, float * outLength)
 
 //=============================================================================
 // OBBとBoxの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndBoxFront(CObjectX * inObjectX, float * outLength)
 {
@@ -1120,6 +1113,7 @@ bool CObjectX::OBBAndBoxFront(CObjectX * inObjectX, float * outLength)
 
 //=============================================================================
 // OBBとBoxの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndBoxBack(CObjectX * inObjectX, float * outLength)
 {
@@ -1140,6 +1134,7 @@ bool CObjectX::OBBAndBoxBack(CObjectX * inObjectX, float * outLength)
 
 //=============================================================================
 // OBBと3DPolygonの当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndPolygon(const CObjectPolygon3D * inObjectPolgon, float* outLength)
 {
@@ -1195,6 +1190,7 @@ bool CObjectX::OBBAndPolygon(const CObjectPolygon3D * inObjectPolgon, float* out
 
 //=============================================================================
 // OBBと平行の当たり判定
+// Author : Yuda Kaito
 //=============================================================================
 bool CObjectX::OBBAndPolygon(const D3DXVECTOR3 & inPos, float * outLength)
 {
@@ -1249,6 +1245,7 @@ bool CObjectX::OBBAndPolygon(const D3DXVECTOR3 & inPos, float * outLength)
 
 //=============================================================================
 // 3つの内積の絶対値の和で投影線分長を計算
+// Author : Yuda Kaito
 // 事項：分離軸Sepは標準化されていること
 //=============================================================================
 float CObjectX::LenSegOnSeparateAxis(D3DXVECTOR3 * Sep, D3DXVECTOR3 * e1, D3DXVECTOR3 * e2, D3DXVECTOR3 * e3)
@@ -1259,6 +1256,7 @@ float CObjectX::LenSegOnSeparateAxis(D3DXVECTOR3 * Sep, D3DXVECTOR3 * e1, D3DXVE
 	return r1 + r2 + r3;
 }
 
+// Author : Yuda Kaito
 bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * inMaxVtx, D3DXVECTOR3 * inMinVtx, D3DXVECTOR3 * pMove)
 {
 	if (!m_isCollision)

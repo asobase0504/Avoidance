@@ -17,9 +17,7 @@
 //-----------------------------------------------------------------------------
 // 前方宣言
 //-----------------------------------------------------------------------------
-class CBg;
-class CPlayer;
-class CEnemy;
+class CObject2d;
 class CCamera;
 class CLight;
 class CParticleManager;
@@ -53,5 +51,7 @@ private:
 	CCamera* m_pCamera;
 	CLight* m_pLight;
 	CParticleManager* m_pPaticleManager;	// パーティクルマネジャー
+	CObject2d* m_mouseCursor;
+
 };
 #endif

@@ -173,6 +173,8 @@
     <ClCompile Include="line.cpp" />
     <ClCompile Include="load_stage.cpp" />
     <ClCompile Include="mouse.cpp" />
+    <ClCompile Include="mouse_effect.cpp" />
+    <ClCompile Include="mouse_object.cpp" />
     <ClCompile Include="object_mesh.cpp" />
     <ClCompile Include="object_polygon3d.cpp" />
     <ClCompile Include="bg.cpp" />
@@ -241,6 +243,8 @@
     <ClInclude Include="line.h" />
     <ClInclude Include="load_stage.h" />
     <ClInclude Include="mouse.h" />
+    <ClInclude Include="mouse_effect.h" />
+    <ClInclude Include="mouse_object.h" />
     <ClInclude Include="object_mesh.h" />
     <ClInclude Include="object_polygon3d.h" />
     <ClInclude Include="bg.h" />

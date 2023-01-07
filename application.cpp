@@ -87,7 +87,7 @@ HRESULT CApplication::Init(HWND hWnd, HINSTANCE hInstance)
 	{
 		return E_FAIL;
 	}
-	CInput::GetKey()->GetMouse()->SetShowCursor(false);
+	CInput::GetKey()->GetMouse()->SetShowCursor(false);	// マウスカーソルの非表示
 
 	// 音楽処理の初期化処理
 	m_pSound = new CSound;

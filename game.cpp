@@ -138,35 +138,35 @@ void CGame::Update(void)
 		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
 	}
 
-	//static int cnt = 0;
-	//cnt++;
-	//if(cnt % 45 == 0)
-	//{
-	//	cnt = 0;
-	//	{
-	//		CBgBox* box = CBgBox::Create();
-	//		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
-	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-	//	}
+	static int cnt = 0;
+	cnt++;
+	if(cnt % 45 == 0)
+	{
+		cnt = 0;
+		{
+			CBgBox* box = CBgBox::Create();
+			box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
+			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+		}
 
-	//	{
-	//		CBgBox* box = CBgBox::Create();
-	//		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
-	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-	//	}
+		{
+			CBgBox* box = CBgBox::Create();
+			box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
+			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+		}
 
-	//	{
-	//		CBgBox* box = CBgBox::Create();
-	//		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
-	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-	//	}
+		{
+			CBgBox* box = CBgBox::Create();
+			box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
+			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+		}
 
-	//	{
-	//		CBgBox* box = CBgBox::Create();
-	//		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
-	//		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-	//	}
-	//}
+		{
+			CBgBox* box = CBgBox::Create();
+			box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
+			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

@@ -24,6 +24,7 @@
 #include "particle_emitter.h"
 
 #include "title_logo.h"
+#include "mouse_object.h"
 
 //=============================================================================
 // コンストラクタ
@@ -78,7 +79,7 @@ HRESULT CTitle::Init(void)
 		CObjectX* testX = CObjectX::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 		testX->LoadModel("BOX");
 		testX->SetMoveRot(D3DXVECTOR3(0.0f, 0.01f, 0.0f));
-		testX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
+		testX->SetMaterialDiffuse(0, D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f));
 		testX->CalculationVtx();
 	}
 
@@ -106,6 +107,9 @@ HRESULT CTitle::Init(void)
 		testX->CalculationVtx();
 	}
 
+	{
+		m_mouseCursor = CMouseObject::Create();
+	}
 	return S_OK;
 }
 
