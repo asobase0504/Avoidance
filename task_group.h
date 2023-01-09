@@ -66,6 +66,9 @@ public:
 	void AbsolutelyRelease();
 	void PriorityRelease(const EPriority inPriotity);
 
+	template<typename Func>
+	void AllProcess(Func func);
+
 	// Setter
 	void SetPushCurrent(CTask* inTask, int inPriority = 0);
 	void SetPushTop(CTask* inTask, int inPriority = 0);
@@ -76,10 +79,13 @@ public:
 	CTask* GetTop(int priority = 0) { return m_list.at(priority).top; }
 	CTask* GetCurrent(int priority = 0) { return m_list.at(priority).current; }
 
+	// åüçı
 	CTask* SearchRoleTop(int inRole, int inPriority);
 	CTask* SearchRoleCurrent(int inRole, int inPriority);
 	CTask* SearchSameRoleNext(CTask* inTask);
 	CTask* SearchSameRolePrev(CTask* inTask);
+
+	void Pause(bool isPause);
 
 private:
 	void DeleteTask();

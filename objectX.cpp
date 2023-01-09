@@ -117,12 +117,6 @@ void CObjectX::Draw()
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
 	}
 
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
-
-	// ワールドマトリックスの設定（ワールド座標行列の設定）
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
 	DrawMaterial();
 }
 

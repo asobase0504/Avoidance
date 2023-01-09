@@ -271,6 +271,9 @@
     <ClCompile Include="mouse_effect.cpp">
       <Filter>00_Cord\02_Object\02_Object2D</Filter>
     </ClCompile>
+    <ClCompile Include="title_menu.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -470,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="mouse_effect.h">
       <Filter>00_Cord\02_Object\02_Object2D</Filter>
+    </ClInclude>
+    <ClInclude Include="title_menu.h">
+      <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

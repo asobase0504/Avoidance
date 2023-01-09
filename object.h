@@ -121,6 +121,7 @@ protected:
 	EType m_type;	// 種別
 	std::string m_textureKey;	// テクスチャにアクセスするキー
 	
+	/* 更新処理 */
 	EUpdateStatus m_updateStatus;	// 更新状態
 	bool m_isPopInNormalUpdate;		// 出現中に通常更新を行うか
 	bool m_isEndInNormalUpdate;		// 終了中に通常更新を行うか

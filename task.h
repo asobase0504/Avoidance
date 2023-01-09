@@ -60,6 +60,10 @@ public:
 	// 優先順位
 	int GetPriority() { return m_priority; }
 
+	bool NeedUpdate() { return m_isUpdate; }
+	void Pouse() { m_isUpdate = m_isPouseUpdate; }
+	void PouseOff() { if (!m_isPouseUpdate) { m_isUpdate = true; } }
+
 private:
 	int m_priority;
 
@@ -75,5 +79,7 @@ private:
 
 	ERole m_role;		// 役割
 
+	bool m_isUpdate;		// 更新を行うか
+	bool m_isPouseUpdate;	// ポーズ中に更新処理を行うか
 };
 #endif

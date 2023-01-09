@@ -13,6 +13,7 @@
 
 //=============================================================================
 // コンストラクタ
+// Author : Yuda Kaito
 //=============================================================================
 CTaskGroup::CTaskGroup() :
 	m_priorityNumber(0)
@@ -22,6 +23,7 @@ CTaskGroup::CTaskGroup() :
 
 //=============================================================================
 // デストラクタ
+// Author : Yuda Kaito
 //=============================================================================
 CTaskGroup::~CTaskGroup()
 {
@@ -29,6 +31,7 @@ CTaskGroup::~CTaskGroup()
 
 //=============================================================================
 // 初期化
+// Author : Yuda Kaito
 //=============================================================================
 HRESULT CTaskGroup::Init()
 {
@@ -36,37 +39,12 @@ HRESULT CTaskGroup::Init()
 }
 
 //=============================================================================
-// 終了
+// 全てに処理を行う
+// Author : Yuda Kaito
 //=============================================================================
-void CTaskGroup::Uninit()
+template<typename Func>
+inline void CTaskGroup::AllProcess(Func func)
 {
-	for (int i = 0; i <= m_priorityNumber; i++)
-	{
-		if (m_list.count(i) == 0)
-		{
-			continue;
-		}
-
-		CTask* current = m_list.at(i).top;
-
-		while (current != nullptr)
-		{
-			CTask* next = current->GetNext();
-			current->Uninit();
-			current->Release();
-			current = next;
-		}
-	}
-
-	DeleteTask();	// タスクリストの削除
-}
-
-//=============================================================================
-// 更新
-//=============================================================================
-void CTaskGroup::Update()
-{
-	m_createNumber = 0;
 	for (int i = 0; i <= m_priorityNumber; i++)
 	{
 		if (m_list.count(i) == 0)
@@ -78,12 +56,8 @@ void CTaskGroup::Update()
 
 		while (now != nullptr)
 		{
-			m_createNumber++;
 			CTask* next = now->GetNext();
-			if (!now->IsDeleted())
-			{
-				now->Update();
-			}
+			func(now);
 			now = next;
 		}
 
@@ -92,7 +66,39 @@ void CTaskGroup::Update()
 }
 
 //=============================================================================
+// 終了
+// Author : Yuda Kaito
+//=============================================================================
+void CTaskGroup::Uninit()
+{
+	AllProcess([](CTask* task)
+	{
+		task->Uninit();
+		task->Release();
+	});
+}
+
+//=============================================================================
+// 更新
+// Author : Yuda Kaito
+//=============================================================================
+void CTaskGroup::Update()
+{
+	AllProcess([](CTask* task)
+	{
+		if (!task->IsDeleted())
+		{
+			if (task->NeedUpdate())
+			{
+				task->Update();
+			}
+		}
+	});
+}
+
+//=============================================================================
 // 描画
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::Draw()
 {
@@ -124,59 +130,31 @@ void CTaskGroup::Draw()
 
 //=============================================================================
 // 所持しているタスクの破棄
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::AllRelease()
 {
-	for (int i = 0; i <= m_priorityNumber; i++)
+	AllProcess([](CTask* task)
 	{
-		if (m_list.count(i) == 0)
+		if (!task->IsProtect())
 		{
-			continue;
+			task->Release();
 		}
-
-		CTask* now = m_list.at(i).top;
-
-		while (now != nullptr)
-		{
-			if (!now->IsProtect())
-			{
-				now->Release();
-			}
-			now = now->GetNext();
-		}
-	}
-
-	// 死亡予定のタスクの破棄
-	DeleteTask();
+	});
 }
 
 //=============================================================================
 // 絶対にタスクを破棄
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::AbsolutelyRelease()
 {
-	for (int i = 0; i <= m_priorityNumber; i++)
-	{
-		if (m_list.count(i) == 0)
-		{
-			continue;
-		}
-
-		CTask* now = m_list.at(i).top;
-
-		while (now != nullptr)
-		{
-			now->Release();
-			now = now->GetNext();
-		}
-	}
-
-	// 死亡予定のタスクの破棄
-	DeleteTask();
+	AllProcess([](CTask* task) {task->Release(); });
 }
 
 //=============================================================================
 // 指定したpriorityのタスクを破棄
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::PriorityRelease(const EPriority inPriotity)
 {
@@ -199,6 +177,7 @@ void CTaskGroup::PriorityRelease(const EPriority inPriotity)
 
 //=============================================================================
 // リストの最後にタスクを入れる
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::SetPushCurrent(CTask * inTask, int inPriority)
 {
@@ -233,6 +212,7 @@ void CTaskGroup::SetPushCurrent(CTask * inTask, int inPriority)
 
 //=============================================================================
 // リストの最初にタスクを入れる
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::SetPushTop(CTask * inTask, int inPriority)
 {
@@ -265,6 +245,7 @@ void CTaskGroup::SetPushTop(CTask * inTask, int inPriority)
 
 //=============================================================================
 // 参照したタスクの次にタスクを入れる
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::SetNextTask(CTask * inReference, CTask * inTask)
 {
@@ -277,6 +258,7 @@ void CTaskGroup::SetNextTask(CTask * inReference, CTask * inTask)
 
 //=============================================================================
 // 参照したタスクの前にタスクを入れる
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::SetPrevTask(CTask * inReference, CTask * inTask)
 {
@@ -289,6 +271,7 @@ void CTaskGroup::SetPrevTask(CTask * inReference, CTask * inTask)
 
 //=============================================================================
 // タスクの役割ごとの検索(Top側から検索して見つかった先頭を返す)
+// Author : Yuda Kaito
 //=============================================================================
 CTask * CTaskGroup::SearchRoleTop(int inRole, int inPriority)
 {
@@ -315,6 +298,7 @@ CTask * CTaskGroup::SearchRoleTop(int inRole, int inPriority)
 
 //=============================================================================
 // タスクの役割ごとの検索(Current側から検索して見つかった先頭を返す)
+// Author : Yuda Kaito
 //=============================================================================
 CTask * CTaskGroup::SearchRoleCurrent(int inRole, int inPriority)
 {
@@ -341,6 +325,7 @@ CTask * CTaskGroup::SearchRoleCurrent(int inRole, int inPriority)
 
 //=============================================================================
 // 受けとったタスクと同じ役割のタスクを検索(Next側から検索)
+// Author : Yuda Kaito
 //=============================================================================
 CTask * CTaskGroup::SearchSameRoleNext(CTask* inTask)
 {
@@ -361,6 +346,7 @@ CTask * CTaskGroup::SearchSameRoleNext(CTask* inTask)
 
 //=============================================================================
 // 受けとったタスクと同じ役割のタスクを検索(Prev側から検索)
+// Author : Yuda Kaito
 //=============================================================================
 CTask * CTaskGroup::SearchSameRolePrev(CTask * inTask)
 {
@@ -380,7 +366,17 @@ CTask * CTaskGroup::SearchSameRolePrev(CTask * inTask)
 }
 
 //=============================================================================
+// ポーズ中に更新を止めるobjectの更新を止める
+// Author : Yuda Kaito
+//=============================================================================
+void CTaskGroup::Pause(bool isPause)
+{
+	isPause ? AllProcess([](CTask* task) {task->Pouse(); }) : AllProcess([](CTask* task) {task->PouseOff(); });
+}
+
+//=============================================================================
 // タスクの削除
+// Author : Yuda Kaito
 //=============================================================================
 void CTaskGroup::DeleteTask()
 {

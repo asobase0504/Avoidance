@@ -180,19 +180,27 @@ void CApplication::Update()
 {
 	//入力処理の更新処理
 	CInput::GetKey()->Update();
-	m_pMode->Update();
-	m_pRenderer->Update();
 
 #ifdef _DEBUG
 	static bool isLock = false;
-	CDebugProc::Print("マウスカーソルの位置ロック 【 1 】  : %s", isLock ? "ON" : "OFF");
+	CDebugProc::Print("マウスカーソルの位置ロック 【 1 】  : %s\n", isLock ? "ON" : "OFF");
 	if (CInput::GetKey()->Trigger(DIK_1))
 	{
 		isLock = !isLock;
 		CInput::GetKey()->GetMouse()->UseSetPosLock(isLock);
 	}
+
+	static bool ppp = false;
+	CDebugProc::Print("ポーズ停止 【 2 】  : %s\n", ppp ? "ON" : "OFF");
+	if (CInput::GetKey()->Trigger(DIK_2))
+	{
+		m_pTaskGroup->Pause(ppp);
+		ppp = !ppp;
+	}
+
 #endif // _DEBUG
 
+	m_pRenderer->Update();
 }
 
 //=============================================================================

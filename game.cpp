@@ -104,7 +104,8 @@ HRESULT CGame::Init(void)
 //-----------------------------------------------------------------------------
 void CGame::Uninit(void)
 {
-	CApplication::GetInstance()->GetSound()->Stop();
+	CInput::GetKey()->GetMouse()->UseSetPosLock(false);	// ƒƒbƒN‚Ì‰ðœ
+	CApplication::GetInstance()->GetSound()->Stop();	// ‰¹Šy‚Ì’âŽ~
 	Release();
 }
 
