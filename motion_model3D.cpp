@@ -72,9 +72,9 @@ CMotionModel3D::~CMotionModel3D()
 HRESULT CMotionModel3D::Init()
 {
 	// •Ï”‚Ì‰Šú‰»
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					// ˆÊ’u
-	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// ‰ß‹ŽˆÊ’u
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);					// Œü‚«
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// ˆÊ’u
+	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// ‰ß‹ŽˆÊ’u
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// Œü‚«
 
 	return E_NOTIMPL;
 }
@@ -118,6 +118,7 @@ void CMotionModel3D::NormalUpdate()
 //=============================================================================
 // •`‰æ
 // Author : “‚ú±Œ‹“l
+// Author : Yuda Kaito
 // ŠT—v : 2D•`‰æ‚ðs‚¤
 //=============================================================================
 void CMotionModel3D::Draw()
@@ -148,7 +149,14 @@ void CMotionModel3D::Draw()
 
 	if (m_pMotion != nullptr)
 	{// ƒp[ƒc‚Ì•`‰æÝ’è
-		m_pMotion->SetParts(mtxWorld);
+		
+		for (int i = 0; i < m_pMotion->GetMaxParts(); i++)
+		{
+			if (m_pMotion->GetParts(i)->GetParent() == nullptr)
+			{
+				m_pMotion->GetParts(i)->SetParent(this);
+			}
+		}
 	}
 }
 

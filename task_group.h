@@ -68,6 +68,8 @@ public:
 
 	template<typename Func>
 	void AllProcess(Func func);
+	template<typename Func>
+	void PriorityProcess(int cnt, Func func);
 
 	// Setter
 	void SetPushCurrent(CTask* inTask, int inPriority = 0);

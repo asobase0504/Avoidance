@@ -70,10 +70,10 @@ void CPlayer::Uninit()
 void CPlayer::NormalUpdate()
 {
 	m_quaternionOld = m_quaternion;
-	Move();		// 移動
-	boost();	// 突進
-	Jump();		// ジャンプ
-	Landing();	// 落下
+	Move();			// 移動
+	boost();		// 突進
+	Jump();			// ジャンプ
+	Landing();		// 落下
 	OnHitGoal();	// Goalとの当たり判定
 	OnHitEnemy();
 

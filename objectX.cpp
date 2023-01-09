@@ -65,26 +65,6 @@ HRESULT CObjectX::Init()
 }
 
 //=============================================================================
-// オブジェクトの終了
-// Author : Yuda Kaito
-// 概要 : 終了を行う
-//=============================================================================
-void CObjectX::Uninit()
-{
-	//インスタンスの解放処理
-	Release();
-}
-
-//=============================================================================
-// オブジェクトの更新
-// Author : Yuda Kaito
-// 概要 : 更新を行う
-//=============================================================================
-void CObjectX::NormalUpdate()
-{
-}
-
-//=============================================================================
 // 描画
 // Author : Yuda Kaito
 // 概要 : 描画を行う
@@ -129,185 +109,113 @@ void CObjectX::DrawMaterial()
 {
 	extern LPD3DXEFFECT pEffect;		// シェーダー
 
-	//==================================================================================
-	if (pEffect != NULL)
-	{
-		CCamera* pCamera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, GetPriority());
-
-		D3DMATRIX viewMatrix = pCamera->GetMtxView();
-		D3DMATRIX projMatrix = pCamera->GetMtxProje();
-
-		CLight* lightClass = (CLight*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());	// カメラ情報
-		D3DLIGHT9 light = lightClass->GetLight(0);
-
-		D3DXVECTOR4 v, light_pos;
-
-		D3DXMATRIX m;
-
-		//-------------------------------------------------
-		// シェーダの設定
-		//-------------------------------------------------
-		pEffect->SetTechnique(m_hTechnique);
-		pEffect->Begin(NULL, 0);
-		pEffect->BeginPass(0);
-
-		D3DXMatrixTranslation(&m, 1.0f, 0.0f, 0.0f);
-
-		// ローカル-射影変換行列
-		D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
-		D3DXMatrixTranspose(&m, &m);
-		pEffect->SetMatrix(m_hmWIT, &m);
-
-		// ローカル-射影変換行列
-		m = m_mtxWorld * viewMatrix * projMatrix;
-		pEffect->SetMatrix(m_hmWVP, &m);
-
-		// ライトの方向
-		light_pos = D3DXVECTOR4(light.Direction.x, light.Direction.y, light.Direction.z, 0);
-
-		D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
-		D3DXVec4Transform(&v, &-light_pos, &m);
-
-		D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);
-
-		//環境光の大きさ
-		v.w = -0.8f;
-		pEffect->SetVector(m_hvLightDir, &v);
-
-		// 視点
-		m = m_mtxWorld *viewMatrix;
-		D3DXMatrixInverse(&m, NULL, &m);
-
-		//環境光
-		v = D3DXVECTOR4(0, 0, 0, 1);
-
-		//マテリアルデータのポインタを取得する
-		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
-		D3DMATERIAL9 *pMtrl = &pMat->MatD3D;
-
-		D3DXVec4Transform(&v, &v, &m);
-
-		//視点をシェーダーに渡す
-		pEffect->SetVector(m_hvEyePos, &v);
-
-		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
-		{
-			// モデルの色の設定 
-			{
-				D3DXVECTOR4 Diffuse;
-				if (m_materialDiffuse.count(nCntMat) != 0)
-				{
-					Diffuse = D3DXVECTOR4(m_materialDiffuse[nCntMat].r, m_materialDiffuse[nCntMat].g, m_materialDiffuse[nCntMat].b, m_materialDiffuse[nCntMat].a);
-				}
-				else
-				{
-					Diffuse = D3DXVECTOR4(pMat[nCntMat].MatD3D.Diffuse.r, pMat[nCntMat].MatD3D.Diffuse.g, pMat[nCntMat].MatD3D.Diffuse.b, pMat[nCntMat].MatD3D.Diffuse.a);
-				}
-
-				// モデルの透明度を設定
-				/*
-				// ※現在適応されません。
-				// 原因：.fxファイルにてAmbientColorのalpha値を1.0fに固定しているため
-				*/
-				Diffuse.w = m_colorAlpha;
-
-				pEffect->SetVector(m_hvCol, &Diffuse);
-			}
-
-			if (CTexture::GetInstance()->GetTexture(m_textureKey) != nullptr)
-			{// テクスチャの適応
-				pTex0 = CTexture::GetInstance()->GetTexture(m_textureKey);
-			}
-
-			// テクスチャの設定
-			pEffect->SetTexture(m_hTexture, pTex0);
-
-			//モデルパーツの描画
-			m_pMesh->DrawSubset(nCntMat);
-
-			pMtrl++;
-		}
-
-		pEffect->EndPass();
-		pEffect->End();
-	}
-	else
+	if (pEffect == nullptr)
 	{
 		assert(false);
+		return;
 	}
-}
 
-//=============================================================================
-// 親子関係のある描画
-// Author : 唐﨑結斗
-// Author : Yuda Kaito
-// 概要 : 描画を行う
-//=============================================================================
-void CObjectX::Draw(D3DXMATRIX mtxParent)
-{
-	// 計算用マトリックス
-	D3DXMATRIX mtxTrans, mtxScaling;
+	/* pEffectに値が入ってる */
 
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
+	CCamera* pCamera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, GetPriority());
 
-	// 向きの反映
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);			// 行列掛け算関数 
+	D3DMATRIX viewMatrix = pCamera->GetMtxView();
+	D3DMATRIX projMatrix = pCamera->GetMtxProje();
 
-	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);		// 行列移動関数
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);			// 行列掛け算関数
+	CLight* lightClass = (CLight*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());	// カメラ情報
+	D3DLIGHT9 light = lightClass->GetLight(0);
 
-	// 行列掛け算関数
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
+	D3DXVECTOR4 v, light_pos;
 
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
+	D3DXMATRIX m;
 
-	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+	//-------------------------------------------------
+	// シェーダの設定
+	//-------------------------------------------------
+	pEffect->SetTechnique(m_hTechnique);
+	pEffect->Begin(NULL, 0);
+	pEffect->BeginPass(0);
 
-	// 現在のマテリアルを保持
-	D3DMATERIAL9 matDef;
-	pDevice->GetMaterial(&matDef);
+	D3DXMatrixTranslation(&m, 1.0f, 0.0f, 0.0f);
 
-	if (m_pBuffMat != nullptr)
+	// ローカル-射影変換行列
+	D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
+	D3DXMatrixTranspose(&m, &m);
+	pEffect->SetMatrix(m_hmWIT, &m);
+
+	// ローカル-射影変換行列
+	m = m_mtxWorld * viewMatrix * projMatrix;
+	pEffect->SetMatrix(m_hmWVP, &m);
+
+	// ライトの方向
+	light_pos = D3DXVECTOR4(light.Direction.x, light.Direction.y, light.Direction.z, 0);
+
+	D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
+	D3DXVec4Transform(&v, &-light_pos, &m);
+
+	D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);
+
+	//環境光の大きさ
+	v.w = -0.8f;
+	pEffect->SetVector(m_hvLightDir, &v);
+
+	// 視点
+	m = m_mtxWorld *viewMatrix;
+	D3DXMatrixInverse(&m, NULL, &m);
+
+	//環境光
+	v = D3DXVECTOR4(0, 0, 0, 1);
+
+	//マテリアルデータのポインタを取得する
+	D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+
+	D3DMATERIAL9 *pMtrl = &pMat->MatD3D;
+
+	D3DXVec4Transform(&v, &v, &m);
+
+	//視点をシェーダーに渡す
+	pEffect->SetVector(m_hvEyePos, &v);
+
+	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
-		// マテリアルデータへのポインタを取得
-		D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-		D3DXCOLOR diffuse;
-
-		// テクスチャポインタの取得
-		CTexture *pTexture = CApplication::GetInstance()->GetTexture();
-
-		for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
-		{// マテリアルの設定
-
-			diffuse = pMat[nCntMat].MatD3D.Diffuse;
-
+		// モデルの色の設定 
+		{
+			D3DXVECTOR4 Diffuse;
 			if (m_materialDiffuse.count(nCntMat) != 0)
 			{
-				pMat[nCntMat].MatD3D.Diffuse = m_materialDiffuse[nCntMat];
+				Diffuse = D3DXVECTOR4(m_materialDiffuse[nCntMat].r, m_materialDiffuse[nCntMat].g, m_materialDiffuse[nCntMat].b, m_materialDiffuse[nCntMat].a);
+			}
+			else
+			{
+				Diffuse = D3DXVECTOR4(pMat[nCntMat].MatD3D.Diffuse.r, pMat[nCntMat].MatD3D.Diffuse.g, pMat[nCntMat].MatD3D.Diffuse.b, pMat[nCntMat].MatD3D.Diffuse.a);
 			}
 
-			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+			// モデルの透明度を設定
+			/*
+			// ※現在適応されません。
+			// 原因：.fxファイルにてAmbientColorのalpha値を1.0fに固定しているため
+			*/
+			Diffuse.w = m_colorAlpha;
 
-			// テクスチャの設定
-			pDevice->SetTexture(0, pTexture->GetTexture("NULL"));
-
-			// モデルパーツの描画
-			m_pMesh->DrawSubset(nCntMat);
-
-			pMat[nCntMat].MatD3D.Diffuse = diffuse;
-
-			// テクスチャの設定
-			pDevice->SetTexture(0, nullptr);
+			pEffect->SetVector(m_hvCol, &Diffuse);
 		}
+
+		if (CTexture::GetInstance()->GetTexture(m_textureKey) != nullptr)
+		{// テクスチャの適応
+			pTex0 = CTexture::GetInstance()->GetTexture(m_textureKey);
+		}
+
+		// テクスチャの設定
+		pEffect->SetTexture(m_hTexture, pTex0);
+
+		//モデルパーツの描画
+		m_pMesh->DrawSubset(nCntMat);
+
+		pMtrl++;
 	}
 
-	// 保持していたマテリアルを戻す
-	pDevice->SetMaterial(&matDef);
+	pEffect->EndPass();
+	pEffect->End();
 }
 
 void CObjectX::SetScale(const D3DXVECTOR3& inScale)

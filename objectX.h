@@ -34,13 +34,10 @@ public:
 	// メンバー関数
 	//-------------------------------------------------------------------------
 	HRESULT Init() override;		// 初期化
-	void Uninit() override;			// 終了
-	void NormalUpdate() override;	// 更新
 
 	/* 描画 */
 	void Draw() override;
 	void DrawMaterial();
-	void Draw(D3DXMATRIX mtxParent);	// 親子関係
 	void Projection();					// 平行投影処理
 
 	/* 生成処理 */

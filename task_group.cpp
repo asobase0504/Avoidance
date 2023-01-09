@@ -39,7 +39,7 @@ HRESULT CTaskGroup::Init()
 }
 
 //=============================================================================
-// 全てに処理を行う
+// 全てのタスクに処理を行う
 // Author : Yuda Kaito
 //=============================================================================
 template<typename Func>
@@ -47,21 +47,29 @@ inline void CTaskGroup::AllProcess(Func func)
 {
 	for (int i = 0; i <= m_priorityNumber; i++)
 	{
-		if (m_list.count(i) == 0)
-		{
-			continue;
-		}
+		PriorityProcess(i, func);
+	}
+}
 
-		CTask* now = m_list.at(i).top;
+//=============================================================================
+// 指定されたpriorityにあるタスク全ての処理を行う
+// Author : Yuda Kaito
+//=============================================================================
+template<typename Func>
+void CTaskGroup::PriorityProcess(int cnt, Func func)
+{
+	if (m_list.count(cnt) == 0)
+	{
+		return;
+	}
 
-		while (now != nullptr)
-		{
-			CTask* next = now->GetNext();
-			func(now);
-			now = next;
-		}
+	CTask* now = m_list.at(cnt).top;
 
-		DeleteTask();	// タスクリストの削除
+	while (now != nullptr)
+	{
+		CTask* next = now->GetNext();
+		func(now);
+		now = next;
 	}
 }
 
@@ -76,6 +84,8 @@ void CTaskGroup::Uninit()
 		task->Uninit();
 		task->Release();
 	});
+
+	DeleteTask();	// タスクリストの削除
 }
 
 //=============================================================================
@@ -94,6 +104,8 @@ void CTaskGroup::Update()
 			}
 		}
 	});
+
+	DeleteTask();	// タスクリストの削除
 }
 
 //=============================================================================
@@ -141,6 +153,8 @@ void CTaskGroup::AllRelease()
 			task->Release();
 		}
 	});
+
+	DeleteTask();	// タスクリストの削除
 }
 
 //=============================================================================
@@ -382,23 +396,15 @@ void CTaskGroup::DeleteTask()
 {
 	for (int i = 0; i <= m_priorityNumber; i++)
 	{
-		if (m_list.count(i) <= 0)
+		// 削除
+		auto Delete = [i, this](CTask* tack)
 		{
-			continue;
-		}
+			CTask* next = tack->GetNext();
+			CTask* prev = tack->GetPrev();
 
-		CTask* now = m_list.at(i).top;
-
-		while (now != nullptr)
-		{
-			// 次のタスクを保存
-			CTask* next = now->GetNext();
-			CTask* prev = now->GetPrev();
-
-			if (!now->IsDeleted())
+			if (!tack->IsDeleted())
 			{
-				now = next;	// 次のタスクに移る
-				continue;
+				return;
 			}
 
 			// 前後の状態を取得
@@ -427,9 +433,11 @@ void CTaskGroup::DeleteTask()
 				m_list.erase(i);
 			}
 
-			now->Uninit();	// 終了
-			delete now;		// 削除
-			now = next;		// 次のタスクに移る
-		}
+			tack->Uninit();	// 終了
+			delete tack;	// 削除
+		};
+
+		// priorityの全てのTackに引数の関数を行う
+		PriorityProcess(i, Delete);
 	}
 }

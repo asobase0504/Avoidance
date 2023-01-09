@@ -159,9 +159,6 @@ void CMotion::SetMotion(const int nCntMotionSet)
 //=============================================================================
 void CMotion::SetParts(D3DXMATRIX mtxWorld)
 {
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
-
 	for (int nCntParts = 0; nCntParts < m_nMaxParts; nCntParts++)
 	{// モデルの描画
 		if (m_parts[nCntParts]->GetParent() != nullptr)
@@ -170,9 +167,12 @@ void CMotion::SetParts(D3DXMATRIX mtxWorld)
 		}
 		else
 		{
-			m_parts[nCntParts]->Draw(mtxWorld);
+			//m_parts[nCntParts]->Draw(mtxWorld);
 		}
 	}
+
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CApplication::GetInstance()->GetRenderer()->GetDevice();
 
 	// 新規深度値とZバッファの深度値が同じ値ならテスト成功にする
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
