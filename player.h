@@ -41,7 +41,7 @@ private: // プライベート関数
 	void Landing();	// 落下
 	void OnHitGoal();	// Goalとの当たり判定
 	void OnHitEnemy();	// Enemyとの当たり判定
-	bool OnHitPolygon();	// Polygonとの当たり判定
+	bool OnHitPlain();	// Polygonとの当たり判定
 
 private: // メンバー変数
 

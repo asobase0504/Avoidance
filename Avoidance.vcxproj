@@ -168,6 +168,7 @@
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemy_oneway.cpp" />
+    <ClCompile Include="enemy_planprogress.cpp" />
     <ClCompile Include="goal.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
     <ClCompile Include="line.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemy_oneway.h" />
+    <ClInclude Include="enemy_planprogress.h" />
     <ClInclude Include="goal.h" />
     <ClInclude Include="inputjoypad.h" />
     <ClInclude Include="inputkeydata.h" />

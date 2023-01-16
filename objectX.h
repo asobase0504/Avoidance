@@ -18,6 +18,33 @@
 //-----------------------------------------------------------------------------
 class CObjectPolygon3D;
 
+struct RI
+{
+	char inR;
+	char outR;
+	char inI;
+	char outI;
+};
+
+
+union FeaturePair
+{
+	RI ri;
+
+	int key;
+};
+
+struct ClipVertex
+{
+	ClipVertex()
+	{
+		f.key = ~0;
+	}
+
+	D3DXVECTOR3 v;
+	FeaturePair f;
+};
+
 //-----------------------------------------------------------------------------
 // クラスの定義
 //-----------------------------------------------------------------------------
@@ -82,17 +109,17 @@ public:
 	bool Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize);	// 当たり判定 (左右, 奥, 手前)
 	bool Collision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx);	// 当たり判定 (左右, 奥, 手前)
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pSize, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
+	bool OBBAndOBB(CObjectX* inObjectX,D3DXVECTOR3* outPos);
 	bool OBBAndOBB(CObjectX* inObjectX);
-	bool OBBAndBoxTop(CObjectX* inObjectX, float* outLength = nullptr);
-	bool OBBAndBoxDown(CObjectX* inObjectX, float* outLength = nullptr);
-	bool OBBAndBoxLeft(CObjectX* inObjectX, float* outLength = nullptr);
-	bool OBBAndBoxRight(CObjectX* inObjectX, float* outLength = nullptr);
-	bool OBBAndBoxFront(CObjectX* inObjectX, float* outLength = nullptr);
-	bool OBBAndBoxBack(CObjectX* inObjectX, float* outLength = nullptr);
 	bool OBBAndPolygon(const CObjectPolygon3D* inObjectPolgon, float* outLength = nullptr);
 	bool OBBAndPolygon(const D3DXVECTOR3& inPos, float* outLength = nullptr);
 	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = nullptr);
 	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
+
+private:
+	void ComputeIncidentFace(const D3DXVECTOR3& itx_pos, const D3DXMATRIX& itx_mtxRot, const D3DXVECTOR3& e, D3DXVECTOR3 n, ClipVertex* out);
+	void ComputeReferenceEdgesAndBasis(const D3DXVECTOR3& eR, const D3DXVECTOR3& rtx_pos, const D3DXMATRIX& rtx_mtxRot, D3DXVECTOR3 n, int axis, char* out, D3DXMATRIX* basis, D3DXVECTOR3* e);
+	int Clip(const D3DXVECTOR3& rPos, const D3DXVECTOR3& e, char* clipEdges, const D3DXMATRIX& basis, ClipVertex* incident, ClipVertex* outVerts, float* outDepths);
 
 private:
 	//-------------------------------------------------------------------------
@@ -116,13 +143,13 @@ private:
 	//=========================================
 	//ハンドル一覧
 	//=========================================
-	IDirect3DTexture9	*pTex0 = NULL;				// テクスチャ保存用
-	D3DXHANDLE			m_hmWVP;					// ワールド～射影行列
-	D3DXHANDLE			m_hmWIT;					// ローカル - ワールド変換行列
-	D3DXHANDLE			m_hvLightDir;				// ライトの方向
-	D3DXHANDLE			m_hvCol;					// 頂点色
-	D3DXHANDLE			m_hvEyePos;					// 視点の位置
-	D3DXHANDLE			m_hTechnique;				// テクニック
-	D3DXHANDLE			m_hTexture;					// テクスチャ
+	IDirect3DTexture9	*pTex0 = NULL;	// テクスチャ保存用
+	D3DXHANDLE			m_hmWVP;		// ワールド～射影行列
+	D3DXHANDLE			m_hmWIT;		// ローカル - ワールド変換行列
+	D3DXHANDLE			m_hvLightDir;	// ライトの方向
+	D3DXHANDLE			m_hvCol;		// 頂点色
+	D3DXHANDLE			m_hvEyePos;		// 視点の位置
+	D3DXHANDLE			m_hTechnique;	// テクニック
+	D3DXHANDLE			m_hTexture;		// テクスチャ
 };
 #endif

@@ -274,6 +274,9 @@
     <ClCompile Include="title_menu.cpp">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClCompile>
+    <ClCompile Include="enemy_planprogress.cpp">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -476,6 +479,9 @@
     </ClInclude>
     <ClInclude Include="title_menu.h">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_planprogress.h">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CPlayer::SPEED = 6.5f;			// 移動量
+const float CPlayer::SPEED = 1.5f;			// 移動量
 const float CPlayer::ATTENUATION = 0.25f;	// 移動減衰係数
 const float CPlayer::JUMPING_POWER = 1.5f;	// 跳躍力
 const float CPlayer::GRAVITY = 0.75f;		// 重力
@@ -241,7 +241,7 @@ void CPlayer::boost()
 //-----------------------------------------------------------------------------
 void CPlayer::Landing()
 {
-	if (OnHitPolygon())
+	if (OnHitPlain())
 	{
 		//m_pos.y = m_posOld.y;
 	}
@@ -283,9 +283,9 @@ void CPlayer::OnHitEnemy()
 	{
 		CObject* next = object->NextSameType();
 
-		//if (OBBAndOBB((CObjectX*)object))
+		if (OBBAndOBB((CObjectX*)object))
 		{
-			//m_isGoal = true;	// Goal
+			m_isGoal = true;	// Goal
 		}
 
 		object = next;
@@ -293,9 +293,9 @@ void CPlayer::OnHitEnemy()
 }
 
 //-----------------------------------------------------------------------------
-// Polygonとの当たり判定
+// Plainとの当たり判定
 //-----------------------------------------------------------------------------
-bool CPlayer::OnHitPolygon()
+bool CPlayer::OnHitPlain()
 {
 	// 最初に見つけた指定したタイプのobjectを持ってくる
 	CObject* object = SearchType(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
@@ -306,11 +306,11 @@ bool CPlayer::OnHitPolygon()
 	{
 		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
 
-		CObjectX* objectX = (CObjectX*)object;	// 変換
-
-		if (OBBAndOBB(objectX))
+		if (OBBAndOBB((CObjectX*)object))
 		{
 		}
+		CDebugProc::Print("----------------------------------------------\n");
+
 		object = next;
 	}
 	return hit;

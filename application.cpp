@@ -190,8 +190,8 @@ void CApplication::Update()
 		CInput::GetKey()->GetMouse()->UseSetPosLock(isLock);
 	}
 
-	static bool ppp = false;
-	CDebugProc::Print("ƒ|[ƒY’âŽ~ y 2 z  : %s\n", ppp ? "ON" : "OFF");
+	static bool ppp = true;
+	CDebugProc::Print("ƒ|[ƒYy 2 z : %s\n", ppp ? "OFF" : "STOP");
 	if (CInput::GetKey()->Trigger(DIK_2))
 	{
 		m_pTaskGroup->Pause(ppp);

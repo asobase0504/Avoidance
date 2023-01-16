@@ -54,7 +54,7 @@ void CDebugProc::Draw(void)
 	RECT rect = { 0, 0, 1280, 720 };
 
 	// テキスト描画
-	m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xef, 0xef, 0xef));
+	m_pFont->DrawText(NULL, m_aStr.c_str(), -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0x00, 0xef, 0x00));
 	m_aStr.clear();
 }
 
@@ -89,7 +89,7 @@ void CDebugProc::Init()
 
 	// デバッグ情報表示用フォントの生成
 	D3DXCreateFont(pDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
-		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, _T("Terminal"), &m_pFont);
+		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, _T("HGRSGU.TTC"), &m_pFont);
 }
 
 //=============================================================================
