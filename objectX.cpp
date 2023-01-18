@@ -108,6 +108,7 @@ void CObjectX::Draw()
 	}
 
 	DrawMaterial();
+	DrawOutLine();
 }
 
 //=============================================================================
@@ -227,6 +228,41 @@ void CObjectX::DrawMaterial()
 	pEffect->End();
 }
 
+void CObjectX::DrawOutLine()
+{
+	// 計算用マトリックス
+	D3DXMATRIX mtxTrans;
+
+	// ワールドマトリックスの初期化
+	// 行列初期化関数(第1引数の行列を単位行列に初期化)
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	// 大きさを反映
+	//D3DXMatrixScaling(&mtxTrans, -m_scale.x * 1.05f, -m_scale.y * 1.05f, -m_scale.z * 1.05f);
+	D3DXMatrixScaling(&mtxTrans, -m_scale.x - 0.15f, -m_scale.y - 0.15f, -m_scale.z - 0.15f);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);
+
+	// 位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_pParent != nullptr)
+	{
+		D3DXMATRIX mtxParent = m_pParent->GetMtxWorld();
+
+		// 行列掛け算関数
+		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxParent);
+	}
+
+	D3DXCOLOR color = m_materialDiffuse[0];
+	m_materialDiffuse[0] = D3DXCOLOR(0.0f,0.0f,0.0f,1.0f);
+	DrawMaterial();
+	m_materialDiffuse[0] = color;
+}
+
 void CObjectX::SetScale(const D3DXVECTOR3& inScale)
 {
 	m_scale = inScale;
@@ -277,7 +313,7 @@ void CObjectX::CalculationVtx()
 	D3DXMatrixIdentity(&mtxWorld);
 
 	// 向きの反映
-	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &m_mtxRot);					// 行列掛け算関数
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &m_mtxRot);		// 行列掛け算関数
 
 	D3DXVec3TransformCoord(&m_MaxVtx, &m_MaxVtx, &mtxWorld);
 	D3DXVec3TransformCoord(&m_MinVtx, &m_MinVtx, &mtxWorld);
@@ -618,7 +654,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 		return false;
 	}
 
-	bool debug = false;
+	bool debug = true;
 
 	if (debug)CDebugProc::Print("----------------------------------------------\n");
 
@@ -635,7 +671,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 	mtxThisRot._33 = m_mtxRot._33;
 
 	// 自身とターゲットの向きを合成
-	D3DXMATRIX mtx = mtxThisRot * inObjectX->GetMatRot();
+	D3DXMATRIX mtx = mtxThisRot * inObjectX->GetMtxRot();
 
 	// 絶対値
 	D3DXMATRIX mtxAds;
@@ -750,7 +786,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 		return false;
 	}
 
-	D3DXMATRIX targetMtxRot = inObjectX->GetMatRot();
+	D3DXMATRIX targetMtxRot = inObjectX->GetMtxRot();
 
 	//B.e1
 	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._11, mtx._21, mtx._31))) - (targetScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._21, mtxAds._31), &thisScale));
@@ -983,7 +1019,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 			rtx_pos = m_pos;
 			itx_pos = inObjectX->GetPos();
 			rtx_mtxRot = m_mtxRot;
-			itx_mtxRot = inObjectX->GetMatRot();
+			itx_mtxRot = inObjectX->GetMtxRot();
 			eR = thisScale;
 			eI = targetScale;
 			flip = false;
@@ -992,7 +1028,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 		{
 			rtx_pos = inObjectX->GetPos();
 			itx_pos = m_pos;
-			rtx_mtxRot = inObjectX->GetMatRot();
+			rtx_mtxRot = inObjectX->GetMtxRot();
 			itx_mtxRot = m_mtxRot;
 			eR = targetScale;
 			eI = thisScale;
@@ -1155,7 +1191,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 		};
 
 		SupportEdge(m_pos, m_mtxRot, thisScale, n, &PA, &QA);
-		SupportEdge(inObjectX->GetPos(), inObjectX->GetMatRot(), targetScale, -n, &PB, &QB);
+		SupportEdge(inObjectX->GetPos(), inObjectX->GetMtxRot(), targetScale, -n, &PB, &QB);
 
 		D3DXVECTOR3 CA, CB;
 		{
@@ -1216,15 +1252,19 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 
 	{
 		// 計算用マトリックス
-		D3DXMATRIX mtxWorld = m_mtxRot;
+		D3DXMATRIX mtxRot = m_mtxRot;
 
 		D3DXVECTOR3 size = m_size * 0.5f;
+		size.x *= m_scale.x;
+		size.y *= m_scale.y;
+		size.z *= m_scale.z;
+
 		thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &m_mtxRot);
-		D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &m_mtxRot);
-		D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &m_mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &mtxRot);
+		D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &mtxRot);
 		D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
 		D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
 		D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
@@ -1242,16 +1282,19 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 
 	{
 		// 計算用マトリックス
-		D3DXMATRIX mtxWorld = inObjectX->GetMatRot();
+		D3DXMATRIX mtxRot = inObjectX->GetMtxRot();
 
 		D3DXVECTOR3 size = inObjectX->GetSize() * 0.5f;
+		size.x *= inObjectX->GetScale().x;
+		size.y *= inObjectX->GetScale().y;
+		size.z *= inObjectX->GetScale().z;
 
 		targetNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		targetNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		targetNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		D3DXVec3TransformCoord(&targetNormalizeVecX, &targetNormalizeVecX, &mtxWorld);
-		D3DXVec3TransformCoord(&targetNormalizeVecY, &targetNormalizeVecY, &mtxWorld);
-		D3DXVec3TransformCoord(&targetNormalizeVecZ, &targetNormalizeVecZ, &mtxWorld);
+		D3DXVec3TransformCoord(&targetNormalizeVecX, &targetNormalizeVecX, &mtxRot);
+		D3DXVec3TransformCoord(&targetNormalizeVecY, &targetNormalizeVecY, &mtxRot);
+		D3DXVec3TransformCoord(&targetNormalizeVecZ, &targetNormalizeVecZ, &mtxRot);
 		D3DXVec3Normalize(&targetNormalizeVecX, &targetNormalizeVecX);
 		D3DXVec3Normalize(&targetNormalizeVecY, &targetNormalizeVecY);
 		D3DXVec3Normalize(&targetNormalizeVecZ, &targetNormalizeVecZ);

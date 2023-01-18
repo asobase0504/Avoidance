@@ -20,8 +20,8 @@
 //-----------------------------------------------------------------------------
 // ’è”
 //-----------------------------------------------------------------------------
-const float CPlayer::SPEED = 1.5f;			// ˆÚ“®—Ê
-const float CPlayer::ATTENUATION = 0.25f;	// ˆÚ“®Œ¸ŠŒW”
+const float CPlayer::SPEED = 6.5f;			// ˆÚ“®—Ê
+const float CPlayer::ATTENUATION = 0.35f;	// ˆÚ“®Œ¸ŠŒW”
 const float CPlayer::JUMPING_POWER = 1.5f;	// ’µ–ô—Í
 const float CPlayer::GRAVITY = 0.75f;		// d—Í
 
@@ -104,7 +104,7 @@ void CPlayer::NormalUpdate()
 	if (time % 2 == 0)
 	{
 		CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
-		afterimage->SetMtxQuaternion(m_quaternion);
+		afterimage->SetMtxRot(GetMtxRot());
 		afterimage->SetMaterialDiffuse(0,GetMaterialDiffuse(0));
 	}
 }

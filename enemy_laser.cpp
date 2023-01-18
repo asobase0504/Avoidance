@@ -8,88 +8,99 @@
 // include
 //-----------------------------------------------------------------------------
 #include <assert.h>
-#include "enemy_oneway.h"
-#include "enemy_oneway_died.h"
+#include "enemy_laser.h"
 #include "line.h"
-#include "utility.h"
+#include "debug_proc.h"
 
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const D3DXVECTOR3 CEnemyOneWay::SCALE = D3DXVECTOR3(1.5f, 1.5f, 1.5f);
-const D3DXVECTOR3 CEnemyOneWay::MOVE_POWER = D3DXVECTOR3(0.0f, -5.5f, 0.0f);
+const D3DXVECTOR3 CEnemyLaser::SCALE = D3DXVECTOR3(0.55f, 1.25f, 0.55f);
+const D3DXVECTOR3 CEnemyLaser::MOVE_POWER = D3DXVECTOR3(0.0f, -2.0f, 0.0f);
+const int CEnemyLaser::MOVE_START_TIME = 80;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CEnemyOneWay::CEnemyOneWay()
+CEnemyLaser::CEnemyLaser()
 {
+	m_startCnt = 0;
 	SetType(CObject::EType::PLAYER);
 }
 
 //-----------------------------------------------------------------------------
 // デストラクタ
 //-----------------------------------------------------------------------------
-CEnemyOneWay::~CEnemyOneWay()
+CEnemyLaser::~CEnemyLaser()
 {
 }
 
 //-----------------------------------------------------------------------------
 // 初期化
 //-----------------------------------------------------------------------------
-HRESULT CEnemyOneWay::Init()
+HRESULT CEnemyLaser::Init()
 {
 	// 現在のモーション番号の保管
 	CEnemy::Init();
 	LoadModel("BOX");
 	SetScale(SCALE);
 	m_guideLine = CLine::Create();
+	SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_moveScale = 0.2f;
 	return S_OK;
 }
 
 //-----------------------------------------------------------------------------
 // 終了
 //-----------------------------------------------------------------------------
-void CEnemyOneWay::Uninit()
+void CEnemyLaser::Uninit()
 {
-	m_guideLine->Release();
 	CEnemy::Uninit();
+}
+
+//-----------------------------------------------------------------------------
+// 出現中更新
+//-----------------------------------------------------------------------------
+void CEnemyLaser::PopUpdate()
+{
+	m_startCnt++;
+	if (m_startCnt % MOVE_START_TIME == 0)
+	{
+		//SetMove(MOVE_POWER);
+		SetUpdateStatus(EUpdateStatus::NORMAL);
+	}
 }
 
 //-----------------------------------------------------------------------------
 // 更新
 //-----------------------------------------------------------------------------
-void CEnemyOneWay::NormalUpdate()
+void CEnemyLaser::NormalUpdate()
 {
 	SetMove(MOVE_POWER);
+	D3DXVECTOR3 scale = GetScale();
+	SetScale(D3DXVECTOR3(scale.x, scale.y + m_moveScale, scale.z));
+	CDebugProc::Print("%f\n", GetScale().y);
+	CEnemy::NormalUpdate();
 
-	if (OnHitPlain())
-	{
-		SetUpdateStatus(EUpdateStatus::END);
-	}
+	//if (OnHitPlain())
+	//{
+	//	SetUpdateStatus(EUpdateStatus::END);
+	//}
 }
 
 //-----------------------------------------------------------------------------
 // 終了更新
 //-----------------------------------------------------------------------------
-void CEnemyOneWay::EndUpdate()
+void CEnemyLaser::EndUpdate()
 {
-	for (int i = 0;i < 10;i++)
-	{
-		D3DXVECTOR3 pos = m_pos;
-		pos.x += FloatRandam(-20.0f, 20.0f);
-		pos.y += FloatRandam(-20.0f, 20.0f);
-		pos.z += FloatRandam(-20.0f, 20.0f);
-		CEnemyOneWayDied::Create(pos);
-	}
-
 	CEnemy::EndUpdate();
+	m_guideLine->Release();
 }
 
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
-void CEnemyOneWay::Draw()
+void CEnemyLaser::Draw()
 {
 	CEnemy::Draw();
 	m_guideLine->SetLine(m_pos, m_rot, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -700.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
@@ -98,7 +109,7 @@ void CEnemyOneWay::Draw()
 //-----------------------------------------------------------------------------
 // 移動量の設定
 //-----------------------------------------------------------------------------
-void CEnemyOneWay::SetMove(const D3DXVECTOR3 & inMove)
+void CEnemyLaser::SetMove(const D3DXVECTOR3 & inMove)
 {
 	D3DXMATRIX mtxRot;
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);		// 行列回転関数

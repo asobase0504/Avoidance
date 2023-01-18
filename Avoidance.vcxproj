@@ -167,7 +167,9 @@
     <ClCompile Include="debug_proc.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="enemy_laser.cpp" />
     <ClCompile Include="enemy_oneway.cpp" />
+    <ClCompile Include="enemy_oneway_died.cpp" />
     <ClCompile Include="enemy_planprogress.cpp" />
     <ClCompile Include="goal.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
@@ -238,7 +240,9 @@
     <ClInclude Include="debug_proc.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="enemy_laser.h" />
     <ClInclude Include="enemy_oneway.h" />
+    <ClInclude Include="enemy_oneway_died.h" />
     <ClInclude Include="enemy_planprogress.h" />
     <ClInclude Include="goal.h" />
     <ClInclude Include="inputjoypad.h" />

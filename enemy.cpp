@@ -51,18 +51,14 @@ void CEnemy::Uninit()
 //-----------------------------------------------------------------------------
 void CEnemy::NormalUpdate()
 {
-	if (m_pos.y < -5000.0f)
-	{
-		SetUpdateStatus(EUpdateStatus::END);
-	}
 }
 
 //-----------------------------------------------------------------------------
-// 描画
+// 終了更新
 //-----------------------------------------------------------------------------
-void CEnemy::Draw()
+void CEnemy::EndUpdate()
 {
-	CObjectX::Draw();
+	Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -78,4 +74,23 @@ CEnemy* CEnemy::Create()
 	}
 
 	return enemy;
+}
+
+bool CEnemy::OnHitPlain()
+{
+	// 最初に見つけた指定したタイプのobjectを持ってくる
+	CObject* object = SearchType(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
+
+	while (object != nullptr)
+	{
+		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
+
+		if (OBBAndOBB((CObjectX*)object))
+		{
+			return true;
+		}
+
+		object = next;
+	}
+	return false;
 }

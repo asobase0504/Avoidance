@@ -91,7 +91,9 @@ public:
 
 	/* êFån */
 	virtual void SetColor(const D3DXCOLOR &inColor) { m_color = inColor; }
+	virtual void SetColor(float r, float g, float b, float a) { SetColor(D3DXCOLOR(r,g,b,a)); }
 	void AddColor(const D3DXCOLOR &inColor) { SetColor(m_color + inColor); }
+	void AddColor(float r, float g, float b, float a) { AddColor(D3DXCOLOR(r, g, b, a)); }
 	void MulColor(const float &inRatio) { SetColor(m_color * inRatio); }
 	const D3DXCOLOR &GetColor() const { return m_color; }
 	// ìßñæêFÇÃÇ›

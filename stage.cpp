@@ -12,6 +12,8 @@
 #include "color.h"
 #include "enemy.h"
 #include "enemy_oneway.h"
+#include "enemy_planprogress.h"
+#include "enemy_laser.h"
 #include "player.h"
 #include "plain.h"
 
@@ -190,7 +192,7 @@ void CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTO
 	switch (type)
 	{
 	case 0:
-		enemy = new CEnemyOneWay;
+		enemy = new CEnemyLaser;
 		break;
 	default:
 		break;

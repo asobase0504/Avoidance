@@ -77,7 +77,8 @@ HRESULT CGame::Init(void)
 		CObject2d* bg = CObject2d::Create();
 		bg->SetPos(CApplication::CENTER_POS);
 		bg->SetSize(CApplication::CENTER_POS);
-		bg->SetColor(D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
+		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0);
+		bg->SetColor(color);
 	}
 
 	{// ƒvƒŒƒCƒ„[
@@ -141,7 +142,7 @@ void CGame::Update(void)
 
 	static int cnt = 0;
 	cnt++;
-	if(cnt % 45 == 0)
+	if(cnt % 90 == 0)
 	{
 		cnt = 0;
 		{

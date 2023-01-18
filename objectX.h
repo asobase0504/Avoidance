@@ -65,6 +65,7 @@ public:
 	/* 描画 */
 	void Draw() override;
 	void DrawMaterial();
+	void DrawOutLine();
 	void Projection();					// 平行投影処理
 
 	/* 生成処理 */
@@ -82,8 +83,9 @@ public:
 	/* 回転系統 */
 	void SetRot(const D3DXVECTOR3& inRot) override;
 	void SetMtxRot(const D3DXVECTOR3& inRot);
+	void SetMtxRot(const D3DXMATRIX& inRot) { m_mtxRot = inRot; }
 	void SetMtxQuaternion(const D3DXQUATERNION& inQuaternion) { D3DXMatrixRotationQuaternion(&m_mtxRot, &inQuaternion); }
-	const D3DXMATRIX& GetMatRot() { return m_mtxRot; }
+	const D3DXMATRIX& GetMtxRot() { return m_mtxRot; }
 
 	/* 頂点位置 */
 	void CalculationVtx();	// 頂点最大小値の計算

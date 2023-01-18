@@ -1,37 +1,51 @@
 //=============================================================================
 //
-// エネミー設定ヘッダー
+// エネミー(一方向にすすむ)設定ヘッダー
 // Author:Yuda Kaito
 //
 //=============================================================================
-#ifndef _ENEMY_H_
-#define _ENEMY_H_
+#ifndef _ENEMY_LASER_H_
+#define _ENEMY_LASER_H_
 
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
-#include "motion.h"
-#include "objectX.h"
+#include "enemy.h"
+
+//-----------------------------------------------------------------------------
+// 前方宣言
+//-----------------------------------------------------------------------------
+class CLine;
 
 //-----------------------------------------------------------------------------
 // エネミークラス
 //-----------------------------------------------------------------------------
-class CEnemy : public CObjectX
+class CEnemyLaser : public CEnemy
 {
+private: // 定数
+	static const D3DXVECTOR3 SCALE;
+	static const D3DXVECTOR3 MOVE_POWER;
+	static const int MOVE_START_TIME;
+
 public: // パブリック関数
-	CEnemy();
-	~CEnemy();
+	CEnemyLaser();
+	~CEnemyLaser();
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
+	void PopUpdate() override;		// 更新
 	void NormalUpdate() override;	// 更新
-	void EndUpdate() override;		// 更新
+	void EndUpdate() override;		// 終了更新
+	void Draw() override;	// 更新
 
-	static CEnemy* Create();	// 生成
-	bool OnHitPlain();	// Plainとの当たり判定
+	void SetMove(const D3DXVECTOR3& inMove) override;
 
 private: // プライベート関数
 
 private: // メンバー変数
+
+	int m_startCnt;
+	float m_moveScale;
+	CLine* m_guideLine;
 };
 #endif
