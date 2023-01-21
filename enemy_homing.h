@@ -4,8 +4,8 @@
 // Author:Yuda Kaito
 //
 //=============================================================================
-#ifndef _ENEMY_PlAN_PROGLESS_H_
-#define _ENEMY_PlAN_PROGLESS_H_
+#ifndef _ENEMY_HOMING_H_
+#define _ENEMY_HOMING_H_
 
 //-----------------------------------------------------------------------------
 // include
@@ -13,14 +13,9 @@
 #include "enemy.h"
 
 //-----------------------------------------------------------------------------
-// 前方宣言
-//-----------------------------------------------------------------------------
-class CLine;
-
-//-----------------------------------------------------------------------------
 // エネミークラス
 //-----------------------------------------------------------------------------
-class CEnemyPlanProgress : public CEnemy
+class CEnemyHoming : public CEnemy
 {
 private: // 定数
 	static const D3DXVECTOR3 SCALE;
@@ -28,8 +23,8 @@ private: // 定数
 	static const int MOVE_START_TIME;
 
 public: // パブリック関数
-	CEnemyPlanProgress();
-	~CEnemyPlanProgress();
+	CEnemyHoming();
+	~CEnemyHoming();
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
@@ -47,6 +42,5 @@ private: // プライベート関数
 private: // メンバー変数
 
 	int m_startCnt;
-	CLine* m_guideLine;
 };
 #endif

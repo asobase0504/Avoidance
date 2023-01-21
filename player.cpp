@@ -99,14 +99,14 @@ void CPlayer::NormalUpdate()
 	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
 
-	static int time = 0;
-	time++;
-	if (time % 2 == 0)
-	{
-		CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
-		afterimage->SetMtxRot(GetMtxRot());
-		afterimage->SetMaterialDiffuse(0,GetMaterialDiffuse(0));
-	}
+	//static int time = 0;
+	//time++;
+	//if (time % 2 == 0)
+	//{
+	//	CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
+	//	afterimage->SetMtxRot(GetMtxRot());
+	//	afterimage->SetMaterialDiffuse(0,GetMaterialDiffuse(0));
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -241,13 +241,14 @@ void CPlayer::boost()
 //-----------------------------------------------------------------------------
 void CPlayer::Landing()
 {
-	if (OnHitPlain())
+	if (/*OnHitPlain()*/ m_pos.y < 20.0f)
 	{
-		//m_pos.y = m_posOld.y;
+		m_pos.y = 20.0f;
+		m_jumpCount = 0;
 	}
 	else
 	{
-		//m_move.y -= GRAVITY;	// 重力
+		m_move.y -= GRAVITY;	// 重力
 	}
 }
 
@@ -306,7 +307,7 @@ bool CPlayer::OnHitPlain()
 	{
 		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
 
-		if (OBBAndOBB((CObjectX*)object))
+		if (OBBAndOBB((CObjectX*)object,&m_pos))
 		{
 		}
 		CDebugProc::Print("----------------------------------------------\n");

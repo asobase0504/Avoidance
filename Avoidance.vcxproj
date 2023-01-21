@@ -167,6 +167,8 @@
     <ClCompile Include="debug_proc.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="enemy_factory.cpp" />
+    <ClCompile Include="enemy_homing.cpp" />
     <ClCompile Include="enemy_laser.cpp" />
     <ClCompile Include="enemy_oneway.cpp" />
     <ClCompile Include="enemy_oneway_died.cpp" />
@@ -240,6 +242,8 @@
     <ClInclude Include="debug_proc.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="enemy_factory.h" />
+    <ClInclude Include="enemy_homing.h" />
     <ClInclude Include="enemy_laser.h" />
     <ClInclude Include="enemy_oneway.h" />
     <ClInclude Include="enemy_oneway_died.h" />
@@ -305,6 +309,7 @@
   <ItemGroup>
     <None Include="data\FILE\color.json" />
     <None Include="data\FILE\model.json" />
+    <None Include="data\FILE\stage.json" />
     <None Include="data\FILE\texture.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

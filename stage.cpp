@@ -14,8 +14,10 @@
 #include "enemy_oneway.h"
 #include "enemy_planprogress.h"
 #include "enemy_laser.h"
+#include "enemy_homing.h"
 #include "player.h"
 #include "plain.h"
+#include "input.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -73,7 +75,7 @@ void CStage::Update()
 		}
 	}
 
-	if (m_goal->IsGoal())
+	if (m_goal->IsGoal() || CInput::GetKey()->Trigger(DIK_8))
 	{
 		m_goal->SetUpdateStatus(CObject::EUpdateStatus::END);
 		m_floor->SetUpdateStatus(CObject::EUpdateStatus::END);
@@ -87,7 +89,7 @@ void CStage::Update()
 		{
 			m_midairFloor[i]->SetUpdateStatus(CObject::EUpdateStatus::END);
 		}
-		m_isEnd = true;
+		//m_isEnd = true;
 	}
 
 	m_startCnt++;
@@ -192,7 +194,7 @@ void CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTO
 	switch (type)
 	{
 	case 0:
-		enemy = new CEnemyLaser;
+		enemy = new CEnemyHoming;
 		break;
 	default:
 		break;

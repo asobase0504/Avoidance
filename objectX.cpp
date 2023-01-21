@@ -670,20 +670,32 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 	mtxThisRot._32 = m_mtxRot._23;
 	mtxThisRot._33 = m_mtxRot._33;
 
+	// 逆行列
+	D3DXMATRIX targetMtxRot = inObjectX->GetMtxRot();
+	targetMtxRot._11 = inObjectX->GetMtxRot()._11;
+	targetMtxRot._12 = inObjectX->GetMtxRot()._21;
+	targetMtxRot._13 = inObjectX->GetMtxRot()._31;
+	targetMtxRot._21 = inObjectX->GetMtxRot()._12;
+	targetMtxRot._22 = inObjectX->GetMtxRot()._22;
+	targetMtxRot._23 = inObjectX->GetMtxRot()._32;
+	targetMtxRot._31 = inObjectX->GetMtxRot()._13;
+	targetMtxRot._32 = inObjectX->GetMtxRot()._23;
+	targetMtxRot._33 = inObjectX->GetMtxRot()._33;
+
 	// 自身とターゲットの向きを合成
 	D3DXMATRIX mtx = mtxThisRot * inObjectX->GetMtxRot();
 
 	// 絶対値
 	D3DXMATRIX mtxAds;
-	mtxAds._11 = fabs(mtx._11);
-	mtxAds._12 = fabs(mtx._21);
-	mtxAds._13 = fabs(mtx._31);
-	mtxAds._21 = fabs(mtx._12);
-	mtxAds._22 = fabs(mtx._22);
-	mtxAds._23 = fabs(mtx._32);
-	mtxAds._31 = fabs(mtx._13);
-	mtxAds._32 = fabs(mtx._23);
-	mtxAds._33 = fabs(mtx._33);
+	mtxAds._11 = fabsf(mtx._11);
+	mtxAds._12 = fabsf(mtx._21);
+	mtxAds._13 = fabsf(mtx._31);
+	mtxAds._21 = fabsf(mtx._12);
+	mtxAds._22 = fabsf(mtx._22);
+	mtxAds._23 = fabsf(mtx._32);
+	mtxAds._31 = fabsf(mtx._13);
+	mtxAds._32 = fabsf(mtx._23);
+	mtxAds._33 = fabsf(mtx._33);
 
 	const float etc = 1.0e-6f;	// めっちゃ小さな数字(100万分の1)
 	bool parallel = false;
@@ -705,33 +717,52 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 	D3DXVECTOR3 pos = (GetPos() - inObjectX->GetPos());
 	D3DXVec3TransformCoord(&interval, &pos, &mtxThisRot);	// m_mtxRotではなく逆行列；
 
-	if (debug)CDebugProc::Print("1 : %.2f,%.2f,%.2f \n ", m_mtxRot._11, m_mtxRot._12, m_mtxRot._13);
-	if (debug)CDebugProc::Print("2 : %.2f,%.2f,%.2f \n ", m_mtxRot._12, m_mtxRot._22, m_mtxRot._23);
-	if (debug)CDebugProc::Print("3 : %.2f,%.2f,%.2f \n\n ", m_mtxRot._31, m_mtxRot._32, m_mtxRot._33);
+	if (debug)CDebugProc::Print("pos : %.2f,%.2f,%.2f \n", pos.x, pos.y, pos.z);
+	if (debug)D3DXVec3Length(&interval) <= 50.0f ? CDebugProc::Print("★interval★ : %.2f,%.2f,%.2f \n", interval.x, interval.y, interval.z) : CDebugProc::Print("interval : %.2f,%.2f,%.2f \n", interval.x, interval.y, interval.z);
+
+	if (debug)CDebugProc::Print("\nm_mtxRot\n");
+	if (debug)CDebugProc::Print(" 1 : %.2f,%.2f,%.2f     ", m_mtxRot._11, m_mtxRot._12, m_mtxRot._13);
+	if (debug)CDebugProc::Print(" 2 : %.2f,%.2f,%.2f     ", m_mtxRot._21, m_mtxRot._22, m_mtxRot._23);
+	if (debug)CDebugProc::Print(" 3 : %.2f,%.2f,%.2f     ", m_mtxRot._31, m_mtxRot._32, m_mtxRot._33);
+	if (debug)CDebugProc::Print("\nmtxThisRot\n");
+	if (debug)CDebugProc::Print(" 1 : %.2f,%.2f,%.2f     ", mtxThisRot._11, mtxThisRot._12, mtxThisRot._13);
+	if (debug)CDebugProc::Print(" 2 : %.2f,%.2f,%.2f     ", mtxThisRot._21, mtxThisRot._22, mtxThisRot._23);
+	if (debug)CDebugProc::Print(" 3 : %.2f,%.2f,%.2f     ", mtxThisRot._31, mtxThisRot._32, mtxThisRot._33);
+	if (debug)CDebugProc::Print("\ninObjectX->GetMtxRot()\n");
+	if (debug)CDebugProc::Print(" 1 : %.2f,%.2f,%.2f     ", inObjectX->GetMtxRot()._11, inObjectX->GetMtxRot()._12, inObjectX->GetMtxRot()._13);
+	if (debug)CDebugProc::Print(" 2 : %.2f,%.2f,%.2f     ", inObjectX->GetMtxRot()._21, inObjectX->GetMtxRot()._22, inObjectX->GetMtxRot()._23);
+	if (debug)CDebugProc::Print(" 3 : %.2f,%.2f,%.2f     ", inObjectX->GetMtxRot()._31, inObjectX->GetMtxRot()._32, inObjectX->GetMtxRot()._33);
+	if (debug)CDebugProc::Print("\nmtx\n");
+	if (debug)CDebugProc::Print(" 1 : %.2f,%.2f,%.2f     ", mtx._11, mtx._12, mtx._13);
+	if (debug)CDebugProc::Print(" 2 : %.2f,%.2f,%.2f     ", mtx._21, mtx._22, mtx._23);
+	if (debug)CDebugProc::Print(" 3 : %.2f,%.2f,%.2f     ", mtx._31, mtx._32, mtx._33);
+	if (debug)CDebugProc::Print("\n\n");
 
 	//if (debug)CDebugProc::Print("mtxAds : %.2f,%.2f,%.2f   %.2f,%.2f,%.2f  %.2f,%.2f,%.2f│ ", mtxAds._11, mtxAds._12, mtxAds._13, mtxAds._21, mtxAds._22, mtxAds._23, mtxAds._31, mtxAds._32, mtxAds._33);
-	if (debug)CDebugProc::Print("pos : %.2f,%.2f,%.2f │ ", pos.x, pos.y, pos.z);
-	if (debug)D3DXVec3Length(&interval) <= 50.0f ? CDebugProc::Print("★interval★ : %.2f,%.2f,%.2f │", interval.x, interval.y, interval.z) : CDebugProc::Print("interval : %.2f,%.2f,%.2f │", interval.x, interval.y, interval.z);
 	//if (debug)CDebugProc::Print("interval : %.2f,%.2f,%.2f │", interval.x, interval.y, interval.z);
 
 	float s;
 
 	D3DXVECTOR3 thisScale = m_MaxVtx;
 	{
-		D3DXVECTOR3 scale = m_scale * 0.5f;
-		thisScale.x *= scale.x;
-		thisScale.y *= scale.y;
-		thisScale.z *= scale.z;
+		//D3DXVECTOR3 scale = m_scale * 0.5f;
+		//thisScale.x *= scale.x;
+		//thisScale.y *= scale.y;
+		//thisScale.z *= scale.z;
 		if (debug)CDebugProc::Print("thisScale : %.2f,%.2f,%.2f │", thisScale.x, thisScale.y, thisScale.z);
 	}
 
 	D3DXVECTOR3 targetScale = inObjectX->GetMaxVtx();
 	{
-		D3DXVECTOR3 scale = inObjectX->GetScale() * 0.5f;
-		targetScale.x *= scale.x;
-		targetScale.y *= scale.y;
-		targetScale.z *= scale.z;
-		if (debug)CDebugProc::Print("targetScale : %.2f,%.2f,%.2f │", targetScale.x, targetScale.y, targetScale.z);
+		//D3DXVECTOR3 scale = inObjectX->GetScale() * 0.5f;
+		//if (debug)CDebugProc::Print("\n");
+		//if (debug)CDebugProc::Print("scale : %.2f,%.2f,%.2f │", inObjectX->GetScale().x, inObjectX->GetScale().y, inObjectX->GetScale().z);
+		//if (debug)CDebugProc::Print("targetScale : %.2f,%.2f,%.2f \n", targetScale.x, targetScale.y, targetScale.z);
+		//targetScale.x *= scale.x;
+		//targetScale.y *= scale.y;
+		//targetScale.z *= scale.z;
+		//if (debug)CDebugProc::Print("scale : %.2f,%.2f,%.2f │", scale.x, scale.y, scale.z);
+		if (debug)CDebugProc::Print("targetScale : %.2f,%.2f,%.2f \n", targetScale.x, targetScale.y, targetScale.z);
 	}
 
 	float aMax = -FLT_MAX;
@@ -762,7 +793,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 
 	//A.e1
 	s = fabs(interval.x) - (thisScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._12, mtxAds._13), &targetScale));
-	if (TrackFaceAxis(&aAxis, 0, s, &aMax, D3DXVECTOR3(m_mtxRot._11, m_mtxRot._21, m_mtxRot._31), &nA))
+	if (TrackFaceAxis(&aAxis, 0, s, &aMax, D3DXVECTOR3(mtxThisRot._11, mtxThisRot._21, mtxThisRot._31), &nA))
 	{
 		if (debug)CDebugProc::Print("│A.e1\n");
 		return false;
@@ -770,7 +801,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 
 	//A.e2
 	s = fabs(interval.y) - (thisScale.y + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._21, mtxAds._22, mtxAds._23), &targetScale));
-	if (TrackFaceAxis(&aAxis, 1, s, &aMax, D3DXVECTOR3(m_mtxRot._12, m_mtxRot._22, m_mtxRot._32), &nA))
+	if (TrackFaceAxis(&aAxis, 1, s, &aMax, D3DXVECTOR3(mtxThisRot._12, mtxThisRot._22, mtxThisRot._32), &nA))
 	{
 		if (debug)CDebugProc::Print("s : %.2f", s);
 		if (debug)CDebugProc::Print("│ A.e2\n");
@@ -779,14 +810,12 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 
 	//A.e3
 	s = fabs(interval.z) - (thisScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._31, mtxAds._32, mtxAds._33), &targetScale));
-	if (TrackFaceAxis(&aAxis, 2, s, &aMax, D3DXVECTOR3(m_mtxRot._13, m_mtxRot._23, m_mtxRot._33), &nA))
+	if (TrackFaceAxis(&aAxis, 2, s, &aMax, D3DXVECTOR3(mtxThisRot._13, mtxThisRot._23, mtxThisRot._33), &nA))
 	{
 		if (debug)CDebugProc::Print("s : %.2f", s);
 		if (debug)CDebugProc::Print("│ A.e3\n");
 		return false;
 	}
-
-	D3DXMATRIX targetMtxRot = inObjectX->GetMtxRot();
 
 	//B.e1
 	s = fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._11, mtx._21, mtx._31))) - (targetScale.x + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._11, mtxAds._21, mtxAds._31), &thisScale));
@@ -811,8 +840,10 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 	if (TrackFaceAxis(&bAxis, 5, s, &bMax, D3DXVECTOR3(targetMtxRot._13, targetMtxRot._23, targetMtxRot._33), &nB))
 	{
 		if (debug)CDebugProc::Print("s : %.2f", s);
-		if (debug)CDebugProc::Print("│a : %.2f", targetScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._13, mtxAds._23, mtxAds._33), &thisScale));
 		if (debug)CDebugProc::Print("│b : %.2f", fabs(D3DXVec3Dot(&interval, &D3DXVECTOR3(mtx._13, mtx._23, mtx._33))));
+		if (debug)CDebugProc::Print("│a : %.2f", targetScale.z + D3DXVec3Dot(&D3DXVECTOR3(mtxAds._13, mtxAds._23, mtxAds._33), &thisScale));
+		if (debug)CDebugProc::Print("│a_1 : %.2f", targetScale.z);
+		if (debug)CDebugProc::Print("│a_2 : %.2f", D3DXVec3Dot(&D3DXVECTOR3(mtxAds._13, mtxAds._23, mtxAds._33), &thisScale));
 		if (debug)CDebugProc::Print("│ B.e3\n");
 		return false;
 	}
@@ -1255,9 +1286,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		D3DXMATRIX mtxRot = m_mtxRot;
 
 		D3DXVECTOR3 size = m_size * 0.5f;
-		size.x *= m_scale.x;
-		size.y *= m_scale.y;
-		size.z *= m_scale.z;
 
 		thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -1285,9 +1313,6 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		D3DXMATRIX mtxRot = inObjectX->GetMtxRot();
 
 		D3DXVECTOR3 size = inObjectX->GetSize() * 0.5f;
-		size.x *= inObjectX->GetScale().x;
-		size.y *= inObjectX->GetScale().y;
-		size.z *= inObjectX->GetScale().z;
 
 		targetNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		targetNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -1478,7 +1503,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		}
 	}
 
-	CDebugProc::Print("★HIT★\n");
+	//CDebugProc::Print("★HIT★\n");
 	return true;
 }
 
