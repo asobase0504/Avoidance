@@ -15,6 +15,7 @@
 #include "enemy_planprogress.h"
 #include "enemy_laser.h"
 #include "enemy_homing.h"
+#include "enemy_homing_bomb.h"
 #include "player.h"
 #include "plain.h"
 #include "input.h"
@@ -194,7 +195,7 @@ void CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTO
 	switch (type)
 	{
 	case 0:
-		enemy = new CEnemyHoming;
+		enemy = new CEnemyHomingBomb;
 		break;
 	default:
 		break;

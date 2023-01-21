@@ -301,6 +301,9 @@
     <ClCompile Include="enemy_factory.cpp">
       <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy\Factory</Filter>
     </ClCompile>
+    <ClCompile Include="enemy_homing_bomb.cpp">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -518,6 +521,9 @@
     </ClInclude>
     <ClInclude Include="stage.h">
       <Filter>00_Cord\02_Object\03_ObjectX</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_homing_bomb.h">
+      <Filter>00_Cord\02_Object\03_ObjectX\00_Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

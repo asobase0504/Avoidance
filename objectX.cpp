@@ -267,15 +267,13 @@ void CObjectX::SetScale(const D3DXVECTOR3& inScale)
 {
 	m_scale = inScale;
 
-	m_MinVtx.x *= m_scale.x;
-	m_MinVtx.y *= m_scale.y;
-	m_MinVtx.z *= m_scale.z;
+	m_MinVtx.x = m_scale.x * m_MinVtxOrigin.x;
+	m_MinVtx.y = m_scale.y * m_MinVtxOrigin.y;
+	m_MinVtx.z = m_scale.z * m_MinVtxOrigin.z;
 
-	m_MaxVtx.x *= m_scale.x;
-	m_MaxVtx.y *= m_scale.y;
-	m_MaxVtx.z *= m_scale.z;
-
-	MulSize(m_scale);
+	m_MaxVtx.x = m_scale.x * m_MaxVtxOrigin.x;
+	m_MaxVtx.y = m_scale.y * m_MaxVtxOrigin.y;
+	m_MaxVtx.z = m_scale.z * m_MaxVtxOrigin.z;
 }
 
 //=============================================================================
@@ -375,9 +373,11 @@ void CObjectX::LoadModel(const char *aFileName)
 {
 	CObjectXGroup *xGroup = CApplication::GetInstance()->GetObjectXGroup();
 	m_pBuffMat = xGroup->GetBuffMat(aFileName);
-	m_MaxVtx = xGroup->GetMaxVtx(aFileName);
+	m_MaxVtxOrigin = xGroup->GetMaxVtx(aFileName);
+	m_MaxVtx = m_MaxVtxOrigin;
+	m_MinVtxOrigin = xGroup->GetMinVtx(aFileName);
+	m_MinVtx = m_MinVtxOrigin;
 	m_pMesh = xGroup->GetMesh(aFileName);
-	m_MinVtx = xGroup->GetMinVtx(aFileName);
 	m_NumMat = xGroup->GetNumMat(aFileName);
 	m_size = xGroup->GetSize(aFileName);
 }
@@ -1285,7 +1285,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		// 計算用マトリックス
 		D3DXMATRIX mtxRot = m_mtxRot;
 
-		D3DXVECTOR3 size = m_size * 0.5f;
+		D3DXVECTOR3 size = GetMaxVtx();
 
 		thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -1312,7 +1312,7 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 		// 計算用マトリックス
 		D3DXMATRIX mtxRot = inObjectX->GetMtxRot();
 
-		D3DXVECTOR3 size = inObjectX->GetSize() * 0.5f;
+		D3DXVECTOR3 size = inObjectX->GetMaxVtx();
 
 		targetNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		targetNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);

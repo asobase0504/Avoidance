@@ -130,6 +130,8 @@ private:
 	D3DXVECTOR3 m_scale;		// 大きさ倍率
 	D3DXVECTOR3 m_MinVtx;		// モデルの頂点最小値
 	D3DXVECTOR3 m_MaxVtx;		// モデルの頂点最大値
+	D3DXVECTOR3 m_MinVtxOrigin;	// モデルの頂点最小値
+	D3DXVECTOR3 m_MaxVtxOrigin;	// モデルの頂点最大値
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
 	D3DXMATRIX m_mtxRot;		// 回転行列
 
