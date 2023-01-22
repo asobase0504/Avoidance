@@ -82,10 +82,10 @@ void CEnemyLaser::NormalUpdate()
 	CDebugProc::Print("%f\n", GetScale().y);
 	CEnemy::NormalUpdate();
 
-	//if (OnHitPlain())
-	//{
-	//	SetUpdateStatus(EUpdateStatus::END);
-	//}
+	if (OnHitPlain())
+	{
+		SetUpdateStatus(EUpdateStatus::END);
+	}
 }
 
 //-----------------------------------------------------------------------------

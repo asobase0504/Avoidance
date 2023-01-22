@@ -10,12 +10,7 @@
 #include "goal.h"
 #include "application.h"
 #include "color.h"
-#include "enemy.h"
-#include "enemy_oneway.h"
-#include "enemy_planprogress.h"
-#include "enemy_laser.h"
-#include "enemy_homing.h"
-#include "enemy_homing_bomb.h"
+#include "factory_enemy.h"
 #include "player.h"
 #include "plain.h"
 #include "input.h"
@@ -68,7 +63,7 @@ void CStage::Update()
 
 	CTask::Update();
 
-	for (int i = 0; i < m_enemy.size(); i++)
+	for (int i = 0; i < (int)m_enemy.size(); i++)
 	{
 		if (m_startCnt == m_enemy[i].popFream)
 		{
@@ -192,14 +187,13 @@ void CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTO
 {
 	CEnemy* enemy = nullptr;
 
-	switch (type)
+	enemy = CreateEnemy((EEnemyType)type);
+
+	if (enemy == nullptr)
 	{
-	case 0:
-		enemy = new CEnemyHomingBomb;
-		break;
-	default:
-		break;
+		assert(false);
 	}
+
 	enemy->Init();
 	enemy->SetPos(inPos);
 	enemy->SetRot(inRot);

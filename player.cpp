@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 const float CPlayer::SPEED = 6.5f;			// ˆÚ“®—Ê
 const float CPlayer::ATTENUATION = 0.35f;	// ˆÚ“®Œ¸ŠŒW”
-const float CPlayer::JUMPING_POWER = 1.5f;	// ’µ–ô—Í
+const float CPlayer::JUMPING_POWER = 2.5f;	// ’µ–ô—Í
 const float CPlayer::GRAVITY = 0.75f;		// d—Í
 
 //-----------------------------------------------------------------------------
@@ -225,14 +225,18 @@ void CPlayer::Jump()
 void CPlayer::boost()
 {
 	// “Ëi
-	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
+	if (CInput::GetKey()->Press(DIK_SPACE) && (m_jumpCount == 1))
+	{
+		m_move.y = 0.75f;
+		m_move.x = 0.0f;
+		m_move.z = 0.0f;
+	}
+
+	if (CInput::GetKey()->Release(DIK_SPACE) && (m_jumpCount == 1))
 	{
 		m_jumpCount++;
-
-		m_move.y *= 2.0f;
-
-		m_move.x *= 7.0f;
-		m_move.z *= 7.0f;
+		m_move.x *= 14.0f;
+		m_move.z *= 14.0f;
 	}
 }
 

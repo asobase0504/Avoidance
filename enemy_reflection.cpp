@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// プレイヤー追従の敵
+// プレイヤー設定
 // Author:Yuda Kaito
 //
 //=============================================================================
@@ -8,75 +8,66 @@
 // include
 //-----------------------------------------------------------------------------
 #include <assert.h>
-#include "enemy_homing.h"
+#include "enemy_reflection.h"
+#include "line.h"
 #include "utility.h"
 
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const D3DXVECTOR3 CEnemyHoming::SCALE = D3DXVECTOR3(0.55f, 1.25f, 0.55f);
-const D3DXVECTOR3 CEnemyHoming::MOVE_POWER = D3DXVECTOR3(0.0f, -4.5f, 0.0f);
-const int CEnemyHoming::MOVE_START_TIME = 10;	// 移動開始
+const D3DXVECTOR3 CEnemyReflection::SCALE(1.5f, 1.5f, 1.5f);
+const D3DXVECTOR3 CEnemyReflection::MOVE_POWER(0.0f, -7.5f, 0.0f);
+const int CEnemyReflection::REFLECT_COUNT = 5;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
-CEnemyHoming::CEnemyHoming()
+CEnemyReflection::CEnemyReflection()
 {
-	m_startCnt = 0;
+	m_reflectCnt = 0;
 	SetType(CObject::EType::PLAYER);
 }
 
 //-----------------------------------------------------------------------------
 // デストラクタ
 //-----------------------------------------------------------------------------
-CEnemyHoming::~CEnemyHoming()
+CEnemyReflection::~CEnemyReflection()
 {
 }
 
 //-----------------------------------------------------------------------------
 // 初期化
 //-----------------------------------------------------------------------------
-HRESULT CEnemyHoming::Init()
+HRESULT CEnemyReflection::Init()
 {
 	// 現在のモーション番号の保管
 	CEnemy::Init();
 	LoadModel("BOX");
 	SetScale(SCALE);
+	SetMove(MOVE_POWER);
 	return S_OK;
 }
 
 //-----------------------------------------------------------------------------
 // 終了
 //-----------------------------------------------------------------------------
-void CEnemyHoming::Uninit()
+void CEnemyReflection::Uninit()
 {
 	CEnemy::Uninit();
 }
 
 //-----------------------------------------------------------------------------
-// 出現中更新
-//-----------------------------------------------------------------------------
-void CEnemyHoming::PopUpdate()
-{
-	SetUpdateStatus(EUpdateStatus::NORMAL);
-}
-
-//-----------------------------------------------------------------------------
 // 更新
 //-----------------------------------------------------------------------------
-void CEnemyHoming::NormalUpdate()
+void CEnemyReflection::NormalUpdate()
 {
-
-	m_startCnt++;
-	if (m_startCnt % MOVE_START_TIME == 0)
+	if (OnHitPlain())
 	{
-		m_startCnt = 0;
-		SeeTarget();
-		SetMove(MOVE_POWER);
+		MulMove(-1.0f);
+		m_reflectCnt++;
 	}
 
-	if (OnHitPlain())
+	if (m_reflectCnt >= REFLECT_COUNT)
 	{
 		SetUpdateStatus(EUpdateStatus::END);
 	}
@@ -85,15 +76,23 @@ void CEnemyHoming::NormalUpdate()
 //-----------------------------------------------------------------------------
 // 終了更新
 //-----------------------------------------------------------------------------
-void CEnemyHoming::EndUpdate()
+void CEnemyReflection::EndUpdate()
 {
+	for (int i = 0; i < 10; i++)
+	{
+		D3DXVECTOR3 pos = m_pos;
+		pos.x += FloatRandam(-20.0f, 20.0f);
+		pos.y += FloatRandam(-20.0f, 20.0f);
+		pos.z += FloatRandam(-20.0f, 20.0f);
+	}
+
 	CEnemy::EndUpdate();
 }
 
 //-----------------------------------------------------------------------------
 // 描画
 //-----------------------------------------------------------------------------
-void CEnemyHoming::Draw()
+void CEnemyReflection::Draw()
 {
 	CEnemy::Draw();
 }
@@ -101,7 +100,7 @@ void CEnemyHoming::Draw()
 //-----------------------------------------------------------------------------
 // 移動量の設定
 //-----------------------------------------------------------------------------
-void CEnemyHoming::SetMove(const D3DXVECTOR3 & inMove)
+void CEnemyReflection::SetMove(const D3DXVECTOR3 & inMove)
 {
 	D3DXMATRIX mtxRot;
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);		// 行列回転関数
@@ -110,20 +109,4 @@ void CEnemyHoming::SetMove(const D3DXVECTOR3 & inMove)
 	D3DXVec3TransformCoord(&move, &move, &mtxRot);
 
 	CObjectX::SetMove(move);
-}
-
-//-----------------------------------------------------------------------------
-// 移動量の設定
-//-----------------------------------------------------------------------------
-void CEnemyHoming::SeeTarget()
-{
-	CObject* object = SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1);
-
-	D3DXVECTOR3 dist = m_pos - object->GetPos();
-
-	D3DXVECTOR3 rot(0.0f, 0.0f, 0.0f);
-	rot.y = atan2f(dist.x, dist.z);
-	rot.x = atan2f(sqrtf(dist.z * dist.z + dist.x * dist.x), dist.y);
-
-	SetRot(rot);
 }

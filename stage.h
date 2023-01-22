@@ -26,7 +26,6 @@ class CStage : public CTask
 {
 private: // ’è”
 
-	
 	struct SEnemyPop
 	{
 		int type;
