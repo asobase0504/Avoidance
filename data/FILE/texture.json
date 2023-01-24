@@ -1,6 +1,8 @@
 {
   "TEXTURE": [
     [ "TITLE_LOGO", "data\/TEXTURE\/TITLE\/logo.png" ],
-    [ "GIZAGIZA", "data\/TEXTURE\/gizagiza.png" ]
+    [ "GIZAGIZA", "data\/TEXTURE\/gizagiza.png" ],
+    [ "NUMBER", "data\/TEXTURE\/number002.png" ],
+    [ "STOP_LOGO", "data\/TEXTURE\/stop.png" ]
   ]
 }

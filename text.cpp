@@ -86,7 +86,8 @@ void CText::NormalUpdate()
 		m_DesTimar--;
 
 		m_AddCount++;
-		if (m_AddCount>=m_Addnumber)
+
+		if (m_AddCount >= m_Addnumber)
 		{
 			if (m_AddLetter <= m_TextSize)
 			{
@@ -110,8 +111,6 @@ void CText::NormalUpdate()
 			Uninit();
 		}
 	}
-
-
 }
 
 //=============================================================================
@@ -127,14 +126,12 @@ void CText::Draw()
 
 	CObject2d::Draw();
 
-
 	RECT rect = { 60, 500, SCREEN_WIDTH, SCREEN_HEIGHT };
 	TCHAR str[256];
 
 	wsprintf(str, _T(m_Text.c_str()));
 
 	m_pFont->DrawText(NULL, str, -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff));
-
 
 	// 新規深度値 <= Zバッファ深度値 (初期設定)
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);

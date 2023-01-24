@@ -28,6 +28,7 @@
 #include "goal.h"
 #include "pause.h"
 #include "bg_box.h"
+#include "countdown.h"
 
 /* Enemy系統 */
 #include "enemy_oneway.h"
@@ -96,6 +97,8 @@ HRESULT CGame::Init(void)
 
 	// マウスの位置ロック
 	CInput::GetKey()->GetMouse()->UseSetPosLock(true);
+
+	CCountdown::Create(D3DXVECTOR3(300.0f,300.0f,0.0f));
 
 	return S_OK;
 }

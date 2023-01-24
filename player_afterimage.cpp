@@ -8,7 +8,7 @@
 #include "player_afterimage.h"
 #include "utility.h"
 
-const int CPlayerAfterimage::MAX_LIFE = 120;
+const int CPlayerAfterimage::MAX_LIFE = 20;
 const float CPlayerAfterimage::ALPHA_COLOR = 0.45f;
 
 //-----------------------------------------------------------------------------
@@ -55,9 +55,10 @@ void CPlayerAfterimage::NormalUpdate()
 {
 	m_life--;
 
-	float scale = ease::OutBounce((float)m_life / (float)MAX_LIFE);
+	float scale = ease::OutSine((float)m_life / (float)MAX_LIFE) * 0.75f;
 
 	SetScale(D3DXVECTOR3(scale, scale, scale));
+
 	if (m_life <= 0)
 	{
 		SetUpdateStatus(CObject::EUpdateStatus::END);

@@ -164,6 +164,7 @@
     <ClCompile Include="camera_title.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="countdown.cpp" />
     <ClCompile Include="debug_proc.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="enemy.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="camera_title.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="countdown.h" />
     <ClInclude Include="debug_proc.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="enemy.h" />
@@ -311,6 +313,7 @@
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="data\FILE\color.json" />
     <None Include="data\FILE\model.json" />
     <None Include="data\FILE\stage.json" />

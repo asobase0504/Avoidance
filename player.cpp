@@ -99,14 +99,14 @@ void CPlayer::NormalUpdate()
 	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
 
-	//static int time = 0;
-	//time++;
-	//if (time % 2 == 0)
-	//{
-	//	CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
-	//	afterimage->SetMtxRot(GetMtxRot());
-	//	afterimage->SetMaterialDiffuse(0,GetMaterialDiffuse(0));
-	//}
+	static int time = 0;
+	time++;
+	if (time % 2 == 0)
+	{
+		CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
+		afterimage->SetMtxRot(GetMtxRot());
+		afterimage->SetMaterialDiffuse(0,GetMaterialDiffuse(0));
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -176,8 +176,15 @@ void CPlayer::Move()
 	// 入力があった場合移動量に反映
 	if (D3DXVec3Length(&moveInput) != 0.0f)
 	{
-		m_move.x = moveInput.x * SPEED;
-		m_move.z = moveInput.z * SPEED;
+		if (fabs(m_move.x) < fabs(moveInput.x * SPEED))
+		{
+			m_move.x = moveInput.x * SPEED;
+		}
+
+		if (fabs(m_move.z) < fabs(moveInput.z * SPEED))
+		{
+			m_move.z = moveInput.z * SPEED;
+		}
 	}
 
 	//（目的の値 - 現在の値） ＊ 減衰係数

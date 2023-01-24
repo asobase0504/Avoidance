@@ -31,7 +31,7 @@ HRESULT CNumber::Init()
 	m_MyNumber = 0;
 	m_Speed = 0.0f;
 	CObject2d::Init();
-	CObject2d::SetTexture("SCORE");
+	CObject2d::SetTexture("NUMBER");
 	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 	SetTex(PositionVec4(
