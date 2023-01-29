@@ -32,7 +32,8 @@ CPlayer::CPlayer() :
 	m_quaternion(D3DXQUATERNION(0.0f,0.0,0.0f,1.0f)),
 	m_quaternionOld(D3DXQUATERNION(0.0f, 0.0, 0.0f, 1.0f)),
 	m_jumpCount(0),
-	m_isGoal(false)
+	m_isGoal(false),
+	m_isMove(false)
 {
 	SetType(CObject::EType::PLAYER);
 }
@@ -137,6 +138,11 @@ CPlayer* CPlayer::Create()
 //-----------------------------------------------------------------------------
 void CPlayer::Move()
 {
+	if (!m_isMove)
+	{
+		return;
+	}
+
 	CInput* input = CInput::GetKey();
 	D3DXVECTOR3 moveInput = D3DXVECTOR3(0.0f,0.0f,0.0f);
 

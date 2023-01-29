@@ -33,6 +33,8 @@ public: // パブリック関数
 	static CPlayer* Create();	// 生成
 
 	bool GetIsGoal() { return m_isGoal; }
+	void SetIsMove(bool isMove) { m_isMove = isMove; }
+	bool IsMove() { return m_isMove; }
 
 private: // プライベート関数
 	void Move();	// 移動
@@ -48,6 +50,7 @@ private: // メンバー変数
 	D3DXQUATERNION m_quaternion;	// クオータニオン
 	D3DXQUATERNION m_quaternionOld;	// 前回クオータニオン
 	int m_jumpCount;				// ジャンプ回数
-	bool m_isGoal;
+	bool m_isGoal;					// Goalしたか
+	bool m_isMove;					// 動いていいか
 };
 #endif

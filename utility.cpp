@@ -185,7 +185,7 @@ float Vec2Dot(D3DXVECTOR3* v1, D3DXVECTOR3* v2)
 }
 
 //---------------------------------------------------------------------------
-// クオータニオンをラジアンに変換する
+// クオータニオンをラジアンに変換する(挙動不安定)
 // Author : Yuda Kaito
 //---------------------------------------------------------------------------
 D3DXVECTOR3 ConvertQuaternionfromRadian(const D3DXQUATERNION& inQuaternion)

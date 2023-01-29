@@ -8,6 +8,12 @@
 #include "plain.h"
 #include "utility.h"
 
+#include "application.h"
+#include "task_group.h"
+#include "camera.h"
+#include "color.h"
+#include "line.h"
+
 //-----------------------------------------------------------------------------
 // コンストラクタ
 //-----------------------------------------------------------------------------
@@ -28,6 +34,7 @@ CPlain::~CPlain()
 HRESULT CPlain::Init()
 {
 	begin = false;
+	m_display = true;
 	m_endCnt = 0;
 	// 現在のモーション番号の保管
 	CObjectX::Init();
@@ -49,6 +56,10 @@ void CPlain::Uninit()
 //-----------------------------------------------------------------------------
 void CPlain::NormalUpdate()
 {
+	CObject* player = SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1);
+	CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, CTaskGroup::EPriority::LEVEL_3D_1);
+
+	m_display = !SegmentAndAABB(player->GetPos(), camera->GetPos());
 }
 
 //-----------------------------------------------------------------------------
@@ -65,7 +76,7 @@ void CPlain::EndUpdate()
 
 	m_endCnt++;
 
-	if (m_endCnt > 180)
+	if (m_endCnt > 320)
 	{
 		Release();
 	}
@@ -76,7 +87,10 @@ void CPlain::EndUpdate()
 //-----------------------------------------------------------------------------
 void CPlain::Draw()
 {
-	CObjectX::Draw();
+	if (m_display)
+	{
+		CObjectX::Draw();
+	}
 }
 
 //-----------------------------------------------------------------------------

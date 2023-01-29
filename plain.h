@@ -32,5 +32,6 @@ private: // プライベート関数
 private: // メンバー変数
 	int m_endCnt;
 	bool begin;
+	bool m_display;
 };
 #endif

@@ -16,6 +16,8 @@
 // 前方宣言
 //-----------------------------------------------------------------------------
 class CStage;
+class CCountdown;
+class CPlayer;
 
 //=============================================================================
 // ゲームクラス
@@ -34,6 +36,8 @@ public:
 private:
 	CStage* m_stage;		// 今のステージ
 	CStage* m_stageNext;	// 次のステージ
+	CPlayer* m_player;
+	CCountdown* m_countdown;// カウントダウン
 	int m_section;			// 1面のステージ数
 };
 #endif

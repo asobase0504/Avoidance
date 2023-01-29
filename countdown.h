@@ -32,12 +32,14 @@ public:
 	HRESULT Init() override;
 	void Uninit() override;
 	void NormalUpdate() override;
-	void Draw() override;
+
+	bool IsEnd() { return m_end; }
 
 	static CCountdown* Create(const D3DXVECTOR3& inPos);
 private:
 	CObject2d* m_side[4];
 	CObject2d* m_stopLogo;
 	int m_count;
+	bool m_end;
 };
 #endif

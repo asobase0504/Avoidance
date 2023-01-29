@@ -58,10 +58,7 @@ CObjectX::~CObjectX()
 //=============================================================================
 HRESULT CObjectX::Init()
 {
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
-
-	extern LPD3DXEFFECT pEffect;		// シェーダー
+	extern LPD3DXEFFECT pEffect;	// シェーダー
 
 	m_hTechnique = pEffect->GetTechniqueByName("Diffuse");			// エフェクト
 	m_hTexture = pEffect->GetParameterByName(NULL, "Tex");			// テクスチャ
@@ -128,12 +125,17 @@ void CObjectX::DrawMaterial()
 
 	/* pEffectに値が入ってる */
 
-	CCamera* pCamera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, GetPriority());
+	// タスクグループ情報
+	CTaskGroup* taskGroup = CApplication::GetInstance()->GetTaskGroup();
+
+	// カメラ情報
+	CCamera* pCamera = (CCamera*)taskGroup->SearchRoleTop(CTask::ERole::ROLE_CAMERA, GetPriority());
 
 	D3DMATRIX viewMatrix = pCamera->GetMtxView();
 	D3DMATRIX projMatrix = pCamera->GetMtxProje();
 
-	CLight* lightClass = (CLight*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());	// カメラ情報
+	// ライト情報
+	CLight* lightClass = (CLight*)taskGroup->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());
 	D3DLIGHT9 light = lightClass->GetLight(0);
 
 	D3DXVECTOR4 v, light_pos;
@@ -176,21 +178,22 @@ void CObjectX::DrawMaterial()
 	//環境光
 	v = D3DXVECTOR4(0, 0, 0, 1);
 
-	//マテリアルデータのポインタを取得する
-	D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
-	D3DMATERIAL9 *pMtrl = &pMat->MatD3D;
-
 	D3DXVec4Transform(&v, &v, &m);
 
 	//視点をシェーダーに渡す
 	pEffect->SetVector(m_hvEyePos, &v);
+
+	//マテリアルデータのポインタを取得する
+	D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+
+	D3DMATERIAL9 *pMtrl = &pMat->MatD3D;
 
 	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
 		// モデルの色の設定 
 		{
 			D3DXVECTOR4 Diffuse;
+
 			if (m_materialDiffuse.count(nCntMat) != 0)
 			{
 				Diffuse = D3DXVECTOR4(m_materialDiffuse[nCntMat].r, m_materialDiffuse[nCntMat].g, m_materialDiffuse[nCntMat].b, m_materialDiffuse[nCntMat].a);
@@ -471,176 +474,6 @@ void CObjectX::SetMaterialDiffuse(unsigned int index, const D3DXCOLOR & inColor)
 	{
 		m_materialDiffuse[index] = inColor;
 	}
-}
-
-//=============================================================================
-// 当たり判定 (左右,奥,手前)
-// Author : Yuda Kaito
-//=============================================================================
-bool CObjectX::Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize)
-{
-	if (!m_isCollision)
-	{
-		return false;
-	}
-
-	D3DXVECTOR3 pos = GetPos();
-
-	// 変数宣言
-	bool bIsLanding = false;
-
-	// モデルの左側当たり判定
-	if ((pPos.z - pSize.z * 0.5f < pos.z + m_MaxVtx.z) &&
-		(pPos.z + pSize.z * 0.5f > pos.z + m_MinVtx.z) &&
-		(pPosOld.x + pSize.x * 0.5f <= pos.x + m_MinVtx.x ) &&
-		(pPos.x + pSize.x * 0.5f > pos.x + m_MinVtx.x * 0.5f) &&
-		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
-	{
-		bIsLanding = true;
-	}
-	// モデルの右側当たり判定
-	if ((pPos.z - pSize.z * 0.5f < pos.z + m_MaxVtx.z) &&
-		(pPos.z + pSize.z * 0.5f > pos.z + m_MinVtx.z) &&
-		(pPosOld.x - pSize.x * 0.5f >= pos.x + m_MaxVtx.x) &&
-		(pPos.x - pSize.x * 0.5f < pos.x + m_MaxVtx.x * 0.5f) &&
-		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
-	{
-		bIsLanding = true;
-	}
-	// モデルの奥側当たり判定
-	if ((pPos.x - pSize.x * 0.5f < pos.x + m_MaxVtx.x) &&
-		(pPos.x + pSize.x * 0.5f > pos.x + m_MinVtx.x) &&
-		(pPosOld.z - pSize.z * 0.5f >= pos.z + m_MaxVtx.z) &&
-		(pPos.z - pSize.z * 0.5f < pos.z + m_MaxVtx.z * 0.5f) &&
-		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
-	{
-		bIsLanding = true;
-	}
-	// モデルの手前側当たり判定
-	if ((pPos.x - pSize.x * 0.5f < pos.x + m_MaxVtx.x) &&
-		(pPos.x + pSize.x * 0.5f > pos.x + m_MinVtx.x) &&
-		(pPosOld.z + pSize.z * 0.5f <= pos.z + m_MinVtx.z) &&
-		(pPos.z + pSize.z * 0.5f > pos.z + m_MinVtx.z * 0.5f) &&
-		(pPos.y + pSize.y > pos.y - m_MaxVtx.y * 0.5f) &&
-		(pPos.y < pos.y + m_MaxVtx.y * 0.5f))
-	{
-		bIsLanding = true;
-	}
-
-	// 値を返す
-	return bIsLanding;
-}
-
-//=============================================================================
-// 当たり判定 (左右,奥,手前)
-// Author : Yuda Kaito
-//=============================================================================
-bool CObjectX::Collision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * inMaxVtx, D3DXVECTOR3 * inMinVtx)
-{
-	if (!m_isCollision)
-	{
-		return false;
-	}
-
-	D3DXVECTOR3 pos = GetPos();
-
-	// 変数宣言
-	bool bIsLanding = false;
-
-	// モデルの乗り上げ判定
-	if ((pPos->y + 20.0f > pos.y + m_MaxVtx.y))
-	{
-		return bIsLanding;
-	}
-
-	// モデルの左側当たり判定
-	if ((pPos->z + inMinVtx->z < pos.z + m_MaxVtx.z) &&
-		(pPos->z + inMaxVtx->z > pos.z + m_MinVtx.z) &&
-		(pPosOld->x + inMaxVtx->x  <= pos.x + m_MinVtx.x) &&
-		(pPos->x + inMaxVtx->x > pos.x + m_MinVtx.x) &&
-		(pPos->y + inMaxVtx->y > pos.y + m_MinVtx.y) &&
-		(pPos->y < pos.y + m_MaxVtx.y))
-	{
-		bIsLanding = true;
-		pPos->x = pos.x + m_MinVtx.x + inMinVtx->x - 5.0f;
-	}
-
-	// モデルの右側当たり判定
-	if ((pPos->z + inMinVtx->z < pos.z + m_MaxVtx.z) &&
-		(pPos->z + inMaxVtx->z > pos.z + m_MinVtx.z) &&
-		(pPosOld->x + inMinVtx->x >= pos.x + m_MaxVtx.x) &&
-		(pPos->x + inMinVtx->x < pos.x + m_MaxVtx.x) &&
-		(pPos->y + inMaxVtx->y > pos.y + m_MinVtx.y) &&
-		(pPos->y < pos.y + m_MaxVtx.y))
-	{
-		bIsLanding = true;
-		pPos->x = pos.x + m_MaxVtx.x + inMaxVtx->x;
-		pPos->x -= 0.1f;
-	}
-
-	// モデルの奥側当たり判定
-	if ((pPos->x + inMinVtx->x < pos.x + m_MaxVtx.x) &&
-		(pPos->x + inMaxVtx->x > pos.x + m_MinVtx.x) &&
-		(pPosOld->z + inMinVtx->z >= pos.z + m_MaxVtx.z) &&
-		(pPos->z + inMinVtx->z < pos.z + m_MaxVtx.z) &&
-		(pPos->y + inMaxVtx->y > pos.y + m_MinVtx.y) &&
-		(pPos->y < pos.y + m_MaxVtx.y))
-	{
-		bIsLanding = true;
-		pPos->z = pos.z + m_MaxVtx.z + inMaxVtx->z;
-	}
-
-	// モデルの手前側当たり判定
-	if ((pPos->x + inMinVtx->x < pos.x + m_MaxVtx.x) &&
-		(pPos->x + inMaxVtx->x > pos.x + m_MinVtx.x) &&
-		(pPosOld->z + inMaxVtx->z <= pos.z + m_MinVtx.z) &&
-		(pPos->z + inMaxVtx->z > pos.z + m_MinVtx.z) &&
-		(pPos->y + inMaxVtx->y > pos.y + m_MinVtx.y) &&
-		(pPos->y < pos.y + m_MaxVtx.y))
-	{
-		bIsLanding = true;
-		pPos->z = pos.z + m_MinVtx.z + inMinVtx->z - 5.0f;
-		pPos->z -= 0.1f;
-	}
-
-	// 値を返す
-	return bIsLanding;
-}
-
-//=============================================================================
-// 当たり判定 (上側)
-// Author : Yuda Kaito
-//=============================================================================
-bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * pSize, D3DXVECTOR3 * pMove)
-{
-	if (!m_isCollision)
-	{
-		return false;
-	}
-
-	// 変数宣言
-	bool bIsLanding = false;
-
-	// モデルの上側当たり判定
-	if ((pPos->z - pSize->z * 0.5f < m_pos.z + m_MaxVtx.z) &&
-		(pPos->z + pSize->z * 0.5f > m_pos.z + m_MinVtx.z) &&
-		(pPos->x - pSize->x * 0.5f < m_pos.x + m_MaxVtx.x) &&
-		(pPos->x + pSize->x * 0.5f > m_pos.x + m_MinVtx.x) &&
-		(pPos->y <= m_pos.y + m_MaxVtx.y))
-	{
-		bIsLanding = true;
-		pPos->y = m_pos.y + m_MaxVtx.y;
-		if (pPos->y == pPosOld->y)
-		{
-			pMove->y = 0.0f;
-		}
-	}
-
-	// 値を返す
-	return bIsLanding;
 }
 
 //=============================================================================
@@ -1116,7 +949,8 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 		n.y = m_mtxRot._21 * vector.x + m_mtxRot._22 * vector.y + m_mtxRot._23 * vector.z;
 		n.z = m_mtxRot._31 * vector.x + m_mtxRot._32 * vector.y + m_mtxRot._33 * vector.z;
 
-		if (D3DXVec3Dot(&n, &(inObjectX->GetPos() - m_pos)) < 0.0f)
+		D3DXVECTOR3 dist = inObjectX->GetPos() - m_pos;
+		if (D3DXVec3Dot(&n, &dist) < 0.0f)
 		{
 			n = -n;
 		}
@@ -1508,114 +1342,131 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX)
 }
 
 //=============================================================================
-// OBBと3DPolygonの当たり判定
+// RayとOBBの当たり判定
 // Author : Yuda Kaito
 //=============================================================================
-bool CObjectX::OBBAndPolygon(const CObjectPolygon3D * inObjectPolgon, float* outLength)
+bool CObjectX::RayAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inNormal, D3DXVECTOR3* outPos)
 {
-	// 平面の法線に対するOBBの射影線の長さを算出
-	float r = 0.0f;		// 近接距離
-	D3DXVECTOR3 polygonNormal = inObjectPolgon->GetNormal();	// 平面の法線ベクトル
+	// 光線を境界ボックスの空間へ移動
+	D3DXMATRIX invMat;
+	D3DXMatrixInverse(&invMat, 0, &m_mtxWorld);
 
-	// X軸
-	D3DXVECTOR3 thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &m_mtxRot);
-	D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
-	r += fabs(D3DXVec3Dot(&(thisNormalizeVecX * (this->GetSize().x * 0.5f)), &polygonNormal));
+	D3DXVECTOR3 p_l, dir_l;
+	D3DXVec3TransformCoord(&p_l, &inPos, &invMat);
+	invMat._41 = 0.0f;
+	invMat._42 = 0.0f;
+	invMat._43 = 0.0f;
+	D3DXVec3TransformCoord(&dir_l, &inNormal, &invMat);
 
-	// Y軸
-	D3DXVECTOR3 thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &m_mtxRot);
-	D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
-	r += fabs(D3DXVec3Dot(&(thisNormalizeVecY * (this->GetSize().y * 0.5f)), &polygonNormal));
+	// 交差判定
+	float p[3], d[3], min[3], max[3];
+	memcpy(p, &p_l, sizeof(D3DXVECTOR3));
+	memcpy(d, &dir_l, sizeof(D3DXVECTOR3));
+	memcpy(min, &(m_MinVtx * 0.5f), sizeof(D3DXVECTOR3));
+	memcpy(max, &(m_MaxVtx * 0.5f), sizeof(D3DXVECTOR3));
 
-	// Z軸
-	D3DXVECTOR3 thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &m_mtxRot);
-	D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
-	r += fabs(D3DXVec3Dot(&(thisNormalizeVecZ * (this->GetSize().z * 0.5f)), &polygonNormal));
+	float t = -FLT_MAX;
+	float t_max = FLT_MAX;
 
-	// 平面とOBBの距離を算出
-	D3DXVECTOR3 ObbPos = this->GetPos();
-	D3DXVECTOR3 PlanePos = inObjectPolgon->GetPos();
-
-	float dist = D3DXVec3Dot(&(ObbPos - PlanePos), &polygonNormal);
-
-	// 戻し距離を算出
-	if (outLength != nullptr)
+	for (int i = 0; i < 3; ++i)
 	{
-		if (dist > 0)
+		if (abs(d[i]) < FLT_EPSILON)
 		{
-			*outLength = r - fabs(dist);
+			if (p[i] < min[i] || p[i] > max[i])
+			{
+				return false; // 交差していない
+			}
 		}
 		else
 		{
-			*outLength = r + fabs(dist);
+			// スラブとの距離を算出
+			// t1が近スラブ、t2が遠スラブとの距離
+			float odd = 1.0f / d[i];
+			float t1 = (min[i] - p[i]) * odd;
+			float t2 = (max[i] - p[i]) * odd;
+			if (t1 > t2) {
+				float tmp = t1; t1 = t2; t2 = tmp;
+			}
+
+			if (t1 > t) t = t1;
+			if (t2 < t_max) t_max = t2;
+
+			// スラブ交差チェック
+			if (t >= t_max)
+			{
+				return false;
+			}
 		}
 	}
 
-	// 衝突判定
-	if (fabs(dist) - r < 0.0f)
+	if (outPos != nullptr)
 	{
-		return true; // 衝突している
+		*outPos = inPos + (t * inNormal);
 	}
-
-	return false; // 衝突していない
+	CDebugProc::Print("★Hit★\n");
+	return true;
 }
 
 //=============================================================================
-// OBBと平行の当たり判定
+// 線分とAABBの当たり判定
 // Author : Yuda Kaito
 //=============================================================================
-bool CObjectX::OBBAndPolygon(const D3DXVECTOR3 & inPos, float * outLength)
+bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inPos2)
 {
-	// 平面の法線に対するOBBの射影線の長さを算出
-	float r = 0.0f;		// 近接距離
-	D3DXVECTOR3 polygonNormal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);	// 平面の法線ベクトル
+	D3DXVECTOR3 dist = inPos - inPos2;
+	D3DXVECTOR3 hitPos(0.0f,0.0f,0.0f);
 
-	// X軸
-	D3DXVECTOR3 thisNormalizeVecX = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-	D3DXVec3TransformCoord(&thisNormalizeVecX, &thisNormalizeVecX, &m_mtxRot);
-	D3DXVec3Normalize(&thisNormalizeVecX, &thisNormalizeVecX);
-	r += fabs(D3DXVec3Dot(&(thisNormalizeVecX * (this->GetSize().x * 0.5f)), &polygonNormal));
+	D3DXVec3Normalize(&dist,&dist);
 
-	// Y軸
-	D3DXVECTOR3 thisNormalizeVecY = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	D3DXVec3TransformCoord(&thisNormalizeVecY, &thisNormalizeVecY, &m_mtxRot);
-	D3DXVec3Normalize(&thisNormalizeVecY, &thisNormalizeVecY);
-	r += fabs(D3DXVec3Dot(&(thisNormalizeVecY * (this->GetSize().y * 0.5f)), &polygonNormal));
+	D3DXVECTOR3 min;
+	D3DXVECTOR3 max;
 
-	// Z軸
-	D3DXVECTOR3 thisNormalizeVecZ = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-	D3DXVec3TransformCoord(&thisNormalizeVecZ, &thisNormalizeVecZ, &m_mtxRot);
-	D3DXVec3Normalize(&thisNormalizeVecZ, &thisNormalizeVecZ);
-	r += fabs(D3DXVec3Dot(&(thisNormalizeVecZ * (this->GetSize().z * 0.5f)), &polygonNormal));
-
-	// 平面とOBBの距離を算出
-	D3DXVECTOR3 ObbPos = this->GetPos();
-
-	float dist = D3DXVec3Dot(&(ObbPos - inPos), &polygonNormal);
-
-	// 戻し距離を算出
-	if (outLength != nullptr)
+	if (inPos.x < inPos2.x)
 	{
-		if (dist > 0)
-		{
-			*outLength = r - fabs(dist);
-		}
-		else
-		{
-			*outLength = r + fabs(dist);
-		}
+		min.x = inPos.x;
+		max.x = inPos2.x;
+	}
+	else
+	{
+		min.x = inPos2.x;
+		max.x = inPos.x;
 	}
 
-	// 衝突判定
-	if (fabs(dist) - r < 0.0f)
+	if (inPos.y < inPos2.y)
 	{
-		return true; // 衝突している
+		min.y = inPos.y;
+		max.y = inPos2.y;
+	}
+	else
+	{
+		min.y = inPos2.y;
+		max.y = inPos.y;
 	}
 
-	return false; // 衝突していない
+	if (inPos.z < inPos2.z)
+	{
+		min.z = inPos.z;
+		max.z = inPos2.z;
+	}
+	else
+	{
+		min.z = inPos2.z;
+		max.z = inPos.z;
+	}
+
+	if (RayAndAABB(inPos, dist, &hitPos))
+	{
+		if (min.x < hitPos.x &&
+			min.y < hitPos.y &&
+			min.z < hitPos.z &&
+			hitPos.x < max.x &&
+			hitPos.y < max.y &&
+			hitPos.z < max.z)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 //=============================================================================
@@ -1629,36 +1480,6 @@ float CObjectX::LenSegOnSeparateAxis(D3DXVECTOR3 * Sep, D3DXVECTOR3 * e1, D3DXVE
 	float r2 = fabs(D3DXVec3Dot(Sep, e2));
 	float r3 = e3 ? (fabs(D3DXVec3Dot(Sep, e3))) : 0.0f;
 	return r1 + r2 + r3;
-}
-
-// Author : Yuda Kaito
-bool CObjectX::UpCollision(D3DXVECTOR3 * pPos, D3DXVECTOR3 * pPosOld, D3DXVECTOR3 * inMaxVtx, D3DXVECTOR3 * inMinVtx, D3DXVECTOR3 * pMove)
-{
-	if (!m_isCollision)
-	{
-		return false;
-	}
-
-	// 変数宣言
-	bool bIsLanding = false;
-
-	// モデルの上側当たり判定
-	if ((pPos->z + inMinVtx->z < m_pos.z + m_MaxVtx.z) &&
-		(pPos->z + inMaxVtx->z > m_pos.z + m_MinVtx.z) &&
-		(pPos->x + inMinVtx->x < m_pos.x + m_MaxVtx.x) &&
-		(pPos->x + inMaxVtx->x > m_pos.x + m_MinVtx.x) &&
-		(pPos->y <= m_pos.y + m_MaxVtx.y))
-	{
-		bIsLanding = true;
-		pPos->y = m_pos.y + m_MaxVtx.y;
-		if (pPos->y == pPosOld->y)
-		{
-			pMove->y = 0.0f;
-		}
-	}
-
-	// 値を返す
-	return bIsLanding;
 }
 
 void CObjectX::ComputeIncidentFace(const D3DXVECTOR3 & itx_pos, const D3DXMATRIX & itx_mtxRot, const D3DXVECTOR3 & e, D3DXVECTOR3 n, ClipVertex * out)
@@ -1986,7 +1807,7 @@ int CObjectX::Clip(const D3DXVECTOR3 & rPos, const D3DXVECTOR3 & e, char * clipE
 			{
 				cv.f = b.f;
 				cv.v = a.v + (b.v - a.v) * (da / (da - db));
-				cv.f.ri.outR = clipEdge;
+				cv.f.ri.outR = (char)clipEdge;
 				cv.f.ri.outI = 0;
 				assert(outCount < 8);
 				out[outCount++] = cv;
@@ -1997,7 +1818,7 @@ int CObjectX::Clip(const D3DXVECTOR3 & rPos, const D3DXVECTOR3 & e, char * clipE
 			{
 				cv.f = a.f;
 				cv.v = a.v + (b.v - a.v) * (da / (da - db));
-				cv.f.ri.inR = clipEdge;
+				cv.f.ri.inR = (char)clipEdge;
 				cv.f.ri.inI = 0;
 				assert(outCount < 8);
 				out[outCount++] = cv;

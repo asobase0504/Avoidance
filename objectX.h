@@ -107,18 +107,15 @@ public:
 
 	/* 当たり判定 */
 	void SetCollisionFlag(bool inFlag) { m_isCollision = inFlag; }	// 当たり判定の有無を設定
+
 	bool IsCollision() { return m_isCollision; }	// 当たり判定の有無を取得
-	bool Collision(const D3DXVECTOR3& pPos, const D3DXVECTOR3& pPosOld, const D3DXVECTOR3& pSize);	// 当たり判定 (左右, 奥, 手前)
-	bool Collision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx);	// 当たり判定 (左右, 奥, 手前)
-	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pSize, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
 	bool OBBAndOBB(CObjectX* inObjectX,D3DXVECTOR3* outPos);
 	bool OBBAndOBB(CObjectX* inObjectX);
-	bool OBBAndPolygon(const CObjectPolygon3D* inObjectPolgon, float* outLength = nullptr);
-	bool OBBAndPolygon(const D3DXVECTOR3& inPos, float* outLength = nullptr);
-	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = nullptr);
-	bool UpCollision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *inMaxVtx, D3DXVECTOR3 *inMinVtx, D3DXVECTOR3 *pMove);	// 当たり判定 (上側)
+	bool RayAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal, D3DXVECTOR3* outPos = nullptr);
+	bool SegmentAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal);
 
 private:
+	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = nullptr);
 	void ComputeIncidentFace(const D3DXVECTOR3& itx_pos, const D3DXMATRIX& itx_mtxRot, const D3DXVECTOR3& e, D3DXVECTOR3 n, ClipVertex* out);
 	void ComputeReferenceEdgesAndBasis(const D3DXVECTOR3& eR, const D3DXVECTOR3& rtx_pos, const D3DXMATRIX& rtx_mtxRot, D3DXVECTOR3 n, int axis, char* out, D3DXMATRIX* basis, D3DXVECTOR3* e);
 	int Clip(const D3DXVECTOR3& rPos, const D3DXVECTOR3& e, char* clipEdges, const D3DXMATRIX& basis, ClipVertex* incident, ClipVertex* outVerts, float* outDepths);

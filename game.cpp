@@ -83,23 +83,22 @@ HRESULT CGame::Init(void)
 	}
 
 	{// プレイヤー
-		CPlayer* player = CPlayer::Create();
-		player->LoadModel("BOX");
-		player->SetPos(D3DXVECTOR3(0.0f, 60.0f, 0.0f));
+		m_player = CPlayer::Create();
+		m_player->LoadModel("BOX");
+		m_player->SetPos(D3DXVECTOR3(0.0f, 60.0f, 0.0f));
 		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2);
-		player->SetMaterialDiffuse(0, color);
-		player->CalculationVtx();
+		m_player->SetMaterialDiffuse(0, color);
+		m_player->CalculationVtx();
 	}
 
 	m_stage = LoadAll(L"data/FILE/stage.json");
-	m_stage->SetStart(true);
+	m_stage->SetStart(false);
 	//m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
 
 	// マウスの位置ロック
 	CInput::GetKey()->GetMouse()->UseSetPosLock(true);
 
-	CCountdown::Create(D3DXVECTOR3(300.0f,300.0f,0.0f));
-
+	m_countdown = CCountdown::Create(CApplication::CENTER_POS);
 	return S_OK;
 }
 
@@ -118,13 +117,23 @@ void CGame::Uninit(void)
 //-----------------------------------------------------------------------------
 void CGame::Update(void)
 {
+	// ステージが始まるまでの間隔
+	if (m_countdown != nullptr)
+	{
+		if (m_countdown->IsEnd())
+		{
+			m_countdown = nullptr;
+			m_stage->SetStart(true);	// ステージをスタートする
+			m_player->SetIsMove(true);	// プレイヤーの移動を許可する
+		}
+	}
+
 	// ステージが終了時
 	if (m_stage->IsEnd())
 	{
-		m_section++;				// ステージの回数
-		m_stage->Release();			// 終了処理
-		m_stage = m_stageNext;		// 次のステージを現在のステージにする
-		m_stage->SetStart(true);	// ステージをスタートする
+		m_section++;			// ステージの回数
+		m_stage->Release();		// 終了処理
+		m_stage = m_stageNext;	// 次のステージを現在のステージにする
 
 		if (m_section > 3)
 		{
@@ -138,11 +147,19 @@ void CGame::Update(void)
 		}
 	}
 
+	// ポーズ
 	if (CInput::GetKey()->Trigger(CMouse::MOUSE_KEY::MOUSE_KEY_LEFT))
 	{
 		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
 	}
 
+	// 遷移
+	if (CInput::GetKey()->Trigger(CMouse::MOUSE_KEY::MOUSE_KEY_LEFT))
+	{
+		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
+	}
+
+	// 背景の演出
 	static int cnt = 0;
 	cnt++;
 	if(cnt % 90 == 0)
