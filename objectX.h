@@ -109,10 +109,13 @@ public:
 	void SetCollisionFlag(bool inFlag) { m_isCollision = inFlag; }	// ìñÇΩÇËîªíËÇÃóLñ≥Çê›íË
 
 	bool IsCollision() { return m_isCollision; }	// ìñÇΩÇËîªíËÇÃóLñ≥ÇéÊìæ
-	bool OBBAndOBB(CObjectX* inObjectX,D3DXVECTOR3* outPos);
 	bool OBBAndOBB(CObjectX* inObjectX);
+	bool OBBAndOBB(CObjectX* inObjectX,D3DXVECTOR3* outPos);
+	bool SphereAndAABB(CObjectX* inObjectX,D3DXVECTOR3* outPos = nullptr);
 	bool RayAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal, D3DXVECTOR3* outPos = nullptr);
 	bool SegmentAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal);
+
+	float AABBAndPointLength(CObjectX* inObject);
 
 private:
 	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = nullptr);

@@ -52,5 +52,7 @@ private: // メンバー変数
 	int m_jumpCount;				// ジャンプ回数
 	bool m_isGoal;					// Goalしたか
 	bool m_isMove;					// 動いていいか
+	bool m_isJump;
+	int m_jumpTime;
 };
 #endif

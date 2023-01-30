@@ -207,6 +207,27 @@ D3DXVECTOR3 ConvertQuaternionfromRadian(const D3DXQUATERNION& inQuaternion)
 	return rot;
 }
 
+//---------------------------------------------------------------------------
+// çsóÒÇÃãtçsóÒÇïœä∑
+// Author : Yuda Kaito
+//---------------------------------------------------------------------------
+const D3DXMATRIX & InverseMatrixConversion(const D3DXMATRIX & inMtx)
+{
+	D3DXMATRIX mtx;
+
+	mtx._11 = inMtx._11;
+	mtx._12 = inMtx._21;
+	mtx._13 = inMtx._31;
+	mtx._21 = inMtx._12;
+	mtx._22 = inMtx._22;
+	mtx._23 = inMtx._32;
+	mtx._31 = inMtx._13;
+	mtx._32 = inMtx._23;
+	mtx._33 = inMtx._33;
+
+	return mtx;
+}
+
 namespace ease
 {
 

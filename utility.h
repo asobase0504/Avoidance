@@ -134,7 +134,7 @@ float Vec2Dot(D3DXVECTOR3* v1, D3DXVECTOR3* v2);
 
 D3DXVECTOR3 ConvertQuaternionfromRadian(const D3DXQUATERNION& inQuaternion);
 
-
+const D3DXMATRIX& InverseMatrixConversion(const D3DXMATRIX& inMtx);
 //--------------------------------------------------
 // Author : Hamada Ryuuga
 // Author : Yuda Kaito

@@ -39,26 +39,49 @@ HRESULT CCountdown::Init()
 	}
 
 	{
-		m_side[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(0.0f, -200.0f, 0.0f);
+		m_sideTrace[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+		m_sideTrace[0]->SetPos(numberPos);
+		m_sideTrace[0]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
+		m_sideTrace[0]->SetColorAlpha(0.25f);
+
+		m_side[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[0]->SetPos(numberPos);
 		m_side[0]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
 	}
 	{
-		m_side[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(200.0f, 0.0f, 0.0f);
+
+		m_sideTrace[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+		m_sideTrace[1]->SetPos(numberPos);
+		m_sideTrace[1]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
+		m_sideTrace[1]->SetColorAlpha(0.25f);
+
+		m_side[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[1]->SetPos(numberPos);
 		m_side[1]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
 	}
 	{
-		m_side[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(0.0f, 200.0f, 0.0f);
+
+		m_sideTrace[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+		m_sideTrace[2]->SetPos(numberPos);
+		m_sideTrace[2]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
+		m_sideTrace[2]->SetColorAlpha(0.25f);
+
+		m_side[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[2]->SetPos(numberPos);
 		m_side[2]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
 	}
 	{
-		m_side[3] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(-200.0f, 0.0f, 0.0f);
+		
+		m_sideTrace[3] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+		m_sideTrace[3]->SetPos(numberPos);
+		m_sideTrace[3]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
+		m_sideTrace[3]->SetColorAlpha(0.25f);
+
+		m_side[3] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[3]->SetPos(numberPos);
 		m_side[3]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
 	}
@@ -149,6 +172,12 @@ void CCountdown::NormalUpdate()
 			{
 				m_side[i]->Release();
 				m_side[i] = nullptr;
+			}
+
+			if (m_sideTrace[i] != nullptr)
+			{
+				m_sideTrace[i]->Release();
+				m_sideTrace[i] = nullptr;
 			}
 		}
 

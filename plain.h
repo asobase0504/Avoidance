@@ -27,11 +27,14 @@ public: // パブリック関数
 
 	static CPlain* Create();	// 生成
 
+	void SetDisplayOperation() { m_isDisplayOperation = true; }
+
 private: // プライベート関数
 
 private: // メンバー変数
 	int m_endCnt;
 	bool begin;
+	bool m_isDisplayOperation;
 	bool m_display;
 };
 #endif

@@ -70,7 +70,7 @@ private: // プライベート関数
 private: // メンバー変数
 	CGoal* m_goal;
 	CPlain* m_floor;
-	CPlain* m_wall[4];
+	CPlain* m_wall[5];
 	float m_scale;
 
 	D3DXVECTOR3 m_pos;

@@ -38,6 +38,7 @@ public:
 	static CCountdown* Create(const D3DXVECTOR3& inPos);
 private:
 	CObject2d* m_side[4];
+	CObject2d* m_sideTrace[4];
 	CObject2d* m_stopLogo;
 	int m_count;
 	bool m_end;

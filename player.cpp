@@ -21,9 +21,9 @@
 // 定数
 //-----------------------------------------------------------------------------
 const float CPlayer::SPEED = 6.5f;			// 移動量
-const float CPlayer::ATTENUATION = 0.35f;	// 移動減衰係数
-const float CPlayer::JUMPING_POWER = 2.5f;	// 跳躍力
-const float CPlayer::GRAVITY = 0.75f;		// 重力
+const float CPlayer::ATTENUATION = 0.15f;	// 移動減衰係数
+const float CPlayer::JUMPING_POWER = 7.5f;	// 跳躍力
+const float CPlayer::GRAVITY = 0.25f;		// 重力
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -50,6 +50,8 @@ CPlayer::~CPlayer()
 //-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
+	m_jumpTime = 0;
+	m_isJump = false;
 	// 現在のモーション番号の保管
 	CObjectX::Init();
 	LoadModel("BOX");
@@ -73,10 +75,15 @@ void CPlayer::NormalUpdate()
 	m_quaternionOld = m_quaternion;
 	Move();			// 移動
 	boost();		// 突進
-	Jump();			// ジャンプ
-	Landing();		// 落下
 	OnHitGoal();	// Goalとの当たり判定
 	OnHitEnemy();
+	Jump();			// ジャンプ
+	Landing();		// 落下
+
+	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
+	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
+	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
+	CDebugProc::Print("move : %.2f,%.0f,%.2f\n", m_move.x, m_move.y, m_move.z);
 
 	CInput* input = CInput::GetKey();
 
@@ -95,11 +102,7 @@ void CPlayer::NormalUpdate()
 		SetPos(D3DXVECTOR3(m_pos.x, 1200.0f, m_pos.z));
 	}
 
-	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
-	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
-	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
-	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
-
+	// 移動軌跡
 	static int time = 0;
 	time++;
 	if (time % 2 == 0)
@@ -228,7 +231,8 @@ void CPlayer::Jump()
 	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 0))
 	{
 		m_jumpCount++;
-		m_move.y = 15.0f;
+		m_isJump = true;
+		m_move.y = JUMPING_POWER;
 	}
 }
 
@@ -238,18 +242,11 @@ void CPlayer::Jump()
 void CPlayer::boost()
 {
 	// 突進
-	if (CInput::GetKey()->Press(DIK_SPACE) && (m_jumpCount == 1))
-	{
-		m_move.y = 0.75f;
-		m_move.x = 0.0f;
-		m_move.z = 0.0f;
-	}
-
-	if (CInput::GetKey()->Release(DIK_SPACE) && (m_jumpCount == 1))
+	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
 	{
 		m_jumpCount++;
-		m_move.x *= 14.0f;
-		m_move.z *= 14.0f;
+		//m_move.x *= 7.0f;
+		//m_move.z *= 7.0f;
 	}
 }
 
@@ -258,14 +255,25 @@ void CPlayer::boost()
 //-----------------------------------------------------------------------------
 void CPlayer::Landing()
 {
-	if (/*OnHitPlain()*/ m_pos.y < 20.0f)
+
+	m_move.y -= GRAVITY;	// 重力
+
+	if (m_isJump)
 	{
-		m_pos.y = 20.0f;
-		m_jumpCount = 0;
+		m_jumpTime++;
+//		if (m_jumpTime == 2)
+		{
+			m_jumpTime = 0;
+			m_isJump = false;
+		}
+		return;
 	}
-	else
+
+	if (OnHitPlain())
 	{
-		m_move.y -= GRAVITY;	// 重力
+		m_move.y = 0.0f;
+		m_quaternion = m_quaternionOld;
+		m_jumpCount = 0;
 	}
 }
 
@@ -280,11 +288,11 @@ void CPlayer::OnHitGoal()
 	{
 		CObject* next = object->NextSameType();
 		
-		//if (OBBAndOBB((CObjectX*)object))
-		//{
-		//	CGoal* goal = (CGoal*)object;	// Goal
-		//	goal->Goal(true);
-		//}
+		if (OBBAndOBB((CObjectX*)object))
+		{
+			CGoal* goal = (CGoal*)object;	// Goal
+			goal->Goal(true);
+		}
 
 		object = next;
 	}
@@ -324,10 +332,11 @@ bool CPlayer::OnHitPlain()
 	{
 		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
 
-		if (OBBAndOBB((CObjectX*)object,&m_pos))
+		if (SphereAndAABB((CObjectX*)object,&m_pos))
 		{
+			m_pos = m_posOld;
+			hit = true;
 		}
-		CDebugProc::Print("----------------------------------------------\n");
 
 		object = next;
 	}

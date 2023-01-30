@@ -76,7 +76,7 @@ void CStage::Update()
 		m_goal->SetUpdateStatus(CObject::EUpdateStatus::END);
 		m_floor->SetUpdateStatus(CObject::EUpdateStatus::END);
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			m_wall[i]->SetUpdateStatus(CObject::EUpdateStatus::END);
 		}
@@ -145,9 +145,11 @@ void CStage::SetWall(int index, const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+	objectX->SetDisplayOperation();
 	//objectX->CalculationVtx();
 
 	m_wall[index] = objectX;
+	m_wall[index]->SetDisplayOperation();
 }
 
 //-----------------------------------------------------------------------------

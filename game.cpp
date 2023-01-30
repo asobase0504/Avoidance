@@ -93,7 +93,7 @@ HRESULT CGame::Init(void)
 
 	m_stage = LoadAll(L"data/FILE/stage.json");
 	m_stage->SetStart(false);
-	//m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
+	m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
 
 	// マウスの位置ロック
 	CInput::GetKey()->GetMouse()->UseSetPosLock(true);

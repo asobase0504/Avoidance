@@ -35,6 +35,7 @@ HRESULT CPlain::Init()
 {
 	begin = false;
 	m_display = true;
+	m_isDisplayOperation = false;
 	m_endCnt = 0;
 	// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚Ì•ÛŠÇ
 	CObjectX::Init();
@@ -87,7 +88,7 @@ void CPlain::EndUpdate()
 //-----------------------------------------------------------------------------
 void CPlain::Draw()
 {
-	if (m_display)
+	if (!m_isDisplayOperation || m_display)
 	{
 		CObjectX::Draw();
 	}
