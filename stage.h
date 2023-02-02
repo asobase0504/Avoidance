@@ -79,6 +79,7 @@ private: // ƒƒ“ƒo[•Ï”
 	std::unordered_map<int, SEnemyPop> m_enemy;
 	int m_startCnt;
 
+	bool m_isFrag;
 	bool m_isStart;
 	bool m_isEnd;
 };

@@ -41,6 +41,9 @@ HRESULT CPlain::Init()
 	CObjectX::Init();
 	LoadModel("BOX");
 	SetType(EType::PLAIN);
+
+	AttachOutLine();
+
 	return S_OK;
 }
 
@@ -73,6 +76,7 @@ void CPlain::EndUpdate()
 		SetMove(D3DXVECTOR3(FloatRandam(5.0f, -5.0f), 0.0f, FloatRandam(5.0f, -5.0f)));
 		SetMoveRot(D3DXVECTOR3(FloatRandam(0.015f, -0.015f), 0.0f, FloatRandam(0.0125f, -0.015f)));
 		begin = true;
+		SetCollisionFlag(false);
 	}
 
 	m_endCnt++;

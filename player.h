@@ -54,5 +54,7 @@ private: // メンバー変数
 	bool m_isMove;					// 動いていいか
 	bool m_isJump;
 	int m_jumpTime;
+
+	D3DXVECTOR3 jumpDirection;				// ジャンプ方向
 };
 #endif

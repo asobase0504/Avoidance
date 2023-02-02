@@ -21,7 +21,8 @@
 CStage::CStage() :
 	CTask(CTaskGroup::EPriority::LEVEL_SYSTEM),
 	m_isStart(false),
-	m_isEnd(false)
+	m_isEnd(false),
+	m_isFrag(false)
 {
 }
 
@@ -60,6 +61,20 @@ void CStage::Update()
 	{
 		return;
 	}
+	
+	if (!m_isFrag)
+	{
+		m_isFrag = true;
+		for (int i = 0; i < 5; i++)
+		{
+			m_wall[i]->SetCollisionFlag(true);
+		}
+
+		for (int i = 0; i < m_midairFloor.size(); i++)
+		{
+			m_midairFloor[i]->SetCollisionFlag(true);
+		}
+	}
 
 	CTask::Update();
 
@@ -71,7 +86,7 @@ void CStage::Update()
 		}
 	}
 
-	if (m_goal->IsGoal() || CInput::GetKey()->Trigger(DIK_8))
+	if (m_goal->IsGoal())
 	{
 		m_goal->SetUpdateStatus(CObject::EUpdateStatus::END);
 		m_floor->SetUpdateStatus(CObject::EUpdateStatus::END);
@@ -85,7 +100,7 @@ void CStage::Update()
 		{
 			m_midairFloor[i]->SetUpdateStatus(CObject::EUpdateStatus::END);
 		}
-		//m_isEnd = true;
+		m_isEnd = true;
 	}
 
 	m_startCnt++;
@@ -129,6 +144,7 @@ void CStage::SetFloor(const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot, const D3
 	objectX->SetScale(scale);
 	m_scale = scale.x;
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
+	objectX->SetDisplayOperation();
 	//objectX->CalculationVtx();
 
 	m_floor = objectX;
@@ -146,6 +162,7 @@ void CStage::SetWall(int index, const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
 	objectX->SetDisplayOperation();
+	objectX->SetCollisionFlag(false);
 	//objectX->CalculationVtx();
 
 	m_wall[index] = objectX;
@@ -163,6 +180,7 @@ void CStage::AddFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DX
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
+	objectX->SetCollisionFlag(false);
 	//objectX->CalculationVtx();
 
 	m_midairFloor.emplace(m_midairFloor.size(), objectX);

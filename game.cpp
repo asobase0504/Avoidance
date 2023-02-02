@@ -122,6 +122,7 @@ void CGame::Update(void)
 	{
 		if (m_countdown->IsEnd())
 		{
+			m_countdown->SetUpdateStatus(CObject::EUpdateStatus::END);
 			m_countdown = nullptr;
 			m_stage->SetStart(true);	// ステージをスタートする
 			m_player->SetIsMove(true);	// プレイヤーの移動を許可する
@@ -134,6 +135,9 @@ void CGame::Update(void)
 		m_section++;			// ステージの回数
 		m_stage->Release();		// 終了処理
 		m_stage = m_stageNext;	// 次のステージを現在のステージにする
+		m_stage->SetStart(false);
+
+		m_countdown = CCountdown::Create(CApplication::CENTER_POS);
 
 		if (m_section > 3)
 		{

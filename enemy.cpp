@@ -35,6 +35,9 @@ HRESULT CEnemy::Init()
 	CObjectX::Init();
 	SetType(CObject::ENEMY);
 	SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_3));
+
+	AttachOutLine();
+
 	return S_OK;
 }
 

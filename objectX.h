@@ -60,13 +60,13 @@ public:
 	//-------------------------------------------------------------------------
 	// メンバー関数
 	//-------------------------------------------------------------------------
-	HRESULT Init() override;		// 初期化
+	HRESULT Init() override;	// 初期化
 
 	/* 描画 */
 	void Draw() override;
 	void DrawMaterial();
 	void DrawOutLine();
-	void Projection();					// 平行投影処理
+	void Projection();			// 平行投影処理
 
 	/* 生成処理 */
 	static CObjectX *Create(D3DXVECTOR3 pos, CTaskGroup::EPriority nPriority = CTaskGroup::LEVEL_3D_1);
@@ -105,6 +105,9 @@ public:
 	/* 透明度 */
 	void SetColorAlpha(float inAlpha) { m_colorAlpha = inAlpha; }
 
+	/* OutLine */
+	void AttachOutLine() { m_hasOutLine = true; }
+
 	/* 当たり判定 */
 	void SetCollisionFlag(bool inFlag) { m_isCollision = inFlag; }	// 当たり判定の有無を設定
 
@@ -115,7 +118,7 @@ public:
 	bool RayAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal, D3DXVECTOR3* outPos = nullptr);
 	bool SegmentAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal);
 
-	float AABBAndPointLength(CObjectX* inObject);
+	float AABBAndPointLength(CObjectX* inObject, D3DXVECTOR3* outDist = nullptr);
 
 private:
 	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 = nullptr);
@@ -128,10 +131,12 @@ private:
 	// メンバー変数
 	//-------------------------------------------------------------------------
 	D3DXVECTOR3 m_scale;		// 大きさ倍率
+
+	D3DXVECTOR3 m_MinVtxOrigin;	// モデルの頂点最小値デフォルト値
+	D3DXVECTOR3 m_MaxVtxOrigin;	// モデルの頂点最大値デフォルト値
 	D3DXVECTOR3 m_MinVtx;		// モデルの頂点最小値
 	D3DXVECTOR3 m_MaxVtx;		// モデルの頂点最大値
-	D3DXVECTOR3 m_MinVtxOrigin;	// モデルの頂点最小値
-	D3DXVECTOR3 m_MaxVtxOrigin;	// モデルの頂点最大値
+
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリックス
 	D3DXMATRIX m_mtxRot;		// 回転行列
 
@@ -143,6 +148,8 @@ private:
 	CObjectX *m_pParent;		// 親モデルの情報
 	bool m_isCollision;			// 当たり判定が必要か
 	float m_colorAlpha;			// 透明度
+
+	bool m_hasOutLine;			// アウトラインを使うか
 
 	//=========================================
 	//ハンドル一覧

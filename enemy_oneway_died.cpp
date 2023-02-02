@@ -57,7 +57,7 @@ void CEnemyOneWayDied::NormalUpdate()
 {
 	m_life--;
 
-	float scale = ease::OutQuad((float)m_life / (float)MAX_LIFE) * 0.25f;
+	float scale = ease::OutQuad((float)m_life / (float)MAX_LIFE) * 0.5f;
 
 	SetScale(D3DXVECTOR3(scale, scale, scale));
 

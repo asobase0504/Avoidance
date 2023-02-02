@@ -21,9 +21,9 @@
 // 定数
 //-----------------------------------------------------------------------------
 const float CPlayer::SPEED = 6.5f;			// 移動量
-const float CPlayer::ATTENUATION = 0.15f;	// 移動減衰係数
-const float CPlayer::JUMPING_POWER = 7.5f;	// 跳躍力
-const float CPlayer::GRAVITY = 0.25f;		// 重力
+const float CPlayer::ATTENUATION = 0.45f;	// 移動減衰係数
+const float CPlayer::JUMPING_POWER = 5.5f;	// 跳躍力
+const float CPlayer::GRAVITY = 0.2f;		// 重力
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -56,6 +56,9 @@ HRESULT CPlayer::Init()
 	CObjectX::Init();
 	LoadModel("BOX");
 	SetScale(D3DXVECTOR3(1.0f,1.0f,1.0f));
+
+	AttachOutLine();
+
 	return S_OK;
 }
 
@@ -72,6 +75,12 @@ void CPlayer::Uninit()
 //-----------------------------------------------------------------------------
 void CPlayer::NormalUpdate()
 {
+	CDebugProc::Print("jumpDirection : %.2f,%.2f,%.2f\n", jumpDirection.x, jumpDirection.y, jumpDirection.z);
+	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
+	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
+	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
+	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
+
 	m_quaternionOld = m_quaternion;
 	Move();			// 移動
 	boost();		// 突進
@@ -80,13 +89,9 @@ void CPlayer::NormalUpdate()
 	Jump();			// ジャンプ
 	Landing();		// 落下
 
-	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
-	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
-	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
-	CDebugProc::Print("move : %.2f,%.0f,%.2f\n", m_move.x, m_move.y, m_move.z);
-
 	CInput* input = CInput::GetKey();
 
+#ifdef _DEBUG
 	if (input->Press(DIK_0))
 	{
 		SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
@@ -96,6 +101,7 @@ void CPlayer::NormalUpdate()
 	{
 		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
+#endif // _DEBUG
 
 	if (m_pos.y < -5000.0f)
 	{
@@ -227,12 +233,21 @@ void CPlayer::Move()
 //-----------------------------------------------------------------------------
 void CPlayer::Jump()
 {
+	if (!m_isMove)
+	{
+		return;
+	}
+
 	// 跳躍
 	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 0))
 	{
 		m_jumpCount++;
 		m_isJump = true;
-		m_move.y = JUMPING_POWER;
+
+		m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		jumpDirection.x *= 3.0f;
+		jumpDirection.z *= 3.0f;
+		m_move.y += JUMPING_POWER/* * jumpDirection*/;
 	}
 }
 
@@ -255,25 +270,11 @@ void CPlayer::boost()
 //-----------------------------------------------------------------------------
 void CPlayer::Landing()
 {
-
 	m_move.y -= GRAVITY;	// 重力
 
-	if (m_isJump)
+	if (!OnHitPlain())
 	{
-		m_jumpTime++;
-//		if (m_jumpTime == 2)
-		{
-			m_jumpTime = 0;
-			m_isJump = false;
-		}
-		return;
-	}
-
-	if (OnHitPlain())
-	{
-		m_move.y = 0.0f;
-		m_quaternion = m_quaternionOld;
-		m_jumpCount = 0;
+		jumpDirection = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	}
 }
 
@@ -327,14 +328,26 @@ bool CPlayer::OnHitPlain()
 	CObject* object = SearchType(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
 
 	bool hit = false;
+	D3DXVECTOR3 dist(0.0f,0.0f,0.0f);
 
 	while (object != nullptr)
 	{
 		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
 
-		if (SphereAndAABB((CObjectX*)object,&m_pos))
+		dist = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		if (SphereAndAABB((CObjectX*)object,&dist))
 		{
-			m_pos = m_posOld;
+			//jumpDirection = -dist;
+			//jumpDirection.y += 0.75f;
+			D3DXVec3Normalize(&jumpDirection,&jumpDirection);
+			m_jumpCount = 0;
+			//m_pos = m_posOld;
+			if (dist.y < -0.1f)
+			{
+				m_move.y = 0.0f;
+			}
+
 			hit = true;
 		}
 

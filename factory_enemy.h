@@ -12,12 +12,12 @@
 //-----------------------------------------------------------------------------
 enum class EEnemyType
 {
+	ONE_WAY,
 	LASER,
 	HOMING,
 	HOMING_BOMB,
 	PLAN_PROGRESS,
 	REFLECTION,
-	ONE_WAY,
 	MAX
 };
 

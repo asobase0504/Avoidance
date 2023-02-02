@@ -43,7 +43,7 @@ HRESULT CCountdown::Init()
 		m_sideTrace[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_sideTrace[0]->SetPos(numberPos);
 		m_sideTrace[0]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
-		m_sideTrace[0]->SetColorAlpha(0.25f);
+		m_sideTrace[0]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
 
 		m_side[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[0]->SetPos(numberPos);
@@ -55,7 +55,7 @@ HRESULT CCountdown::Init()
 		m_sideTrace[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_sideTrace[1]->SetPos(numberPos);
 		m_sideTrace[1]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
-		m_sideTrace[1]->SetColorAlpha(0.25f);
+		m_sideTrace[1]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
 
 		m_side[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[1]->SetPos(numberPos);
@@ -67,7 +67,7 @@ HRESULT CCountdown::Init()
 		m_sideTrace[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_sideTrace[2]->SetPos(numberPos);
 		m_sideTrace[2]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
-		m_sideTrace[2]->SetColorAlpha(0.25f);
+		m_sideTrace[2]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
 
 		m_side[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[2]->SetPos(numberPos);
@@ -80,6 +80,7 @@ HRESULT CCountdown::Init()
 		m_sideTrace[3]->SetPos(numberPos);
 		m_sideTrace[3]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
 		m_sideTrace[3]->SetColorAlpha(0.25f);
+		m_sideTrace[3]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
 
 		m_side[3] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
 		m_side[3]->SetPos(numberPos);
@@ -119,6 +120,7 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().x + 2.5f;
 				size2 = m_side[i]->GetSize().y - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size, size2, 0.0f));
+				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 1:
@@ -128,6 +130,7 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().y + 2.5f;
 				size2 = m_side[i]->GetSize().x - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size2, size, 0.0f));
+				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 2:
@@ -137,6 +140,7 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().x + 2.5f;
 				size2 = m_side[i]->GetSize().y - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size, size2, 0.0f));
+				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 3:
@@ -146,14 +150,16 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().y + 2.5f;
 				size2 = m_side[i]->GetSize().x - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size2, size, 0.0f));
+				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 4:
 			if (m_stopLogo != nullptr)
 			{
-				size = m_stopLogo->GetSize().y - 4.25f;
+				size = m_stopLogo->GetSize().y + 4.25f;
 				size2 = m_stopLogo->GetSize().x + 4.25f;
 				m_stopLogo->SetSize(D3DXVECTOR3(size2, size, 0.0f));
+				m_stopLogo->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f,0.0f));
 			}
 			break;
 		default:

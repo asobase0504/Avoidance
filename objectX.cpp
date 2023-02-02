@@ -37,7 +37,8 @@ CObjectX::CObjectX(CTaskGroup::EPriority nPriority) :
 	CObject(nPriority),
 	m_pParent(nullptr),
 	m_scale(1.0f,1.0f,1.0f),
-	m_colorAlpha(1.0f)
+	m_colorAlpha(1.0f),
+	m_hasOutLine(false)
 {
 	//オブジェクトのタイプセット処理
 	CObject::SetType(CObject::MODEL);
@@ -233,6 +234,11 @@ void CObjectX::DrawMaterial()
 
 void CObjectX::DrawOutLine()
 {
+	if (!m_hasOutLine)
+	{
+		return;
+	}
+
 	// 計算用マトリックス
 	D3DXMATRIX mtxTrans;
 
@@ -1323,10 +1329,30 @@ bool CObjectX::OBBAndOBB(CObjectX* inObjectX, D3DXVECTOR3* outPos)
 	return true;
 }
 
+//=============================================================================
+// SphereとAABBの当たり判定
+// Author : Yuda Kaito
+//=============================================================================
 bool CObjectX::SphereAndAABB(CObjectX * inObjectX, D3DXVECTOR3 * outPos)
 {
-	float length = AABBAndPointLength(inObjectX);	// 最短距離
-	return m_MaxVtx.x > length;
+	if (!inObjectX->IsCollision())
+	{
+		return false;
+	}
+
+	D3DXVECTOR3 dist(0.0f,0.0f,0.0f);
+	float length = AABBAndPointLength(inObjectX,&dist);	// 最短距離
+
+	if (m_MaxVtx.x * 1.4f > length)
+	{
+		*outPos = dist;
+
+		CDebugProc::Print("dist : %f,%f,%f\n", dist.x, dist.y, dist.z);
+		CDebugProc::Print("length : %f\n", length);
+		m_pos -= dist * (m_MaxVtx.x * 1.4f - length);
+	}
+
+	return m_MaxVtx.x * 1.4f > length;
 }
 
 //=============================================================================
@@ -1461,7 +1487,7 @@ bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inP
 // 現在地とAABBの最小距離
 // Author : Yuda Kaito
 //=============================================================================
-float CObjectX::AABBAndPointLength(CObjectX * inObject)
+float CObjectX::AABBAndPointLength(CObjectX * inObject, D3DXVECTOR3* outDist)
 {
 	float SqLen = 0.0f;	// 長さのべき乗の値を格納
 
@@ -1469,35 +1495,49 @@ float CObjectX::AABBAndPointLength(CObjectX * inObject)
 
 	D3DXVECTOR3 min = inObject->m_pos + inObject->m_MinVtx;
 	D3DXVECTOR3 max = inObject->m_pos + inObject->m_MaxVtx;
+	D3DXVECTOR3 dist(0.0f,0.0f,0.0f);
 
 	if (m_pos.x < min.x)
 	{
 		SqLen += (m_pos.x - min.x) * (m_pos.x - min.x);
+		dist.x += 1.0f;
 	}
 
 	if (m_pos.x > max.x)
 	{
 		SqLen += (m_pos.x - max.x) * (m_pos.x - max.x);
+		dist.x += -1.0f;
 	}
 
 	if (m_pos.y < min.y)
 	{
 		SqLen += (m_pos.y - min.y) * (m_pos.y - min.y);
+		dist.y += 1.0f;
 	}
 
 	if (m_pos.y > max.y)
 	{
 		SqLen += (m_pos.y - max.y) * (m_pos.y - max.y);
+		dist.y += -1.0f;
 	}
 
 	if (m_pos.z < min.z)
 	{
 		SqLen += (m_pos.z - min.z) * (m_pos.z - min.z);
+		dist.z += 1.0f;
 	}
 
 	if (m_pos.z > max.z)
 	{
 		SqLen += (m_pos.z - max.z) * (m_pos.z - max.z);
+		dist.z+= -1.0f;
+	}
+
+	D3DXVec3Normalize(&dist, &dist);
+
+	if (outDist != nullptr)
+	{
+		*outDist = dist;
 	}
 
 	return sqrt(SqLen);
