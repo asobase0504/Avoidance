@@ -35,6 +35,7 @@ public: // パブリック関数
 	bool GetIsGoal() { return m_isGoal; }
 	void SetIsMove(bool isMove) { m_isMove = isMove; }
 	bool IsMove() { return m_isMove; }
+	bool IsDied() { return m_isDied; }
 
 private: // プライベート関数
 	void Move();	// 移動
@@ -56,5 +57,7 @@ private: // メンバー変数
 	int m_jumpTime;
 
 	D3DXVECTOR3 jumpDirection;				// ジャンプ方向
+
+	bool m_isDied;
 };
 #endif

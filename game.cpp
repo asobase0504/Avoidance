@@ -25,13 +25,11 @@
 /* Object系統 */
 #include "object_polygon3d.h"
 #include "player.h"
+#include "player_died.h"
 #include "goal.h"
 #include "pause.h"
 #include "bg_box.h"
 #include "countdown.h"
-
-/* Enemy系統 */
-#include "enemy_oneway.h"
 
 //-----------------------------------------------------------------------------
 // 静的メンバ変数の宣言
@@ -91,14 +89,16 @@ HRESULT CGame::Init(void)
 		m_player->CalculationVtx();
 	}
 
-	m_stage = LoadAll(L"data/FILE/stage.json");
+	m_stage = LoadAll("data/FILE/stage.json");
 	m_stage->SetStart(false);
-	m_stageNext = LoadAll(L"data/FILE/stage.json",D3DXVECTOR3(0.0f,-1200.0f,0.0f));
+	m_stageNext = LoadAll("data/FILE/stage.json",D3DXVECTOR3(0.0f,-3600.0f,0.0f));
 
 	// マウスの位置ロック
 	CInput::GetKey()->GetMouse()->UseSetPosLock(true);
 
 	m_countdown = CCountdown::Create(CApplication::CENTER_POS);
+
+	m_isDeathStop = false;
 	return S_OK;
 }
 
@@ -129,76 +129,124 @@ void CGame::Update(void)
 		}
 	}
 
-	// ステージが終了時
-	if (m_stage->IsEnd())
-	{
-		m_section++;			// ステージの回数
-		m_stage->Release();		// 終了処理
-		m_stage = m_stageNext;	// 次のステージを現在のステージにする
-		m_stage->SetStart(false);
-
-		m_countdown = CCountdown::Create(CApplication::CENTER_POS);
-
-		if (m_section > 3)
-		{
-			m_section = 0;
-			m_stageNext = LoadAll(L"data/FILE/stage.json", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		}
-		else
-		{
-			D3DXVECTOR3 pos = m_stage->GetPos();
-			m_stageNext = LoadAll(L"data/FILE/stage.json", D3DXVECTOR3(0.0f, pos.y - 1200.0f, 0.0f));
-		}
-	}
-
 	// ポーズ
-	if (CInput::GetKey()->Trigger(CMouse::MOUSE_KEY::MOUSE_KEY_LEFT))
+	if (CInput::GetKey()->Trigger(DIK_P))
 	{
-		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
+		CPause* pause = new CPause;
+		pause->Init();
 	}
 
-	// 遷移
-	if (CInput::GetKey()->Trigger(CMouse::MOUSE_KEY::MOUSE_KEY_LEFT))
+	StageClear();
+	BackStaging();
+	PlayerDeath();
+}
+
+//-----------------------------------------------------------------------------
+// 1ステージクリア時
+//-----------------------------------------------------------------------------
+void CGame::StageClear()
+{
+	// ステージが終了時
+	if (!m_stage->IsEnd())
 	{
-		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
+		return;
 	}
 
-	// 背景の演出
-	static int cnt = 0;
-	cnt++;
-	if(cnt % 90 == 0)
+	m_section++;			// ステージの回数
+	m_stage->Release();		// 終了処理
+	m_stage = m_stageNext;	// 次のステージを現在のステージにする
+	m_stage->SetStart(false);
+
+	m_countdown = CCountdown::Create(CApplication::CENTER_POS);
+
+	if (m_section > 3)
 	{
-		cnt = 0;
-		{
-			CBgBox* box = CBgBox::Create();
-			box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
-			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-		}
+		m_section = 0;
+		m_stageNext = LoadAll("data/FILE/stage.json", D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+	else
+	{
+		D3DXVECTOR3 pos = m_stage->GetPos();
+		m_stageNext = LoadAll("data/FILE/stage.json", D3DXVECTOR3(0.0f, pos.y - 3600.0f, 0.0f));
+	}
+}
 
-		{
-			CBgBox* box = CBgBox::Create();
-			box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
-			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-		}
+//-----------------------------------------------------------------------------
+// プレイヤー死亡時
+//-----------------------------------------------------------------------------
+void CGame::PlayerDeath()
+{
+	if (m_player->IsDied() && !m_isDeathStop)
+	{
+		D3DXVECTOR3 pos = m_stage->GetPos();
+		pos.y += 100.0f;
 
-		{
-			CBgBox* box = CBgBox::Create();
-			box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
-			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-		}
+		CPlayerDied::SetOriginPos(pos);
+		pos -= m_player->GetPos();
+		pos /= 150.0f;
+		m_player->AddMove(pos);
+		m_isDeathStop = true;
 
+		// 最初に見つけた指定したタイプのobjectを持ってくる
+		CObject* object = CObject::SearchType(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1);
+
+		while (object != nullptr)
 		{
-			CBgBox* box = CBgBox::Create();
-			box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
-			box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+			CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
+
+			object->Release();
+
+			object = next;
+		}
+	}
+
+	if (m_isDeathStop)
+	{
+		m_stage->PopReset();
+
+		if (!m_player->IsDied())
+		{
+			m_isDeathStop = false;
 		}
 	}
 }
 
 //-----------------------------------------------------------------------------
-// 描画
+// 後ろの演出
 //-----------------------------------------------------------------------------
-void CGame::Draw(void)
+void CGame::BackStaging()
 {
+	// 背景の演出
+	static int cnt = 0;
+	cnt++;
+	if (cnt % 90 != 0)
+	{
+		return;
+	}
 
+	cnt = 0;
+
+	{
+		CBgBox* box = CBgBox::Create();
+		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
+		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	}
+
+	{
+		CBgBox* box = CBgBox::Create();
+		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
+		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	}
+
+	{
+		CBgBox* box = CBgBox::Create();
+		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
+		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	}
+
+	{
+		CBgBox* box = CBgBox::Create();
+		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
+		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
+	}
 }

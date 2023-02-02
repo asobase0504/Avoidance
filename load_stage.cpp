@@ -8,7 +8,7 @@
 #include <sstream>
 #include <unordered_map>
 
-CStage* LoadAll(const wchar_t* filename, const D3DXVECTOR3& inPos)
+CStage* LoadAll(const char* filename, const D3DXVECTOR3& inPos)
 {
 	CStage* stage = CStage::Create();
 

@@ -14,6 +14,7 @@
 #include "collision.h"
 #include "object_polygon3d.h"
 #include "player_afterimage.h"
+#include "player_died.h"
 #include "goal.h"
 
 #include "color.h"
@@ -81,41 +82,55 @@ void CPlayer::NormalUpdate()
 	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
 
-	m_quaternionOld = m_quaternion;
-	Move();			// 移動
-	boost();		// 突進
-	OnHitGoal();	// Goalとの当たり判定
-	OnHitEnemy();
-	Jump();			// ジャンプ
-	Landing();		// 落下
+	if (!m_isDied)
+	{
+		m_quaternionOld = m_quaternion;
+		Move();			// 移動
+		boost();		// 突進
+		OnHitGoal();	// Goalとの当たり判定
+		OnHitEnemy();
+		Jump();			// ジャンプ
+		Landing();		// 落下
 
-	CInput* input = CInput::GetKey();
+		CInput* input = CInput::GetKey();
 
 #ifdef _DEBUG
-	if (input->Press(DIK_0))
-	{
-		SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
-		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	}
-	if (input->Press(DIK_9))
-	{
-		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-	}
+		if (input->Press(DIK_0))
+		{
+			SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
+			SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		}
+		if (input->Press(DIK_9))
+		{
+			SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		}
 #endif // _DEBUG
 
-	if (m_pos.y < -5000.0f)
-	{
-		SetPos(D3DXVECTOR3(m_pos.x, 1200.0f, m_pos.z));
-	}
+		if (m_pos.y < -5000.0f)
+		{
+			SetPos(D3DXVECTOR3(m_pos.x, 1200.0f, m_pos.z));
+		}
 
-	// 移動軌跡
-	static int time = 0;
-	time++;
-	if (time % 2 == 0)
+		// 移動軌跡
+		static int time = 0;
+		time++;
+		if (time % 2 == 0)
+		{
+			CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
+			afterimage->SetMtxRot(GetMtxRot());
+			afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
+		}
+	}
+	else
 	{
-		CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
-		afterimage->SetMtxRot(GetMtxRot());
-		afterimage->SetMaterialDiffuse(0,GetMaterialDiffuse(0));
+		static int cnt = 0;
+
+		cnt++;
+		if (cnt >= CPlayerDied::MAX_LIFE)
+		{
+			cnt = 0;
+			m_isDied = false;
+		}
 	}
 }
 
@@ -124,7 +139,10 @@ void CPlayer::NormalUpdate()
 //-----------------------------------------------------------------------------
 void CPlayer::Draw()
 {
-	CObjectX::Draw();
+	if (!m_isDied)
+	{
+		CObjectX::Draw();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -244,9 +262,10 @@ void CPlayer::Jump()
 		m_jumpCount++;
 		m_isJump = true;
 
-		m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		jumpDirection.x *= 3.0f;
 		jumpDirection.z *= 3.0f;
+		m_pos += 1.0f * jumpDirection;
+		m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_move.y += JUMPING_POWER/* * jumpDirection*/;
 	}
 }
@@ -312,7 +331,18 @@ void CPlayer::OnHitEnemy()
 
 		if (OBBAndOBB((CObjectX*)object))
 		{
-			m_isGoal = true;	// Goal
+			for (int i = 0; i < 50; i++)
+			{
+				D3DXVECTOR3 pos = m_pos;
+				pos.x += FloatRandam(-20.0f, 20.0f);
+				pos.y += FloatRandam(-20.0f, 20.0f);
+				pos.z += FloatRandam(-20.0f, 20.0f);
+				CPlayerDied::Create(pos);
+				SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			}
+
+			m_isDied = true;	// Goal
+			return;
 		}
 
 		object = next;
@@ -338,12 +368,13 @@ bool CPlayer::OnHitPlain()
 
 		if (SphereAndAABB((CObjectX*)object,&dist))
 		{
-			//jumpDirection = -dist;
-			//jumpDirection.y += 0.75f;
+			jumpDirection = -dist;
+			jumpDirection.y += 0.75f;
 			D3DXVec3Normalize(&jumpDirection,&jumpDirection);
 			m_jumpCount = 0;
 			//m_pos = m_posOld;
-			if (dist.y < -0.1f)
+
+			if (dist.y < 0.0f)
 			{
 				m_move.y = 0.0f;
 			}

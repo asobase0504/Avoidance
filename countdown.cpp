@@ -1,3 +1,9 @@
+//=============================================================================
+//
+// カウントダウンUI
+// Author:Yuda Kaito
+//
+//=============================================================================
 #include "countdown.h"
 #include "number.h"
 #include "object2d.h"
@@ -5,11 +11,13 @@
 
 //-----------------------------------------------------------------------------
 // 定数
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 const int CCountdown::START_TIME(30 * 8);
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CCountdown::CCountdown()
 {
@@ -17,6 +25,7 @@ CCountdown::CCountdown()
 
 //-----------------------------------------------------------------------------
 // デストラクタ
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CCountdown::~CCountdown()
 {
@@ -24,6 +33,7 @@ CCountdown::~CCountdown()
 
 //-----------------------------------------------------------------------------
 // 初期化
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 HRESULT CCountdown::Init()
 {
@@ -92,6 +102,7 @@ HRESULT CCountdown::Init()
 
 //-----------------------------------------------------------------------------
 // 終了
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CCountdown::Uninit()
 {
@@ -99,12 +110,11 @@ void CCountdown::Uninit()
 
 //-----------------------------------------------------------------------------
 // 通常更新
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CCountdown::NormalUpdate()
 {
 	m_count++;
-
-	//m_number->SetNumber(m_count / 60);
 
 	float size;
 	float size2;
@@ -120,7 +130,7 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().x + 2.5f;
 				size2 = m_side[i]->GetSize().y - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size, size2, 0.0f));
-				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
+				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 1:
@@ -130,7 +140,7 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().y + 2.5f;
 				size2 = m_side[i]->GetSize().x - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size2, size, 0.0f));
-				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
+				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 2:
@@ -140,7 +150,7 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().x + 2.5f;
 				size2 = m_side[i]->GetSize().y - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size, size2, 0.0f));
-				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
+				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 3:
@@ -150,16 +160,16 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().y + 2.5f;
 				size2 = m_side[i]->GetSize().x - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size2, size, 0.0f));
-				m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
+				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 4:
 			if (m_stopLogo != nullptr)
 			{
-				size = m_stopLogo->GetSize().y + 4.25f;
-				size2 = m_stopLogo->GetSize().x + 4.25f;
+				size = m_stopLogo->GetSize().y - 2.25f;
+				size2 = m_stopLogo->GetSize().x - 2.25f;
 				m_stopLogo->SetSize(D3DXVECTOR3(size2, size, 0.0f));
-				m_stopLogo->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f,0.0f));
+				//m_stopLogo->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f,0.0f));
 			}
 			break;
 		default:
@@ -194,6 +204,7 @@ void CCountdown::NormalUpdate()
 
 //-----------------------------------------------------------------------------
 // 作成
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CCountdown* CCountdown::Create(const D3DXVECTOR3 & inPos)
 {

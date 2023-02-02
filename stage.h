@@ -66,6 +66,9 @@ public: // パブリック関数
 	void SetStart(bool start) { m_isStart = start; }
 	bool IsEnd() { return m_isEnd; }
 
+	void EnemyDeath();
+	void PopReset() { m_startCnt = -60; }
+
 private: // プライベート関数
 private: // メンバー変数
 	CGoal* m_goal;

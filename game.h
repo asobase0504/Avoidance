@@ -31,7 +31,11 @@ public:
 	HRESULT Init() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw() override;
+
+private:
+	void StageClear();
+	void PlayerDeath();
+	void BackStaging();
 
 private:
 	CStage* m_stage;		// 今のステージ
@@ -39,5 +43,7 @@ private:
 	CPlayer* m_player;
 	CCountdown* m_countdown;// カウントダウン
 	int m_section;			// 1面のステージ数
+
+	bool m_isDeathStop;
 };
 #endif

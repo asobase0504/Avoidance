@@ -43,7 +43,7 @@ HRESULT CTaskGroup::Init()
 // Author : Yuda Kaito
 //=============================================================================
 template<typename Func>
-inline void CTaskGroup::AllProcess(Func func)
+void CTaskGroup::AllProcess(Func func)
 {
 	for (int i = 0; i <= m_priorityNumber; i++)
 	{
@@ -385,7 +385,14 @@ CTask * CTaskGroup::SearchSameRolePrev(CTask * inTask)
 //=============================================================================
 void CTaskGroup::Pause(bool isPause)
 {
-	isPause ? AllProcess([](CTask* task) {task->Pouse(); }) : AllProcess([](CTask* task) {task->PouseOff(); });
+	if (isPause)
+	{
+		AllProcess([](CTask* task) {task->Pouse(); });
+	}
+	else
+	{
+		AllProcess([](CTask* task) {task->PouseOff(); });
+	}
 }
 
 //=============================================================================

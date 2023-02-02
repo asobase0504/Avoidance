@@ -68,12 +68,12 @@ private:
 	// メンバ変数
 	//--------------------------------------------------------------------
 	LPDIRECTINPUTDEVICE8 m_device;		// 入力デバイスへのポインタ
-	DIMOUSESTATE2 m_aKeyState;					// プレス情報
-	DIMOUSESTATE2 m_aKeyStateTrigger;			// トリガー情報
-	DIMOUSESTATE2 m_aKeyStateRelease;			// リリース情報
-	POINT m_mouseCursor;						// マウスカーソルの位置
+	DIMOUSESTATE2 m_aKeyState;			// プレス情報
+	DIMOUSESTATE2 m_aKeyStateTrigger;	// トリガー情報
+	DIMOUSESTATE2 m_aKeyStateRelease;	// リリース情報
+	POINT m_mouseCursor;				// マウスカーソルの位置
 	bool m_isPosLock;
-	HWND m_hWnd;								// ウィンドウハンドを格納する変数
+	HWND m_hWnd;						// ウィンドウハンドを格納する変数
 };
 
 #endif

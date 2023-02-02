@@ -14,14 +14,6 @@
 #include "object2d.h"
 #include "mode.h"
 
-//-----------------------------------------------------------------------------
-// 前方宣言
-//-----------------------------------------------------------------------------
-class CObject2d;
-class CCamera;
-class CLight;
-class CParticleManager;
-
 //=============================================================================
 // タイトルクラス
 //=============================================================================
@@ -43,15 +35,7 @@ public:
 	HRESULT Init() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw() override;
-
-	CParticleManager* GetPaticleManager() { return m_pPaticleManager; }
 
 private:
-	CCamera* m_pCamera;
-	CLight* m_pLight;
-	CParticleManager* m_pPaticleManager;	// パーティクルマネジャー
-	CObject2d* m_mouseCursor;
-
 };
 #endif

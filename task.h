@@ -40,29 +40,33 @@ public:
 
 	void Release() { m_isDeleted = true; }
 
-	// リスト構造
+	/* リスト構造 */
 	void SetPrev(CTask* inTask) { m_prev = inTask; }
 	CTask* GetPrev() { return m_prev; }
 	void SetNext(CTask* inTask) { m_next = inTask; }
 	CTask* GetNext() { return m_next; }
 
-	// 破棄予定
+	/* 破棄予定 */
 	bool IsDeleted() { return m_isDeleted; }
 
-	// 破棄を保護する
+	/* 破棄を保護する */
 	void AttachProtect() { m_isProtect = true; }
 	bool IsProtect() { return m_isProtect; }
 
-	// 役割
+	/* 役割 */
 	void SetRole(const ERole& inJobRole) { m_role = inJobRole; }
 	const ERole& GetRole() const { return m_role; }
 
-	// 優先順位
+	/* 優先順位 */
 	int GetPriority() { return m_priority; }
 
+	/* 更新する必要があるか */
 	bool NeedUpdate() { return m_isUpdate; }
-	void Pouse() { m_isUpdate = m_isPouseUpdate; }
-	void PouseOff() { if (!m_isPouseUpdate) { m_isUpdate = true; } }
+
+	/* ポーズ */
+	void SetPouseUpdate(bool isUpdate) { m_isPouseUpdate = isUpdate; }	// ポーズ時に更新を行うか決める
+	void Pouse() { m_isUpdate = m_isPouseUpdate; }						// 更新を行うか行わないかポーズ状態で判断
+	void PouseOff() { if (!m_isPouseUpdate) { m_isUpdate = true; } }	// ポーズ状態で止まっていた更新を稼働させる
 
 private:
 	int m_priority;

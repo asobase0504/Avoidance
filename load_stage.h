@@ -12,6 +12,6 @@
 //-----------------------------------------------------------------------------
 class CStage;
 
-CStage* LoadAll(const wchar_t* filename, const D3DXVECTOR3& inPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+CStage* LoadAll(const char* filename, const D3DXVECTOR3& inPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 #endif

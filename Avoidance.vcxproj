@@ -215,6 +215,7 @@
     <ClCompile Include="plain.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_afterimage.cpp" />
+    <ClCompile Include="player_died.cpp" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -225,6 +226,7 @@
     <ClCompile Include="score.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="stage.cpp" />
+    <ClCompile Include="stage_clear.cpp" />
     <ClCompile Include="task.cpp" />
     <ClCompile Include="task_group.cpp" />
     <ClCompile Include="text.cpp" />
@@ -294,6 +296,7 @@
     <ClInclude Include="plain.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player_afterimage.h" />
+    <ClInclude Include="player_died.h" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="ranking.h" />
     <ClInclude Include="renderer.h" />
@@ -302,6 +305,7 @@
     <ClInclude Include="score.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="stage.h" />
+    <ClInclude Include="stage_clear.h" />
     <ClInclude Include="task.h" />
     <ClInclude Include="task_group.h" />
     <ClInclude Include="text.h" />

@@ -70,7 +70,7 @@ void CStage::Update()
 			m_wall[i]->SetCollisionFlag(true);
 		}
 
-		for (int i = 0; i < m_midairFloor.size(); i++)
+		for (int i = 0; i < (int)m_midairFloor.size(); i++)
 		{
 			m_midairFloor[i]->SetCollisionFlag(true);
 		}
@@ -96,7 +96,7 @@ void CStage::Update()
 			m_wall[i]->SetUpdateStatus(CObject::EUpdateStatus::END);
 		}
 
-		for (int i = 0; i < m_midairFloor.size(); i++)
+		for (int i = 0; i < (int)m_midairFloor.size(); i++)
 		{
 			m_midairFloor[i]->SetUpdateStatus(CObject::EUpdateStatus::END);
 		}
@@ -217,6 +217,13 @@ void CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTO
 	enemy->Init();
 	enemy->SetPos(inPos);
 	enemy->SetRot(inRot);
+}
+
+//-----------------------------------------------------------------------------
+// エネミーを殺す
+//-----------------------------------------------------------------------------
+void CStage::EnemyDeath()
+{
 }
 
 //-----------------------------------------------------------------------------

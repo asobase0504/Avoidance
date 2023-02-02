@@ -52,7 +52,7 @@ CTexture::~CTexture()
 //--------------------------------------------------
 void CTexture::LoadAll()
 {
-	nlohmann::json list = LoadJson(L"Data/FILE/texture.json");
+	nlohmann::json list = LoadJson("Data/FILE/texture.json");
 	
 	for (int i = 0; i < (int)list["TEXTURE"].size(); ++i)
 	{

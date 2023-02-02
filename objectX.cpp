@@ -1345,7 +1345,10 @@ bool CObjectX::SphereAndAABB(CObjectX * inObjectX, D3DXVECTOR3 * outPos)
 
 	if (m_MaxVtx.x * 1.4f > length)
 	{
-		*outPos = dist;
+		if (outPos != nullptr)
+		{
+			*outPos = dist;
+		}
 
 		CDebugProc::Print("dist : %f,%f,%f\n", dist.x, dist.y, dist.z);
 		CDebugProc::Print("length : %f\n", length);

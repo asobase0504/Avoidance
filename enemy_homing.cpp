@@ -15,8 +15,8 @@
 // 定数
 //-----------------------------------------------------------------------------
 const D3DXVECTOR3 CEnemyHoming::SCALE = D3DXVECTOR3(0.55f, 1.25f, 0.55f);
-const D3DXVECTOR3 CEnemyHoming::MOVE_POWER = D3DXVECTOR3(0.0f, -4.5f, 0.0f);
-const int CEnemyHoming::MOVE_START_TIME = 10;	// 移動開始
+const D3DXVECTOR3 CEnemyHoming::MOVE_POWER = D3DXVECTOR3(0.0f, -2.5f, 0.0f);
+const int CEnemyHoming::MOVE_START_TIME = 15;	// 移動開始
 
 //-----------------------------------------------------------------------------
 // コンストラクタ

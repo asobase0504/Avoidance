@@ -97,7 +97,7 @@ void CMouseObject::NormalUpdate()
 //-----------------------------------------------------------------------------
 CMouseObject* CMouseObject::Create()
 {
-	CMouseObject* object = new CMouseObject;
+	CMouseObject* object = new CMouseObject(CTaskGroup::LEVEL_2D_UI);
 
 	if (object != nullptr)
 	{

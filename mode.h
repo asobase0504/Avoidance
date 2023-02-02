@@ -24,7 +24,7 @@ public:
 	virtual HRESULT Init() override = 0;
 	virtual void Uninit() override = 0;
 	virtual void Update() override = 0;
-	virtual void Draw() override = 0;
+	virtual void Draw() override {};
 
 private:
 };
