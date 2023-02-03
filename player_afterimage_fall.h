@@ -16,7 +16,6 @@ class CPlayerAfterimageFall : public CObjectX
 {
 private: // 定数
 	static const int MAX_LIFE;
-	static const float ALPHA_COLOR;
 public: // パブリック関数
 	CPlayerAfterimageFall();
 	~CPlayerAfterimageFall();

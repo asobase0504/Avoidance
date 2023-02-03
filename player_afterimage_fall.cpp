@@ -9,7 +9,6 @@
 #include "utility.h"
 
 const int CPlayerAfterimageFall::MAX_LIFE = 10;
-const float CPlayerAfterimageFall::ALPHA_COLOR = 0.45f;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -35,7 +34,6 @@ HRESULT CPlayerAfterimageFall::Init()
 	LoadModel("BOX");
 
 	m_life = MAX_LIFE;
-	SetColorAlpha(ALPHA_COLOR);
 
 	return S_OK;
 }
