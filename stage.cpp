@@ -57,11 +57,13 @@ void CStage::Uninit()
 //-----------------------------------------------------------------------------
 void CStage::Update()
 {
+	// スタートするまで更新が通らない
 	if (!m_isStart)
 	{
 		return;
 	}
 	
+	// 当たり判定を着ける(1度しか通らない)
 	if (!m_isFrag)
 	{
 		m_isFrag = true;
@@ -76,16 +78,16 @@ void CStage::Update()
 		}
 	}
 
-	CTask::Update();
-
+	// エネミーを召喚する
 	for (int i = 0; i < (int)m_enemy.size(); i++)
 	{
-		if (m_startCnt == m_enemy[i].popFream)
+		if (m_startCnt == m_enemy.at(i).popFream)
 		{
-			PopEnemy(m_enemy[i].type, m_enemy[i].pos, m_enemy[i].rot);
+			PopEnemy(m_enemy.at(i).type, m_enemy.at(i).pos, m_enemy.at(i).rot);
 		}
 	}
 
+	// ゴールしたらステージを終了更新に変更する
 	if (m_goal->IsGoal())
 	{
 		m_goal->SetUpdateStatus(CObject::EUpdateStatus::END);
@@ -103,6 +105,7 @@ void CStage::Update()
 		m_isEnd = true;
 	}
 
+	// スタートしてからどれ程経ったか記録する
 	m_startCnt++;
 }
 

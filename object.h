@@ -58,6 +58,9 @@ public:
 	static CObject* SearchType(EType inType, int inPriority);
 	CObject* NextSameType();
 
+	template<typename Func>
+	static void TypeAllFunc(CObject::EType, CTaskGroup::EPriority, Func);
+
 	/* 位置系 */
 	virtual void SetPos(const D3DXVECTOR3 &inPos) { m_pos = inPos; }
 	void AddPos(const D3DXVECTOR3 &inPos) { SetPos(m_pos + inPos); }
@@ -128,4 +131,24 @@ protected:
 	bool m_isPopInNormalUpdate;		// 出現中に通常更新を行うか
 	bool m_isEndInNormalUpdate;		// 終了中に通常更新を行うか
 };
+
+//-----------------------------------------------------------------------------
+// 一つタイプに処理をかける
+//-----------------------------------------------------------------------------
+template<typename Func>
+void CObject::TypeAllFunc(CObject::EType inType, CTaskGroup::EPriority inPriority, Func inFunc)
+{
+	// 最初に見つけた指定したタイプのobjectを持ってくる
+	CObject* now = SearchType(inType, inPriority);
+
+	while (now != nullptr)
+	{
+		CObject* next = now->NextSameType();	// 同じタイプのobjectを持ってくる
+
+		inFunc(now);
+
+		now = next;
+	}
+}
+
 #endif

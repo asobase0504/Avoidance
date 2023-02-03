@@ -328,6 +328,9 @@
     <ClCompile Include="player_died.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\01_Player</Filter>
     </ClCompile>
+    <ClCompile Include="player_afterimage_fall.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\01_Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -559,6 +562,9 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\02_Stage</Filter>
     </ClInclude>
     <ClInclude Include="player_died.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\01_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_afterimage_fall.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\01_Player</Filter>
     </ClInclude>
   </ItemGroup>

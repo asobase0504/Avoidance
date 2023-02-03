@@ -24,6 +24,8 @@ class CPlayer;
 //=============================================================================
 class CGame : public CMode
 {
+private:
+	static const int FALL_TIME;
 public:
 	CGame();
 	~CGame();
@@ -34,6 +36,8 @@ public:
 
 private:
 	void StageClear();
+	void NextStage();
+	void RetryStage();
 	void PlayerDeath();
 	void BackStaging();
 
@@ -43,6 +47,8 @@ private:
 	CPlayer* m_player;
 	CCountdown* m_countdown;// カウントダウン
 	int m_section;			// 1面のステージ数
+
+	int m_fallCount;		// 落ちる時間
 
 	bool m_isDeathStop;
 };

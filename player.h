@@ -32,16 +32,23 @@ public: // パブリック関数
 
 	static CPlayer* Create();	// 生成
 
+	void SetIsGoal(bool isGoal) { m_isGoal = isGoal; }
 	bool GetIsGoal() { return m_isGoal; }
+
 	void SetIsMove(bool isMove) { m_isMove = isMove; }
 	bool IsMove() { return m_isMove; }
+
 	bool IsDied() { return m_isDied; }
 
 private: // プライベート関数
-	void Move();	// 移動
-	void Jump();	// 跳躍
-	void boost();	// 突進
-	void Landing();	// 落下
+	void Move();		// 移動
+	void Jump();		// 跳躍
+	void boost();		// 突進
+	void Landing();		// 落下
+
+	void NextStageWait();	// 次のステージまで待機させる
+
+	/* 当たり判定 */
 	void OnHitGoal();	// Goalとの当たり判定
 	void OnHitEnemy();	// Enemyとの当たり判定
 	bool OnHitPlain();	// Polygonとの当たり判定

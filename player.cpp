@@ -6,24 +6,24 @@
 //=============================================================================
 #include <assert.h>
 #include "player.h"
+#include "player_afterimage.h"
+#include "player_afterimage_fall.h"
+#include "player_died.h"
+
 #include "input.h"
 #include "camera.h"
 #include "application.h"
-#include "particle_manager.h"
 #include "utility.h"
 #include "collision.h"
-#include "object_polygon3d.h"
-#include "player_afterimage.h"
-#include "player_died.h"
 #include "goal.h"
-
 #include "color.h"
+
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
 const float CPlayer::SPEED = 6.5f;			// 移動量
 const float CPlayer::ATTENUATION = 0.45f;	// 移動減衰係数
-const float CPlayer::JUMPING_POWER = 5.5f;	// 跳躍力
+const float CPlayer::JUMPING_POWER = 8.5f;	// 跳躍力
 const float CPlayer::GRAVITY = 0.2f;		// 重力
 
 //-----------------------------------------------------------------------------
@@ -88,9 +88,11 @@ void CPlayer::NormalUpdate()
 		Move();			// 移動
 		boost();		// 突進
 		OnHitGoal();	// Goalとの当たり判定
-		OnHitEnemy();
+		OnHitEnemy();	// Enemyとの当たり判定
 		Jump();			// ジャンプ
 		Landing();		// 落下
+
+		NextStageWait();
 
 		CInput* input = CInput::GetKey();
 
@@ -106,19 +108,36 @@ void CPlayer::NormalUpdate()
 		}
 #endif // _DEBUG
 
+		// 何かの拍子で下に行った場合の対処法
 		if (m_pos.y < -5000.0f)
 		{
 			SetPos(D3DXVECTOR3(m_pos.x, 1200.0f, m_pos.z));
 		}
 
-		// 移動軌跡
+		// 軌跡パーティクル
 		static int time = 0;
 		time++;
-		if (time % 2 == 0)
+		if (m_isGoal)
 		{
-			CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
-			afterimage->SetMtxRot(GetMtxRot());
-			afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
+			// 落下軌跡
+			//if (time % 2 == 0)
+			{
+				time = 0;
+				CPlayerAfterimageFall* afterimage = CPlayerAfterimageFall::Create(m_pos);
+				afterimage->SetMtxRot(GetMtxRot());
+				afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
+			}
+		}
+		else
+		{
+			// 移動軌跡
+			if (time % 2 == 0)
+			{
+				time = 0;
+				CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
+				afterimage->SetMtxRot(GetMtxRot());
+				afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
+			}
 		}
 	}
 	else
@@ -262,11 +281,11 @@ void CPlayer::Jump()
 		m_jumpCount++;
 		m_isJump = true;
 
-		jumpDirection.x *= 3.0f;
-		jumpDirection.z *= 3.0f;
+		//jumpDirection.x *= 6.0f;
+		//jumpDirection.z *= 6.0f;
 		m_pos += 1.0f * jumpDirection;
 		m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		m_move.y += JUMPING_POWER/* * jumpDirection*/;
+		m_move += JUMPING_POWER * jumpDirection;
 	}
 }
 
@@ -298,24 +317,31 @@ void CPlayer::Landing()
 }
 
 //-----------------------------------------------------------------------------
+// 次のステージまで待機させる
+//-----------------------------------------------------------------------------
+void CPlayer::NextStageWait()
+{
+	if (!m_isGoal)
+	{
+		return;
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Goalとの当たり判定
 //-----------------------------------------------------------------------------
 void CPlayer::OnHitGoal()
 {
-	CObject* object = SearchType(CObject::EType::GOAL, CTaskGroup::EPriority::LEVEL_3D_1);
-
-	while (object != nullptr)
+	// 指定したタイプを全て検索して指定した関数を呼ぶ
+	TypeAllFunc(CObject::EType::GOAL, CTaskGroup::EPriority::LEVEL_3D_1, [this](CObject* inObject)
 	{
-		CObject* next = object->NextSameType();
-		
-		if (OBBAndOBB((CObjectX*)object))
+		if (OBBAndOBB((CObjectX*)inObject))
 		{
-			CGoal* goal = (CGoal*)object;	// Goal
+			CGoal* goal = (CGoal*)inObject;	// Goal
 			goal->Goal(true);
+			m_isGoal = true;
 		}
-
-		object = next;
-	}
+	});
 }
 
 //-----------------------------------------------------------------------------
@@ -323,13 +349,15 @@ void CPlayer::OnHitGoal()
 //-----------------------------------------------------------------------------
 void CPlayer::OnHitEnemy()
 {
-	CObject* object = SearchType(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1);
-
-	while (object != nullptr)
+	// 指定したタイプを全て検索して指定した関数を呼ぶ
+	TypeAllFunc(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1, [this](CObject* inObject)
 	{
-		CObject* next = object->NextSameType();
+		if (m_isDied)
+		{
+			return;
+		}
 
-		if (OBBAndOBB((CObjectX*)object))
+		if (OBBAndOBB((CObjectX*)inObject))
 		{
 			for (int i = 0; i < 50; i++)
 			{
@@ -342,11 +370,8 @@ void CPlayer::OnHitEnemy()
 			}
 
 			m_isDied = true;	// Goal
-			return;
 		}
-
-		object = next;
-	}
+	});
 }
 
 //-----------------------------------------------------------------------------
@@ -354,23 +379,19 @@ void CPlayer::OnHitEnemy()
 //-----------------------------------------------------------------------------
 bool CPlayer::OnHitPlain()
 {
-	// 最初に見つけた指定したタイプのobjectを持ってくる
-	CObject* object = SearchType(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1);
-
 	bool hit = false;
-	D3DXVECTOR3 dist(0.0f,0.0f,0.0f);
+	D3DXVECTOR3 dist(0.0f, 0.0f, 0.0f);
 
-	while (object != nullptr)
+	// 指定したタイプを全て検索して指定した関数を呼ぶ
+	TypeAllFunc(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1, [this, &dist, &hit](CObject* inObject)
 	{
-		CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
-
 		dist = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-		if (SphereAndAABB((CObjectX*)object,&dist))
+		if (SphereAndAABB((CObjectX*)inObject, &dist))
 		{
 			jumpDirection = -dist;
-			jumpDirection.y += 0.75f;
-			D3DXVec3Normalize(&jumpDirection,&jumpDirection);
+			jumpDirection.y += 2.0f;
+			D3DXVec3Normalize(&jumpDirection, &jumpDirection);
 			m_jumpCount = 0;
 			//m_pos = m_posOld;
 
@@ -382,7 +403,7 @@ bool CPlayer::OnHitPlain()
 			hit = true;
 		}
 
-		object = next;
-	}
+	});
+
 	return hit;
 }

@@ -215,6 +215,7 @@
     <ClCompile Include="plain.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_afterimage.cpp" />
+    <ClCompile Include="player_afterimage_fall.cpp" />
     <ClCompile Include="player_died.cpp" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -296,6 +297,7 @@
     <ClInclude Include="plain.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="player_afterimage.h" />
+    <ClInclude Include="player_afterimage_fall.h" />
     <ClInclude Include="player_died.h" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="ranking.h" />
