@@ -44,7 +44,10 @@ CGame::CGame():
 	m_stage(nullptr),
 	m_stageNext(nullptr),
 	m_section(0),
-	m_fallCount(0)
+	m_fallCount(0),
+	m_nextText(nullptr),
+	m_retryText(nullptr),
+	m_backText(nullptr)
 {
 }
 
@@ -161,17 +164,32 @@ void CGame::StageClear()
 
 	if (m_fallCount == 0)
 	{
-		// 最初に見つけた指定したタイプのobjectを持ってくる
-		CObject* object = CObject::SearchType(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1);
-
-		while (object != nullptr)
+		// Enemyに全てリリース処理をかける
+		CObject::TypeAllFunc(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1, [](CObject* inObject)
 		{
-			CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
+			inObject->Release();
+		});
 
-			object->Release();
+		m_nextText = CObject2d::Create(CTaskGroup::EPriority::LEVEL_2D_UI);
+		D3DXVECTOR3 pos = CApplication::CENTER_POS;
+		pos.x += 375.0f;
+		pos.y += 180.0f;
+		pos.y -= 70.0f;
+		m_nextText->SetPos(pos);
+		m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+		m_nextText->SetTexture("TEXT_NEXT");
 
-			object = next;
-		}
+		m_retryText = CObject2d::Create(CTaskGroup::EPriority::LEVEL_2D_UI);
+		pos.y += 70.0f;
+		m_retryText->SetPos(pos);
+		m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+		m_retryText->SetTexture("TEXT_RETRY");
+
+		m_backText = CObject2d::Create(CTaskGroup::EPriority::LEVEL_2D_UI);
+		pos.y += 70.0f;
+		m_backText->SetPos(pos);
+		m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+		m_backText->SetTexture("TEXT_TITLE");
 	}
 
 	m_fallCount++;
@@ -188,6 +206,10 @@ void CGame::StageClear()
 			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
 			m_fallCount = 0;
 			NextStage();
+
+			m_nextText->Release();
+			m_retryText->Release();
+			m_backText->Release();
 		}
 
 		// タイトルに移行
@@ -203,6 +225,10 @@ void CGame::StageClear()
 			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
 			m_fallCount = 0;
 			RetryStage();
+
+			m_nextText->Release();
+			m_retryText->Release();
+			m_backText->Release();
 		}
 	}
 }
@@ -258,17 +284,11 @@ void CGame::PlayerDeath()
 		m_player->AddMove(pos);
 		m_isDeathStop = true;
 
-		// 最初に見つけた指定したタイプのobjectを持ってくる
-		CObject* object = CObject::SearchType(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1);
-
-		while (object != nullptr)
+		// Enemyに全てリリース処理をかける
+		CObject::TypeAllFunc(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1, [](CObject* inObject)
 		{
-			CObject* next = object->NextSameType();	// 同じタイプのobjectを持ってくる
-
-			object->Release();
-
-			object = next;
-		}
+			inObject->Release();
+		});
 	}
 
 	if (m_isDeathStop)

@@ -18,6 +18,7 @@
 class CStage;
 class CCountdown;
 class CPlayer;
+class CObject2d;
 
 //=============================================================================
 // ƒQ[ƒ€ƒNƒ‰ƒX
@@ -51,5 +52,9 @@ private:
 	int m_fallCount;		// —‚¿‚éŠÔ
 
 	bool m_isDeathStop;
+
+	CObject2d* m_nextText;
+	CObject2d* m_retryText;
+	CObject2d* m_backText;
 };
 #endif

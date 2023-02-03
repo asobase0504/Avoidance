@@ -58,8 +58,9 @@ public:
 	static CObject* SearchType(EType inType, int inPriority);
 	CObject* NextSameType();
 
+	// 一つタイプに処理をかける
 	template<typename Func>
-	static void TypeAllFunc(CObject::EType, CTaskGroup::EPriority, Func);
+	static void TypeAllFunc(CObject::EType inType, CTaskGroup::EPriority inPriority, Func inFunc);
 
 	/* 位置系 */
 	virtual void SetPos(const D3DXVECTOR3 &inPos) { m_pos = inPos; }
@@ -150,5 +151,6 @@ void CObject::TypeAllFunc(CObject::EType inType, CTaskGroup::EPriority inPriorit
 		now = next;
 	}
 }
+
 
 #endif

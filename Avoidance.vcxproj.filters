@@ -101,6 +101,9 @@
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\02_Stage">
       <UniqueIdentifier>{0e478b54-43cd-49c7-9983-697542d6a536}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type">
+      <UniqueIdentifier>{679e5f82-dba9-462d-b25a-c1b6ba292a35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="result.cpp">
@@ -247,9 +250,6 @@
     <ClCompile Include="pause.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\00_Pause</Filter>
     </ClCompile>
-    <ClCompile Include="enemy_oneway.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="camera_title.cpp">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClCompile>
@@ -280,26 +280,8 @@
     <ClCompile Include="title_menu.cpp">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClCompile>
-    <ClCompile Include="enemy_planprogress.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy_oneway_died.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy_laser.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy_homing.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="enemy.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Abstract</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy_homing_bomb.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy_reflection.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
     </ClCompile>
     <ClCompile Include="factory_enemy.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Factory</Filter>
@@ -330,6 +312,27 @@
     </ClCompile>
     <ClCompile Include="player_afterimage_fall.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\01_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_homing.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_homing_bomb.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_laser.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_oneway.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_oneway_died.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_planprogress.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_reflection.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -483,9 +486,6 @@
     <ClInclude Include="pause.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\00_Pause</Filter>
     </ClInclude>
-    <ClInclude Include="enemy_oneway.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="camera_title.h">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClInclude>
@@ -516,26 +516,8 @@
     <ClInclude Include="title_menu.h">
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClInclude>
-    <ClInclude Include="enemy_planprogress.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy_oneway_died.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy_laser.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy_homing.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="enemy.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Abstract</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy_homing_bomb.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy_reflection.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy</Filter>
     </ClInclude>
     <ClInclude Include="factory_enemy.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Factory</Filter>
@@ -566,6 +548,27 @@
     </ClInclude>
     <ClInclude Include="player_afterimage_fall.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\01_Player</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_homing.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_homing_bomb.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_laser.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_oneway.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_oneway_died.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_planprogress.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_reflection.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

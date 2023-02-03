@@ -11,6 +11,7 @@
 #include "enemy.h"
 #include "application.h"
 #include "color.h"
+#include "sound.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -61,6 +62,7 @@ void CEnemy::NormalUpdate()
 //-----------------------------------------------------------------------------
 void CEnemy::EndUpdate()
 {
+	CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_ENEMY_HIT);
 	Release();
 }
 

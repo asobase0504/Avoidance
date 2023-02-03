@@ -68,7 +68,9 @@ void CTaskGroup::PriorityProcess(int cnt, Func func)
 	while (now != nullptr)
 	{
 		CTask* next = now->GetNext();
+
 		func(now);
+
 		now = next;
 	}
 }

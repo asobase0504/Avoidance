@@ -60,23 +60,23 @@ void CPlayerDied::NormalUpdate()
 {
 	m_life--;
 
-	float scale = 1.5f - (ease::InBounce((float)m_life / (float)MAX_LIFE));
+	//float scale = 1.5f - (ease::InBounce((float)m_life / (float)MAX_LIFE));
 
-	SetScale(m_scaleOrigin * scale);
+	//SetScale(m_scaleOrigin * scale);
 
 	if (!m_hit)
 	{
-		if (m_life > 80)
+		if (m_life > 40)
 		{
-			AddMove(D3DXVECTOR3(0.0f, -0.45f, 0.0f));
+			AddMove(D3DXVECTOR3(0.0f, -0.75f, 0.0f));
 		}
 
 		m_hit = OnHitPlain();
 	}
 
-	if (m_life == 80)
+	if (m_life == 40)
 	{
-		SetMove((m_posOrigin - m_pos) / 80.0f);
+		SetMove((m_posOrigin - m_pos) / 40.0f);
 	}
 
 	if (m_life <= 0)

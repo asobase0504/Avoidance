@@ -120,7 +120,7 @@ void CTitle::Uninit(void)
 //=============================================================================
 void CTitle::Update(void)
 {
-	if (CInput::GetKey()->Trigger(KEY_DOWN))
+	if (CInput::GetKey()->Trigger(KEY_DOWN) || CInput::GetKey()->Trigger(CMouse::MOUSE_KEY_LEFT))
 	{
 		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_GAME);
 	}

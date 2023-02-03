@@ -1341,7 +1341,7 @@ bool CObjectX::SphereAndAABB(CObjectX * inObjectX, D3DXVECTOR3 * outPos)
 	}
 
 	D3DXVECTOR3 dist(0.0f,0.0f,0.0f);
-	float length = AABBAndPointLength(inObjectX,&dist);	// Å’Z‹——£
+	float length = AABBAndPointLength(inObjectX, &dist);	// Å’Z‹——£
 
 	if (m_MaxVtx.x * 1.4f > length)
 	{

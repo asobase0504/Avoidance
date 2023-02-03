@@ -96,7 +96,7 @@ void CPlayer::NormalUpdate()
 
 		CInput* input = CInput::GetKey();
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 		if (input->Press(DIK_0))
 		{
 			SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));

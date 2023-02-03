@@ -39,9 +39,8 @@ CEnemyOneWay::~CEnemyOneWay()
 //-----------------------------------------------------------------------------
 HRESULT CEnemyOneWay::Init()
 {
-	// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚Ì•ÛŠÇ
-	CEnemy::Init();
 	LoadModel("BOX");
+	CEnemy::Init();
 	SetScale(SCALE);
 	m_guideLine = CLine::Create();
 	return S_OK;

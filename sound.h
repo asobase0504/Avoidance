@@ -29,7 +29,8 @@ public:
 		LABEL_BGM_TITLE = 0,	// ƒ^ƒCƒgƒ‹
 		LABEL_BGM_GAME,
 		LABEL_BGM_RESULE,
-		LABEL_MAX,	
+		LABEL_SE_ENEMY_HIT,
+		LABEL_MAX,
 	};
 
 	struct SParam
