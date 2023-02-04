@@ -389,11 +389,11 @@ void CTaskGroup::Pause(bool isPause)
 {
 	if (isPause)
 	{
-		AllProcess([](CTask* task) {task->Pouse(); });
+		AllProcess([](CTask* task) { task->PauseOn(); });
 	}
 	else
 	{
-		AllProcess([](CTask* task) {task->PouseOff(); });
+		AllProcess([](CTask* task) { task->PauseOff(); });
 	}
 }
 

@@ -39,7 +39,7 @@ void CDebugProc::Print(const char *pFormat, ...)
 	vsprintf(&aStrCpy[0], pFormat, args);
 	va_end(args);
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 	m_aStr += aStrCpy;
 #endif // DEBUG
 }
