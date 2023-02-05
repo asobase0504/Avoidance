@@ -30,11 +30,15 @@ const float CPlayer::GRAVITY = 0.2f;		// 重力
 // コンストラクタ
 //-----------------------------------------------------------------------------
 CPlayer::CPlayer() :
-	m_quaternion(D3DXQUATERNION(0.0f,0.0,0.0f,1.0f)),
-	m_quaternionOld(D3DXQUATERNION(0.0f, 0.0, 0.0f, 1.0f)),
-	m_jumpCount(0),
+	m_quaternion(0.0f,0.0,0.0f,1.0f),
+	m_quaternionOld(0.0f, 0.0, 0.0f, 1.0f),
 	m_isGoal(false),
-	m_isMove(false)
+	m_isMove(false),
+	jumpDirection(0.0f, 0.0, 0.0f),
+	m_isJump(false),
+	m_jumpCount(0),
+	m_jumpTime(0),
+	m_isDied(false)
 {
 	SetType(CObject::EType::PLAYER);
 }
@@ -51,13 +55,8 @@ CPlayer::~CPlayer()
 //-----------------------------------------------------------------------------
 HRESULT CPlayer::Init()
 {
-	m_jumpTime = 0;
-	m_isJump = false;
-	// 現在のモーション番号の保管
-	CObjectX::Init();
 	LoadModel("BOX");
-	SetScale(D3DXVECTOR3(1.0f,1.0f,1.0f));
-
+	CObjectX::Init();
 	AttachOutLine();
 
 	return S_OK;
@@ -359,6 +358,7 @@ void CPlayer::OnHitEnemy()
 
 		if (OBBAndOBB((CObjectX*)inObject))
 		{
+			// 死亡演出
 			for (int i = 0; i < 50; i++)
 			{
 				D3DXVECTOR3 pos = m_pos;
@@ -402,7 +402,6 @@ bool CPlayer::OnHitPlain()
 
 			hit = true;
 		}
-
 	});
 
 	return hit;

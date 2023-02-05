@@ -57,13 +57,14 @@ private: // メンバー変数
 
 	D3DXQUATERNION m_quaternion;	// クオータニオン
 	D3DXQUATERNION m_quaternionOld;	// 前回クオータニオン
-	int m_jumpCount;				// ジャンプ回数
 	bool m_isGoal;					// Goalしたか
 	bool m_isMove;					// 動いていいか
-	bool m_isJump;
-	int m_jumpTime;
 
-	D3DXVECTOR3 jumpDirection;				// ジャンプ方向
+	// ジャンプ
+	D3DXVECTOR3 jumpDirection;		// ジャンプ方向
+	bool m_isJump;					// ジャンプできるか
+	int m_jumpCount;				// ジャンプ回数
+	int m_jumpTime;					// ジャンプ時間
 
 	bool m_isDied;
 };

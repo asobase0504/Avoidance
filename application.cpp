@@ -197,7 +197,6 @@ void CApplication::Update()
 		m_pTaskGroup->Pause(ppp);
 		ppp = !ppp;
 	}
-
 #endif // _DEBUG
 
 	m_pRenderer->Update();
@@ -219,9 +218,6 @@ void CApplication::SetMode(MODE mode)
 	m_mode = mode;
 	m_pTaskGroup->AllRelease();
 
-	// ƒ|ƒŠƒSƒ“‚ÌI—¹ˆ—
-	//CObject::ModeNotUninit();
-	
 	switch (mode)
 	{
 	case CApplication::MODE_TITLE:
@@ -249,6 +245,3 @@ void CApplication::SetMode(MODE mode)
 		return ;
 	}
 }
-
-
-
