@@ -334,6 +334,9 @@
     <ClCompile Include="enemy_reflection.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
     </ClCompile>
+    <ClCompile Include="delay_process.cpp">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -569,6 +572,9 @@
     </ClInclude>
     <ClInclude Include="enemy_reflection.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="delay_process.h">
+      <Filter>00_Cord\00_Main\00_Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

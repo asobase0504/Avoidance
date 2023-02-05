@@ -40,9 +40,7 @@ CEnemyReflection::~CEnemyReflection()
 //-----------------------------------------------------------------------------
 HRESULT CEnemyReflection::Init()
 {
-	// åªç›ÇÃÉÇÅ[ÉVÉáÉìî‘çÜÇÃï€ä«
 	CEnemy::Init();
-	LoadModel("BOX");
 	SetScale(SCALE);
 	SetMove(MOVE_POWER);
 	return S_OK;
@@ -78,14 +76,6 @@ void CEnemyReflection::NormalUpdate()
 //-----------------------------------------------------------------------------
 void CEnemyReflection::EndUpdate()
 {
-	for (int i = 0; i < 10; i++)
-	{
-		D3DXVECTOR3 pos = m_pos;
-		pos.x += FloatRandam(-20.0f, 20.0f);
-		pos.y += FloatRandam(-20.0f, 20.0f);
-		pos.z += FloatRandam(-20.0f, 20.0f);
-	}
-
 	CEnemy::EndUpdate();
 }
 

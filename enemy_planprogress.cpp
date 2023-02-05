@@ -10,6 +10,7 @@
 #include <assert.h>
 #include "enemy_planprogress.h"
 #include "line.h"
+#include "delay_process.h"
 
 //-----------------------------------------------------------------------------
 // ’è”
@@ -23,7 +24,6 @@ const int CEnemyPlanProgress::MOVE_START_TIME = 80;
 //-----------------------------------------------------------------------------
 CEnemyPlanProgress::CEnemyPlanProgress()
 {
-	m_startCnt = 0;
 	SetType(CObject::EType::PLAYER);
 }
 
@@ -39,12 +39,17 @@ CEnemyPlanProgress::~CEnemyPlanProgress()
 //-----------------------------------------------------------------------------
 HRESULT CEnemyPlanProgress::Init()
 {
-	// Œ»Ý‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚Ì•ÛŠÇ
 	CEnemy::Init();
-	LoadModel("BOX");
 	SetScale(SCALE);
 	m_guideLine = CLine::Create();
 	SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
+
+	CDelayProcess::DelayProcess(MOVE_START_TIME, this, [this]()
+	{
+		SetMove(MOVE_POWER);
+		SetUpdateStatus(EUpdateStatus::NORMAL);
+	});
+
 	return S_OK;
 }
 
@@ -53,6 +58,7 @@ HRESULT CEnemyPlanProgress::Init()
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::Uninit()
 {
+	m_guideLine->Release();
 	CEnemy::Uninit();
 }
 
@@ -62,13 +68,6 @@ void CEnemyPlanProgress::Uninit()
 void CEnemyPlanProgress::PopUpdate()
 {
 	SeeTarget();
-
-	m_startCnt++;
-	if (m_startCnt % MOVE_START_TIME == 0)
-	{
-		SetMove(MOVE_POWER);
-		SetUpdateStatus(EUpdateStatus::NORMAL);
-	}
 }
 
 //-----------------------------------------------------------------------------

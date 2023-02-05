@@ -49,7 +49,9 @@ public:
 	enum EPushMethod
 	{
 		PUSH_CURRENT = 0,
-		PUSH_TOP
+		PUSH_TOP,
+		PUSH_NEXT,
+		PUSH_PREV
 	};
 
 public:
@@ -66,10 +68,8 @@ public:
 	void AbsolutelyRelease();
 	void PriorityRelease(const EPriority inPriotity);
 
-	template<typename Func>
-	void AllProcess(Func func);
-	template<typename Func>
-	void PriorityProcess(int cnt, Func func);
+	void AllProcess(std::function<void(CTask*)> func);
+	void PriorityProcess(int cnt, std::function<void(CTask*)> func);
 
 	// Setter
 	void SetPushCurrent(CTask* inTask, int inPriority = 0);

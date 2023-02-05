@@ -107,6 +107,24 @@ CObject * CObject::NextSameType()
 }
 
 //-----------------------------------------------------------------------------
+// 一つタイプに処理をかける
+//-----------------------------------------------------------------------------
+void CObject::TypeAllFunc(CObject::EType inType, CTaskGroup::EPriority inPriority, std::function<void(CObject*)> inFunc)
+{
+	// 最初に見つけた指定したタイプのobjectを持ってくる
+	CObject* now = SearchType(inType, inPriority);
+
+	while (now != nullptr)
+	{
+		CObject* next = now->NextSameType();	// 同じタイプのobjectを持ってくる
+
+		inFunc(now);
+
+		now = next;
+	}
+}
+
+//-----------------------------------------------------------------------------
 // 大きさの乗算
 //-----------------------------------------------------------------------------
 void CObject::MulSize(const D3DXVECTOR3 & inRatio)

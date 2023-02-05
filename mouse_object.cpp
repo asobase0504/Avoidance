@@ -54,8 +54,7 @@ void CMouseObject::Uninit()
 //-----------------------------------------------------------------------------
 void CMouseObject::NormalUpdate()
 {
-	D3DXVECTOR3 pos = CInput::GetKey()->GetMouse()->GetMouseCursorPos();
-	SetPos(pos);
+	SetPos(CInput::GetKey()->GetMouse()->GetMouseCursorPos());
 	AddRot(D3DXVECTOR3(0.0f, 0.0f, 0.005f));
 
 	CObject2d::NormalUpdate();

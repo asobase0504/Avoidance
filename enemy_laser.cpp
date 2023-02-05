@@ -42,7 +42,6 @@ HRESULT CEnemyLaser::Init()
 {
 	// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚Ì•ÛŠÇ
 	CEnemy::Init();
-	LoadModel("BOX");
 	SetScale(SCALE);
 	m_guideLine = CLine::Create();
 	SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));

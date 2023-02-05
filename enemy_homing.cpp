@@ -10,6 +10,7 @@
 #include <assert.h>
 #include "enemy_homing.h"
 #include "utility.h"
+#include "delay_process.h"
 
 //-----------------------------------------------------------------------------
 // 定数
@@ -23,7 +24,6 @@ const int CEnemyHoming::MOVE_START_TIME = 15;	// 移動開始
 //-----------------------------------------------------------------------------
 CEnemyHoming::CEnemyHoming()
 {
-	m_startCnt = 0;
 	SetType(CObject::EType::PLAYER);
 }
 
@@ -41,8 +41,14 @@ HRESULT CEnemyHoming::Init()
 {
 	// 現在のモーション番号の保管
 	CEnemy::Init();
-	LoadModel("BOX");
 	SetScale(SCALE);
+
+	CDelayProcess::DelayProcess(MOVE_START_TIME, this, [this]()
+	{
+		SeeTarget();
+		SetMove(MOVE_POWER);
+	},5);
+
 	return S_OK;
 }
 
@@ -67,15 +73,6 @@ void CEnemyHoming::PopUpdate()
 //-----------------------------------------------------------------------------
 void CEnemyHoming::NormalUpdate()
 {
-
-	m_startCnt++;
-	if (m_startCnt % MOVE_START_TIME == 0)
-	{
-		m_startCnt = 0;
-		SeeTarget();
-		SetMove(MOVE_POWER);
-	}
-
 	if (OnHitPlain())
 	{
 		SetUpdateStatus(EUpdateStatus::END);

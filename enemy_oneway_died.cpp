@@ -35,9 +35,8 @@ CEnemyOneWayDied::~CEnemyOneWayDied()
 //-----------------------------------------------------------------------------
 HRESULT CEnemyOneWayDied::Init()
 {
-	// åªç›ÇÃÉÇÅ[ÉVÉáÉìî‘çÜÇÃï€ä«
-	CObjectX::Init();
 	LoadModel("BOX");
+	CObjectX::Init();
 
 	m_life = MAX_LIFE;
 	SetColorAlpha(ALPHA_COLOR);

@@ -166,6 +166,7 @@
     <ClCompile Include="color.cpp" />
     <ClCompile Include="countdown.cpp" />
     <ClCompile Include="debug_proc.cpp" />
+    <ClCompile Include="delay_process.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="factory_enemy.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="countdown.h" />
     <ClInclude Include="debug_proc.h" />
+    <ClInclude Include="delay_process.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="factory_enemy.h" />

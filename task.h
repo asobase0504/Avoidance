@@ -30,7 +30,7 @@ public:
 	};
 
 public:
-	CTask(CTaskGroup::EPriority inPriority = CTaskGroup::EPriority::LEVEL_3D_1, CTaskGroup::EPushMethod inMethod = CTaskGroup::EPushMethod::PUSH_CURRENT);
+	CTask(CTaskGroup::EPriority inPriority = CTaskGroup::EPriority::LEVEL_3D_1, CTaskGroup::EPushMethod inMethod = CTaskGroup::EPushMethod::PUSH_CURRENT, CTask* inTask = nullptr);
 	virtual ~CTask();
 
 	virtual HRESULT Init() = 0;
@@ -58,7 +58,7 @@ public:
 	const ERole& GetRole() const { return m_role; }
 
 	/* 優先順位 */
-	int GetPriority() { return m_priority; }
+	CTaskGroup::EPriority GetPriority() { return m_priority; }
 
 	/* 更新する必要があるか */
 	bool NeedUpdate() { return m_isUpdate; }
@@ -69,7 +69,7 @@ public:
 	void PauseOff() { if (!m_isPouseUpdate) { m_isUpdate = true; } }	// ポーズ状態で止まっていた更新を稼働させる
 
 private:
-	int m_priority;
+	CTaskGroup::EPriority m_priority;
 
 	CTask* m_prev;		// 前のタスク
 	CTask* m_next;		// 後のタスク

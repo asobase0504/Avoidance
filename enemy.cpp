@@ -32,6 +32,8 @@ CEnemy::~CEnemy()
 //-----------------------------------------------------------------------------
 HRESULT CEnemy::Init()
 {
+	LoadModel("BOX");
+
 	// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚Ì•ÛŠÇ
 	CObjectX::Init();
 	SetType(CObject::ENEMY);

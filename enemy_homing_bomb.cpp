@@ -42,7 +42,6 @@ HRESULT CEnemyHomingBomb::Init()
 {
 	// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚Ì•ÛŠÇ
 	CEnemy::Init();
-	LoadModel("BOX");
 	SetScale(SCALE);
 	return S_OK;
 }

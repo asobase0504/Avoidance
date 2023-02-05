@@ -42,8 +42,7 @@ HRESULT CTaskGroup::Init()
 // 全てのタスクに処理を行う
 // Author : Yuda Kaito
 //=============================================================================
-template<typename Func>
-void CTaskGroup::AllProcess(Func func)
+void CTaskGroup::AllProcess(std::function<void(CTask*)> func)
 {
 	for (int i = 0; i <= m_priorityNumber; i++)
 	{
@@ -55,8 +54,7 @@ void CTaskGroup::AllProcess(Func func)
 // 指定されたpriorityにあるタスク全ての処理を行う
 // Author : Yuda Kaito
 //=============================================================================
-template<typename Func>
-void CTaskGroup::PriorityProcess(int cnt, Func func)
+void CTaskGroup::PriorityProcess(int cnt, std::function<void(CTask*)> func)
 {
 	if (m_list.count(cnt) == 0)
 	{
@@ -263,12 +261,29 @@ void CTaskGroup::SetPushTop(CTask * inTask, int inPriority)
 // 参照したタスクの次にタスクを入れる
 // Author : Yuda Kaito
 //=============================================================================
-void CTaskGroup::SetNextTask(CTask * inReference, CTask * inTask)
+void CTaskGroup::SetNextTask(CTask* inReference, CTask* inTask)
 {
 	if (inReference == nullptr)
 	{
 		SetPushCurrent(inTask, 0);
 		return;
+	}
+
+	CTask* currentNext = inReference->GetNext();	// nextの保存
+
+	if (currentNext != nullptr)
+	{
+		inTask->SetNext(currentNext);
+		inTask->SetPrev(inReference);
+		inReference->SetNext(inTask);
+		currentNext->SetPrev(inTask);
+	}
+	else
+	{
+		m_list.at((int)inReference->GetPriority()).current = inTask;
+		inTask->SetNext(nullptr);
+		inTask->SetPrev(inReference);
+		inReference->SetNext(inTask);
 	}
 }
 
@@ -276,13 +291,31 @@ void CTaskGroup::SetNextTask(CTask * inReference, CTask * inTask)
 // 参照したタスクの前にタスクを入れる
 // Author : Yuda Kaito
 //=============================================================================
-void CTaskGroup::SetPrevTask(CTask * inReference, CTask * inTask)
+void CTaskGroup::SetPrevTask(CTask* inReference, CTask* inTask)
 {
 	if (inReference == nullptr)
 	{
 		SetPushCurrent(inTask);
 		return;
 	}
+
+	CTask* currentPrev = inReference->GetPrev();	// nextの保存
+
+	if (currentPrev != nullptr)
+	{
+		inTask->SetNext(inReference);
+		inTask->SetPrev(currentPrev);
+		currentPrev->SetNext(inTask);
+		inReference->SetPrev(inTask);
+	}
+	else
+	{
+		m_list.at((int)inReference->GetPriority()).top = inTask;
+		inTask->SetNext(inReference);
+		inTask->SetPrev(nullptr);
+		inReference->SetPrev(inTask);
+	}
+
 }
 
 //=============================================================================
