@@ -50,7 +50,11 @@ CApplication::CApplication() :
 	m_pTaskGroup(nullptr),
 	m_pFade(nullptr),
 	m_pMode(nullptr),
-	m_pSound(nullptr)
+	m_pSound(nullptr),
+	m_needDelay(false),
+	m_delayTime(0),
+	m_delayInterval(0),
+	m_delayCnt(0)
 {
 }
 
@@ -178,6 +182,24 @@ void CApplication::Uninit()
 //=============================================================================
 void CApplication::Update()
 {
+	if (m_needDelay)
+	{
+		m_delayCnt++;
+
+		if (m_delayCnt % m_delayInterval != 0)
+		{
+			return;
+		}
+
+		if (m_delayTime <= m_delayCnt)
+		{
+			m_delayCnt = 0;
+			m_delayTime = 0;
+			m_delayInterval = 0;
+			m_needDelay = false;
+		}
+	}
+
 	//“ü—Íˆ—‚ÌXVˆ—
 	CInput::GetKey()->Update();
 
@@ -207,6 +229,11 @@ void CApplication::Update()
 //=============================================================================
 void CApplication::Draw()
 {
+	if (m_needDelay && (m_delayCnt % m_delayInterval != 0))
+	{
+		return;
+	}
+
 	m_pRenderer->Draw();	// •`‰æˆ—
 }
 
@@ -244,4 +271,12 @@ void CApplication::SetMode(MODE mode)
 	{//‰Šú‰»ˆ—‚ª¸”s‚µ‚½ê‡
 		return ;
 	}
+}
+
+
+void CApplication::Delay(int intime, int inDelay)
+{
+	m_needDelay = true;
+	m_delayTime = intime;
+	m_delayInterval = inDelay;
 }

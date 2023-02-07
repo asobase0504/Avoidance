@@ -20,7 +20,6 @@
 #include "light.h"
 #include <assert.h>
 
-
 #define InFront( a ) \
 	((a) < 0.0f)
 
@@ -76,7 +75,8 @@ HRESULT CObjectX::Init()
 	m_hmWVP = pEffect->GetParameterByName(NULL, "mWVP");			// ローカル-射影変換行列
 	m_hmWIT = pEffect->GetParameterByName(NULL, "mWIT");			// ローカル-ワールド変換行列
 	m_hvLightDir = pEffect->GetParameterByName(NULL, "vLightDir");	// ライトの方向
-	m_hvCol = pEffect->GetParameterByName(NULL, "vColor");			// 頂点カラー
+	m_hvDiffuse = pEffect->GetParameterByName(NULL, "vDiffuse");	// 頂点カラー
+	m_hvAmbient = pEffect->GetParameterByName(NULL, "vAmbient");	// 頂点カラー
 	m_hvEyePos = pEffect->GetParameterByName(NULL, "vEyePos");
 
 	return S_OK;
@@ -116,7 +116,7 @@ void CObjectX::Draw()
 	}
 
 	DrawMaterial();
-	DrawOutLine();
+	//DrawOutLine();
 }
 
 //-----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ void CObjectX::DrawMaterial()
 	pEffect->SetVector(m_hvLightDir, &v);
 
 	// 視点
-	m = m_mtxWorld *viewMatrix;
+	m = m_mtxWorld * viewMatrix;
 	D3DXMatrixInverse(&m, NULL, &m);
 
 	//環境光
@@ -221,7 +221,16 @@ void CObjectX::DrawMaterial()
 			*/
 			Diffuse.w = m_colorAlpha;
 
-			pEffect->SetVector(m_hvCol, &Diffuse);
+			pEffect->SetVector(m_hvDiffuse, &Diffuse);
+		}
+		{
+			D3DXVECTOR4 Ambient;
+
+			Ambient = D3DXVECTOR4(pMat[nCntMat].MatD3D.Ambient.r, pMat[nCntMat].MatD3D.Ambient.g, pMat[nCntMat].MatD3D.Ambient.b, pMat[nCntMat].MatD3D.Ambient.a);
+
+//			Ambient.w = m_colorAlpha;
+
+			pEffect->SetVector(m_hvAmbient, &Ambient);
 		}
 
 		if (CTexture::GetInstance()->GetTexture(m_textureKey) != nullptr)

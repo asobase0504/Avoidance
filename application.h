@@ -77,6 +77,8 @@ public:	// ƒƒ“ƒo[ŠÖ”
 	CSound* GetSound() { return m_pSound; }
 	CColor* GetColor() { return m_color; }
 
+	void Delay(int intime, int inDelay);
+
 private:
 	CTexture* m_pTexture;
 	CRenderer* m_pRenderer;
@@ -87,5 +89,11 @@ private:
 	CColor* m_color;
 	CObjectXGroup* m_pObjectXGroup;
 	MODE m_mode;
+
+	/* ’x‰„ */
+	bool m_needDelay;
+	int m_delayTime;
+	int m_delayInterval;
+	int m_delayCnt;
 };
 #endif

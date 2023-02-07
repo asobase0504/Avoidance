@@ -44,7 +44,7 @@ void CDelayProcess::Update()
 
 	if (m_count <= 0)
 	{
-		m_func();
+		m_func();	// ŠÖ”
 
 		m_loopCount--;
 

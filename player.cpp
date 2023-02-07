@@ -369,6 +369,7 @@ void CPlayer::OnHitEnemy()
 				SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			}
 
+			CApplication::GetInstance()->Delay(60, 2);
 			m_isDied = true;	// Goal
 		}
 	});

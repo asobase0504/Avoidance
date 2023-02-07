@@ -24,7 +24,7 @@ public:
 	HRESULT Init() override;
 	void Update() override;
 
-	static void DelayProcess(int inCount, CTask* inTask, std::function<void()> inFunc, int inLoopCount = 1);
+	static void DelayProcess(int inDelaytime, CTask* inTask, std::function<void()> inFunc, int inLoopCount = 1);
 
 private:
 	CTask* m_task;					// 処理を行うタスク

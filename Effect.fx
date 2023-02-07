@@ -11,7 +11,8 @@
 float4x4 mWVP;
 
 float4 vLightDir;	// ライトの方向
-float4 vColor;		// ライト＊メッシュの色
+float4 vDiffuse;	// ライト＊メッシュの色
+float4 vAmbient;	// 色
 float3 vEyePos;		// カメラの位置（ローカル座標系）
 
 // -------------------------------------------------------------
@@ -60,7 +61,8 @@ VS_OUTPUT VS(
 	// 拡散光＋環境光
 	float amb = -vLightDir.w;	// 環境光の強さ
 	float3 L = -vLightDir;		// ローカル座標系でのライトベクトル
-	Out.Color = vColor * max(amb, dot(Normal, -vLightDir));
+
+	Out.Color = vDiffuse * max(amb, dot(Normal, -vLightDir));
 
 	// 鏡面反射用のベクトル
 	Out.N = Normal.xyz;
@@ -86,9 +88,7 @@ float4 PS(VS_OUTPUT In) : COLOR
 	float NL = dot(N,L);
 	float LH = dot(L,H);
 
-	float4 Ambient = { 0.0f,0.0f,0.0f, 1.0f };
-
-	return In.Color + Ambient;		// 拡散光＋環境光(テクスチャの色)
+	return In.Color + vAmbient;		// 拡散光＋環境光(テクスチャの色)
 }
 
 // -------------------------------------------------------------

@@ -78,6 +78,31 @@ void CCameraGame::Update()
 	// D3DXVECTOR3に反映
 	D3DXVec3TransformCoord(&m_posV, &m_posV, &mtxWorld);
 	D3DXVec3TransformCoord(&m_posR, &m_posR, &mtxWorld);
+
+	if (m_posV.x <= -380.0f)
+	{
+		m_posV.x = -380.0f;
+	}
+	if (m_posV.x >= 380.0f)
+	{
+		m_posV.x = 380.0f;
+	}
+	if (m_posV.z <= -380.0f)
+	{
+		m_posV.z = -380.0f;
+	}
+	if (m_posV.z >= 380.0f)
+	{
+		m_posV.z = 380.0f;
+	}
+	if (m_posV.y <= 5.0f)
+	{
+		m_posV.y = 5.0f;
+	}
+	if (m_posV.y >= 780.0f)
+	{
+		m_posV.y = 780.0f;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -86,7 +111,7 @@ void CCameraGame::Update()
 void CCameraGame::Rotate()
 {
 	// 入力情報の取得
-	const float MIN_MOUSE_MOVED = 0.0f;	// デッドゾーン
+	const float MIN_MOUSE_MOVED = 0.01f;	// デッドゾーン
 
 	D3DXVECTOR3 rollDir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 

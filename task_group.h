@@ -97,5 +97,4 @@ private:
 	unsigned int m_createNumber;			// ¶¬”
 	int m_priorityNumber;					// •`‰æ‡”
 };
-
 #endif
