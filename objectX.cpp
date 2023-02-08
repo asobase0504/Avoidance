@@ -116,7 +116,7 @@ void CObjectX::Draw()
 	}
 
 	DrawMaterial();
-	//DrawOutLine();
+	DrawOutLine();
 }
 
 //-----------------------------------------------------------------------------
@@ -171,15 +171,16 @@ void CObjectX::DrawMaterial()
 	pEffect->SetMatrix(m_hmWVP, &m);
 
 	// ライトの方向
-	light_pos = D3DXVECTOR4(light.Direction.x, light.Direction.y, light.Direction.z, 0);
+	D3DXVECTOR4 lightDir = D3DXVECTOR4(light.Direction.x, light.Direction.y, light.Direction.z, 0);
 
 	D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
-	D3DXVec4Transform(&v, &-light_pos, &m);
+	m._11 = 1.0f;
+	m._22 = 1.0f;
+	m._33 = 1.0f;
+	D3DXVec4Transform(&v, &lightDir, &m);
 
-	D3DXVec3Normalize((D3DXVECTOR3 *)&v, (D3DXVECTOR3 *)&v);
+	D3DXVec3Normalize((D3DXVECTOR3*)&v, (D3DXVECTOR3*)&v);
 
-	//環境光の大きさ
-	v.w = -0.8f;
 	pEffect->SetVector(m_hvLightDir, &v);
 
 	// 視点
@@ -190,6 +191,8 @@ void CObjectX::DrawMaterial()
 	v = D3DXVECTOR4(0, 0, 0, 1);
 
 	D3DXVec4Transform(&v, &v, &m);
+
+	D3DXVec4Normalize(&v, &v);
 
 	//視点をシェーダーに渡す
 	pEffect->SetVector(m_hvEyePos, &v);
@@ -207,7 +210,7 @@ void CObjectX::DrawMaterial()
 
 			if (m_materialDiffuse.count(nCntMat) != 0)
 			{
-				Diffuse = D3DXVECTOR4(m_materialDiffuse[nCntMat].r, m_materialDiffuse[nCntMat].g, m_materialDiffuse[nCntMat].b, m_materialDiffuse[nCntMat].a);
+				Diffuse = (D3DXVECTOR4)m_materialDiffuse[nCntMat];
 			}
 			else
 			{
@@ -225,17 +228,14 @@ void CObjectX::DrawMaterial()
 		}
 		{
 			D3DXVECTOR4 Ambient;
-
 			Ambient = D3DXVECTOR4(pMat[nCntMat].MatD3D.Ambient.r, pMat[nCntMat].MatD3D.Ambient.g, pMat[nCntMat].MatD3D.Ambient.b, pMat[nCntMat].MatD3D.Ambient.a);
-
-//			Ambient.w = m_colorAlpha;
-
 			pEffect->SetVector(m_hvAmbient, &Ambient);
 		}
 
-		if (CTexture::GetInstance()->GetTexture(m_textureKey) != nullptr)
+		LPDIRECT3DTEXTURE9 texture = CTexture::GetInstance()->GetTexture("TOON");
+		if (texture != nullptr)
 		{// テクスチャの適応
-			pTex0 = CTexture::GetInstance()->GetTexture(m_textureKey);
+			pTex0 = texture;
 		}
 
 		// テクスチャの設定

@@ -9,7 +9,7 @@
 #include "utility.h"
 
 const int CPlayerAfterimage::MAX_LIFE = 20;
-const float CPlayerAfterimage::ALPHA_COLOR = 0.45f;
+const float CPlayerAfterimage::ALPHA_COLOR = 0.25f;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ

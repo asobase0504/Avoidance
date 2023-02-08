@@ -49,55 +49,31 @@ HRESULT CCountdown::Init()
 	}
 
 	{
-		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(0.0f, -200.0f, 0.0f);
-		m_sideTrace[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_sideTrace[0]->SetPos(numberPos);
-		m_sideTrace[0]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
-		m_sideTrace[0]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
-
+		D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(0.0f, -200.0f, 0.0f);
 		m_side[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_side[0]->SetPos(numberPos);
+		m_side[0]->SetPos(pos);
 		m_side[0]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
 	}
 	{
-		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(200.0f, 0.0f, 0.0f);
-
-		m_sideTrace[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_sideTrace[1]->SetPos(numberPos);
-		m_sideTrace[1]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
-		m_sideTrace[1]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
-
+		D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(200.0f, 0.0f, 0.0f);
 		m_side[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_side[1]->SetPos(numberPos);
+		m_side[1]->SetPos(pos);
 		m_side[1]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
 	}
 	{
-		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(0.0f, 200.0f, 0.0f);
-
-		m_sideTrace[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_sideTrace[2]->SetPos(numberPos);
-		m_sideTrace[2]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
-		m_sideTrace[2]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
-
+		D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(0.0f, 200.0f, 0.0f);
 		m_side[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_side[2]->SetPos(numberPos);
+		m_side[2]->SetPos(pos);
 		m_side[2]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
 	}
 	{
-		D3DXVECTOR3 numberPos = m_pos + D3DXVECTOR3(-200.0f, 0.0f, 0.0f);
-		
-		m_sideTrace[3] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_sideTrace[3]->SetPos(numberPos);
-		m_sideTrace[3]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
-		m_sideTrace[3]->SetColorAlpha(0.25f);
-		m_sideTrace[3]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
-
+		D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(-200.0f, 0.0f, 0.0f);
 		m_side[3] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
-		m_side[3]->SetPos(numberPos);
+		m_side[3]->SetPos(pos);
 		m_side[3]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
 	}
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 //-----------------------------------------------------------------------------
@@ -106,6 +82,47 @@ HRESULT CCountdown::Init()
 //-----------------------------------------------------------------------------
 void CCountdown::Uninit()
 {
+}
+
+//-----------------------------------------------------------------------------
+// oŒ»XV
+// Author:Yuda Kaito
+//-----------------------------------------------------------------------------
+void CCountdown::PopUpdate()
+{
+	if (true)
+	{
+		{
+			D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(0.0f, -200.0f, 0.0f);
+			m_sideTrace[0] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+			m_sideTrace[0]->SetPos(pos);
+			m_sideTrace[0]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
+			m_sideTrace[0]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
+		}
+		{
+			D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(200.0f, 0.0f, 0.0f);
+			m_sideTrace[1] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+			m_sideTrace[1]->SetPos(pos);
+			m_sideTrace[1]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
+			m_sideTrace[1]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
+		}
+		{
+			D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(-200.0f, 0.0f, 0.0f);
+			m_sideTrace[2] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+			m_sideTrace[2]->SetPos(pos);
+			m_sideTrace[2]->SetSize(D3DXVECTOR3(207.5f, 7.5f, 0.0f));
+			m_sideTrace[2]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
+		}
+		{
+			D3DXVECTOR3 pos = m_pos + D3DXVECTOR3(-200.0f, 0.0f, 0.0f);
+			m_sideTrace[3] = CObject2d::Create(CTaskGroup::LEVEL_2D_1);
+			m_sideTrace[3]->SetPos(pos);
+			m_sideTrace[3]->SetSize(D3DXVECTOR3(7.5f, 207.5f, 0.0f));
+			m_sideTrace[3]->SetColor(D3DXCOLOR(0.55f, 0.55f, 0.5f, 1.0f));
+		}
+
+		CObject::PopUpdate();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -130,7 +147,6 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().x + 2.5f;
 				size2 = m_side[i]->GetSize().y - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size, size2, 0.0f));
-				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 1:
@@ -140,7 +156,6 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().y + 2.5f;
 				size2 = m_side[i]->GetSize().x - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size2, size, 0.0f));
-				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 2:
@@ -150,7 +165,6 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().x + 2.5f;
 				size2 = m_side[i]->GetSize().y - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size, size2, 0.0f));
-				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 3:
@@ -160,7 +174,6 @@ void CCountdown::NormalUpdate()
 				size = m_side[i]->GetSize().y + 2.5f;
 				size2 = m_side[i]->GetSize().x - 0.75f;
 				m_side[i]->SetSize(D3DXVECTOR3(size2, size, 0.0f));
-				//m_side[i]->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f, 0.0f));
 			}
 			break;
 		case 4:
@@ -169,7 +182,6 @@ void CCountdown::NormalUpdate()
 				size = m_stopLogo->GetSize().y - 2.25f;
 				size2 = m_stopLogo->GetSize().x - 2.25f;
 				m_stopLogo->SetSize(D3DXVECTOR3(size2, size, 0.0f));
-				//m_stopLogo->AddColor(D3DXCOLOR(-0.015f, -0.015f, -0.015f,0.0f));
 			}
 			break;
 		default:

@@ -104,6 +104,9 @@
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type">
       <UniqueIdentifier>{679e5f82-dba9-462d-b25a-c1b6ba292a35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\03_Tutorial">
+      <UniqueIdentifier>{bbf60cf0-c644-4182-9a33-c11de77736a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="result.cpp">
@@ -128,9 +131,6 @@
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="fade.cpp">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="tutorial.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
@@ -262,9 +262,6 @@
     <ClCompile Include="debug_proc.cpp">
       <Filter>00_Cord\01_System</Filter>
     </ClCompile>
-    <ClCompile Include="line.cpp">
-      <Filter>00_Cord\02_Object</Filter>
-    </ClCompile>
     <ClCompile Include="mouse.cpp">
       <Filter>00_Cord\01_System\00_Input</Filter>
     </ClCompile>
@@ -337,6 +334,12 @@
     <ClCompile Include="delay_process.cpp">
       <Filter>00_Cord\00_Main\00_Main</Filter>
     </ClCompile>
+    <ClCompile Include="line.cpp">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClCompile>
+    <ClCompile Include="tutorial.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\03_Tutorial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -364,9 +367,6 @@
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="fade.h">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="tutorial.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="text.h">
@@ -501,9 +501,6 @@
     <ClInclude Include="debug_proc.h">
       <Filter>00_Cord\01_System</Filter>
     </ClInclude>
-    <ClInclude Include="line.h">
-      <Filter>00_Cord\02_Object</Filter>
-    </ClInclude>
     <ClInclude Include="mouse.h">
       <Filter>00_Cord\01_System\00_Input</Filter>
     </ClInclude>
@@ -575,6 +572,12 @@
     </ClInclude>
     <ClInclude Include="delay_process.h">
       <Filter>00_Cord\00_Main\00_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="line.h">
+      <Filter>00_Cord\02_Object\01_Master</Filter>
+    </ClInclude>
+    <ClInclude Include="tutorial.h">
+      <Filter>00_Cord\00_Main\01_Mode\03_Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

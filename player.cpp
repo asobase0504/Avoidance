@@ -95,7 +95,7 @@ void CPlayer::NormalUpdate()
 
 		CInput* input = CInput::GetKey();
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 		if (input->Press(DIK_0))
 		{
 			SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
@@ -297,8 +297,8 @@ void CPlayer::boost()
 	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
 	{
 		m_jumpCount++;
-		//m_move.x *= 7.0f;
-		//m_move.z *= 7.0f;
+		m_move.x *= 7.0f;
+		m_move.z *= 7.0f;
 	}
 }
 
@@ -369,7 +369,7 @@ void CPlayer::OnHitEnemy()
 				SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			}
 
-			CApplication::GetInstance()->Delay(60, 2);
+			//CApplication::GetInstance()->Delay(60, 2);
 			m_isDied = true;	// Goal
 		}
 	});

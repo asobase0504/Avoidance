@@ -6,6 +6,7 @@
     [ "STOP_LOGO", "data\/TEXTURE\/stop.png" ],
     [ "TEXT_TITLE", "data\/TEXTURE\/TEXT\/title.png" ],
     [ "TEXT_RETRY", "data\/TEXTURE\/TEXT\/retry.png" ],
-    [ "TEXT_NEXT", "data\/TEXTURE\/TEXT\/next.png" ]
+    [ "TEXT_NEXT", "data\/TEXTURE\/TEXT\/next.png" ],
+    [ "TOON", "data\/TEXTURE\/toon.png" ]
   ]
 }

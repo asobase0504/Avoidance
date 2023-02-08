@@ -31,6 +31,7 @@ public:
 
 	HRESULT Init() override;
 	void Uninit() override;
+	void PopUpdate() override;
 	void NormalUpdate() override;
 
 	bool IsEnd() { return m_end; }
@@ -42,5 +43,8 @@ private:
 	CObject2d* m_stopLogo;
 	int m_count;
 	bool m_end;
+
+	std::function<void()> m_pop;
+	std::function<void()> m_countdown;
 };
 #endif

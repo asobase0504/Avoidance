@@ -87,7 +87,7 @@ void CCamera::Set(int Type)
 	{
 		//プロジェクションマトリックス作成
 		D3DXMatrixPerspectiveFovLH(&m_MtxProject,
-			D3DXToRadian(90.0f),
+			D3DXToRadian(55.0f),
 			(float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
 			10.0f,
 			20000.0f);

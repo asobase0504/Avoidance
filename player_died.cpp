@@ -41,6 +41,7 @@ HRESULT CPlayerDied::Init()
 
 	m_life = MAX_LIFE;
 	m_hit = false;
+	AttachOutLine();
 
 	return S_OK;
 }

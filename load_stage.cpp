@@ -15,7 +15,11 @@ CStage* LoadAll(const char* filename, const D3DXVECTOR3& inPos)
 	nlohmann::json list = LoadJson(filename);
 
 	stage->SetPos(inPos);
-	stage->SetGoal(D3DXVECTOR3(60.0f,inPos.y,60.0f));
+	if (list.count("GOAL") != 0)
+	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(list["GOAL"]["POS"][0], list["GOAL"]["POS"][1], list["GOAL"]["POS"][2]) + inPos;
+		stage->SetGoal(pos);
+	}
 
 	if(list.count("FLOOR") != 0)
 	{// è∞

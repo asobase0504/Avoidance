@@ -23,8 +23,7 @@ struct VS_OUTPUT
 	float4 Pos			: POSITION;			// 位置
 	float4 Color		: COLOR0;			// 色
 	float2 Tex			: TEXCOORD0;		// テクスチャ
-	float3 N			: TEXCOORD2;		// 法線
-	float3 X			: TEXCOORD1;
+	float3 Normal		: TEXCOORD1;
 };
 
 // -------------------------------------------------------------
@@ -49,7 +48,8 @@ VS_OUTPUT VS(
 	float4 Pos    : POSITION,	// ローカル位置座標
 	float4 Normal : NORMAL,		// 法線ベクトル
 	float2 Tex : TEXCOORD		// テクスチャの法線ベクトル
-) {
+)
+{
 	VS_OUTPUT Out = (VS_OUTPUT)0;		// 出力データ
 
 	// 座標変換
@@ -59,14 +59,13 @@ VS_OUTPUT VS(
 	Out.Tex = Tex;
 
 	// 拡散光＋環境光
-	float amb = -vLightDir.w;	// 環境光の強さ
-	float3 L = -vLightDir;		// ローカル座標系でのライトベクトル
+	float3 L = -(vLightDir.xyz);		// ローカル座標系でのライトベクトル
 
-	Out.Color = vDiffuse * max(amb, dot(Normal, -vLightDir));
+	//法線ベクトル。
+	float3 N = normalize( Normal.xyz );
 
-	// 鏡面反射用のベクトル
-	Out.N = Normal.xyz;
-	Out.X = Pos.xyz;
+	Out.Normal = N;
+	Out.Color = vDiffuse * (max(vAmbient, dot(N, L)) + max(vAmbient, dot(N, -L)));
 
 	return Out;
 }
@@ -76,19 +75,60 @@ VS_OUTPUT VS(
 //=========================================
 float4 PS(VS_OUTPUT In) : COLOR
 {
-	float3 L = vLightDir.xyz;				// ライトベクトル
-	float3 N = normalize(In.N);				// 法線ベクトル
-	float3 V = normalize(vEyePos - In.X);	// 視線ベクトル
-	float3 H = normalize(L + V);			// ハーフベクトル
+	return In.Color;		// 拡散光＋環境光(テクスチャの色)
+}
 
-	// 計算に使うそれぞれの角度
-	float NV = dot(N,V);
-	float NH = dot(N,H);
-	float VH = dot(V,H);
-	float NL = dot(N,L);
-	float LH = dot(L,H);
+//=========================================
+//トゥーン頂点シェーダー
+//=========================================
+VS_OUTPUT ToonVS(float4 Pos    : POSITION,
+	float4 Normal : NORMAL,
+	float2 Tex : TEXCOORD0)
+{
+	VS_OUTPUT Out = (VS_OUTPUT)0;		// 出力データ
 
-	return In.Color + vAmbient;		// 拡散光＋環境光(テクスチャの色)
+	Out.Normal = normalize(Normal.xyz);
+
+	// 座標変換
+	Out.Pos = mul(Pos, mWVP);
+
+	// テクスチャ座標
+	Out.Tex = Tex;
+
+	// 拡散光＋環境光
+	float3 L = -(vLightDir.xyz);		// ローカル座標系でのライトベクトル
+
+	//法線ベクトル。
+	float3 N = normalize(Normal.xyz);
+
+	Out.Color = vDiffuse;
+
+	return Out;
+}
+
+//=========================================
+//トゥーンピクセルシェーダー
+//=========================================
+float4 ToonPS(VS_OUTPUT In) : COLOR0
+{
+	float4 Out;
+
+	//ハーフランバート拡散照明によるライティング計算
+	float3 L = -(vLightDir.xyz);		// ローカル座標系でのライトベクトル
+
+	float3 N = In.Normal;
+
+	float p = (max(vAmbient, dot(N, L)) + max(vAmbient, dot(N, -L)));
+	p = p * 0.5f + 0.5f;
+	p = p * p;
+	
+	//色情報をテクセルのＵ成分とし、トゥーンマップテクスチャーから光の反射率を取得する
+	float4 Col = In.Color * tex2D(Samp, float2(p, 0.0f));
+	
+	//色情報を格納する
+	Out = Col;
+	
+	return Out;
 }
 
 // -------------------------------------------------------------
@@ -98,7 +138,7 @@ technique Diffuse
 {
 	pass P0
 	{
-		VertexShader = compile vs_2_0 VS();
-		PixelShader = compile ps_2_0 PS();
+		VertexShader = compile vs_2_0 ToonVS();
+		PixelShader = compile ps_2_0 ToonPS();
 	}
 }
