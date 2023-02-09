@@ -11,6 +11,7 @@
 #include "enemy_laser.h"
 #include "line.h"
 #include "debug_proc.h"
+#include "delay_process.h"
 
 //-----------------------------------------------------------------------------
 // ’è”
@@ -54,6 +55,7 @@ HRESULT CEnemyLaser::Init()
 //-----------------------------------------------------------------------------
 void CEnemyLaser::Uninit()
 {
+	m_guideLine->Release();
 	CEnemy::Uninit();
 }
 
@@ -78,12 +80,12 @@ void CEnemyLaser::NormalUpdate()
 	SetMove(MOVE_POWER);
 	D3DXVECTOR3 scale = GetScale();
 	SetScale(D3DXVECTOR3(scale.x, scale.y + m_moveScale, scale.z));
-	CDebugProc::Print("%f\n", GetScale().y);
+
 	CEnemy::NormalUpdate();
 
 	if (OnHitPlain())
 	{
-		SetUpdateStatus(EUpdateStatus::END);
+		CDelayProcess::DelayProcess(60, this, [this]() { SetUpdateStatus(EUpdateStatus::END); });
 	}
 }
 

@@ -22,7 +22,7 @@ CObject::CObject(CTaskGroup::EPriority inPriority, CTaskGroup::EPushMethod inMet
 	m_rot(0.0f, 0.0f, 0.0f),		// Œü‚«
 	m_moveRot(0.0f, 0.0f, 0.0f),	// ‰ñ“]—Ê
 	m_size(0.0f, 0.0f, 0.0f),		// ‘å‚«‚³
-	m_color(0.0f, 0.0f, 0.0f,1.0f),		// F
+	m_color(1.0f, 1.0f, 1.0f,1.0f),		// F
 	m_type(NONE),
 	m_updateStatus(EUpdateStatus::POP),
 	m_isPopInNormalUpdate(false),

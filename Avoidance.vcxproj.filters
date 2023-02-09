@@ -53,9 +53,6 @@
     <Filter Include="00_Cord\02_Object\02_Object2D\01_UI\00_Number">
       <UniqueIdentifier>{893ba109-c22b-4607-bdee-b9db01165e51}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\02_Object\03_ObjectX">
-      <UniqueIdentifier>{a769b689-bec5-49cb-b2fa-c4d659f98e33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00_Cord\00_Main\02_Group">
       <UniqueIdentifier>{23a7b4ab-29bc-45d9-a9c1-f63e25d06da9}</UniqueIdentifier>
     </Filter>

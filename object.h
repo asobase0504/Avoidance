@@ -58,7 +58,7 @@ public:
 	static CObject* SearchType(EType inType, int inPriority);
 	CObject* NextSameType();
 
-	// 一つタイプに処理をかける
+	// 一つタイプ全てに処理をかける
 	static void TypeAllFunc(CObject::EType inType, CTaskGroup::EPriority inPriority, std::function<void(CObject*)> inFunc);
 
 	/* 位置系 */

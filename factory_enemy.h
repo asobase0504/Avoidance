@@ -12,9 +12,9 @@
 //-----------------------------------------------------------------------------
 enum class EEnemyType
 {
-	HOMING,
-	LASER,
 	ONE_WAY,
+	LASER,
+	HOMING,
 	PLAN_PROGRESS,
 	REFLECTION,
 	HOMING_BOMB,

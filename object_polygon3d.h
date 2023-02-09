@@ -29,10 +29,10 @@ public:
 	//頂点情報「3D」の構造体を定義
 	struct VERTEX_3D
 	{
-		D3DXVECTOR3 pos;//頂点座標
-		D3DXVECTOR3 nor;//ベクトル
-		D3DCOLOR col;//カラー
-		D3DXVECTOR2 tex;//テクスチャ
+		D3DXVECTOR3 pos;	// 頂点座標
+		D3DXVECTOR3 nor;	// ベクトル
+		D3DCOLOR col;		// カラー
+		D3DXVECTOR2 tex;	// テクスチャ
 	};
 
 protected:

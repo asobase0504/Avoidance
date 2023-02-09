@@ -87,6 +87,7 @@ public:
 	CTask* SearchSameRoleNext(CTask* inTask);
 	CTask* SearchSameRolePrev(CTask* inTask);
 
+	/* ƒ|[ƒYó‘Ô‚É‚·‚é */
 	void Pause(bool isPause);
 
 private:

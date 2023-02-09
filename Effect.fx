@@ -114,11 +114,11 @@ float4 ToonPS(VS_OUTPUT In) : COLOR0
 	float4 Out;
 
 	//ハーフランバート拡散照明によるライティング計算
-	float3 L = -(vLightDir.xyz);		// ローカル座標系でのライトベクトル
+	float3 L = -(vLightDir.xyz);	// ローカル座標系でのライトベクトル
 
 	float3 N = In.Normal;
 
-	float p = (max(vAmbient, dot(N, L)) + max(vAmbient, dot(N, -L)));
+	float p = (max(vAmbient, dot(N, L)));
 	p = p * 0.5f + 0.5f;
 	p = p * p;
 	

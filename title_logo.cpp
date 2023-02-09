@@ -38,6 +38,7 @@ HRESULT CTitleLogo::Init()
 	m_count = 0;
 	m_rateSizeX = 0.01f;
 	m_rateSizeY = 0.01f;
+	SetColorAlpha(0.9f);
 
 	return S_OK;
 }

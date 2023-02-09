@@ -80,6 +80,7 @@ void CCameraGame::Update()
 	D3DXVec3TransformCoord(&m_posV, &m_posV, &mtxWorld);
 	D3DXVec3TransformCoord(&m_posR, &m_posR, &mtxWorld);
 
+
 	if (m_posV.x <= -380.0f)
 	{
 		m_posV.x = -380.0f;

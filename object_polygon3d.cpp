@@ -245,12 +245,14 @@ void CObjectPolygon3D::SetColor(const D3DXCOLOR& Collar)
 	//頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
+	D3DXCOLOR color(GetColor());
+
 	//テクスチャの座標設定
 	//頂点カラーの設定
-	pVtx[0].col = GetColor();
-	pVtx[1].col = GetColor();
-	pVtx[2].col = GetColor();
-	pVtx[3].col = GetColor();
+	pVtx[0].col = color;
+	pVtx[1].col = color;
+	pVtx[2].col = color;
+	pVtx[3].col = color;
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
