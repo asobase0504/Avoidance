@@ -9,7 +9,7 @@
 #include "utility.h"
 
 const int CPlayerAfterimage::MAX_LIFE = 20;
-const float CPlayerAfterimage::ALPHA_COLOR = 0.25f;
+const float CPlayerAfterimage::ALPHA_COLOR = 0.45f;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -36,6 +36,8 @@ HRESULT CPlayerAfterimage::Init()
 
 	m_life = MAX_LIFE;
 	SetColorAlpha(ALPHA_COLOR);
+
+	AttachOutLine();
 
 	return S_OK;
 }

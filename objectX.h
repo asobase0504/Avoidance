@@ -106,7 +106,7 @@ public:
 	void SetColorAlpha(float inAlpha) { m_colorAlpha = inAlpha; }
 
 	/* OutLine */
-	void AttachOutLine() { m_hasOutLine = true; }
+	void AttachOutLine(bool isOutLine = true) { m_hasOutLine = isOutLine; }
 
 	/* ìñÇΩÇËîªíË */
 	void SetCollisionFlag(bool inFlag) { m_isCollision = inFlag; }	// ìñÇΩÇËîªíËÇÃóLñ≥Çê›íË
@@ -116,7 +116,7 @@ public:
 	bool OBBAndOBB(CObjectX* inObjectX,D3DXVECTOR3* outPos);
 	bool SphereAndAABB(CObjectX* inObjectX,D3DXVECTOR3* outPos = nullptr);
 	bool RayAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal, D3DXVECTOR3* outPos = nullptr);
-	bool SegmentAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inNormal);
+	bool SegmentAndAABB(const D3DXVECTOR3& inPos, const D3DXVECTOR3& inPos2, D3DXVECTOR3* outPos = nullptr);
 
 	float AABBAndPointLength(CObjectX* inObject, D3DXVECTOR3* outDist = nullptr);
 

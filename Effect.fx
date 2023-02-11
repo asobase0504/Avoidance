@@ -65,7 +65,7 @@ VS_OUTPUT VS(
 	float3 N = normalize( Normal.xyz );
 
 	Out.Normal = N;
-	Out.Color = vDiffuse * (max(vAmbient, dot(N, L)) + max(vAmbient, dot(N, -L)));
+	Out.Color = vDiffuse * (max(vAmbient, dot(N, L)));
 
 	return Out;
 }
@@ -96,7 +96,7 @@ VS_OUTPUT ToonVS(float4 Pos    : POSITION,
 	Out.Tex = Tex;
 
 	// 拡散光＋環境光
-	float3 L = -(vLightDir.xyz);		// ローカル座標系でのライトベクトル
+	float3 L = -(vLightDir.xyz);	// ローカル座標系でのライトベクトル
 
 	//法線ベクトル。
 	float3 N = normalize(Normal.xyz);
@@ -118,7 +118,7 @@ float4 ToonPS(VS_OUTPUT In) : COLOR0
 
 	float3 N = In.Normal;
 
-	float p = (max(vAmbient, dot(N, L)));
+	float p = (max(vAmbient, dot(N, L))) + (max(vAmbient, dot(N, -L)));
 	p = p * 0.5f + 0.5f;
 	p = p * p;
 	

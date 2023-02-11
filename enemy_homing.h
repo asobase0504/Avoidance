@@ -21,6 +21,7 @@ private: // 定数
 	static const D3DXVECTOR3 SCALE;
 	static const D3DXVECTOR3 MOVE_POWER;
 	static const int MOVE_START_TIME;
+	static const int MOVE_END_TIME;
 
 public: // パブリック関数
 	CEnemyHoming();

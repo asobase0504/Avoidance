@@ -10,6 +10,7 @@
 #include "application.h"
 #include "renderer.h"
 #include "light.h"
+#include "input.h"
 
 //=============================================================================
 // コンストラクタ
@@ -38,7 +39,8 @@ HRESULT CLight::Init(void)
 
 	// ライトの設定
 	D3DXCOLOR color(1.0f, 1.0f, 1.0f, 1.0f);
-	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(0.35f, -0.5f, 0.4f), 0);
+
+	Set(D3DLIGHT_DIRECTIONAL, color, D3DXVECTOR3(-0.32, -0.09, -0.93), 0);
 
 	// デバイスへのポインタの取得
 	CApplication::GetInstance()->GetRenderer()->GetDevice()->SetRenderState(D3DRS_AMBIENT, color);
@@ -58,6 +60,22 @@ void CLight::Uninit(void)
 //=============================================================================
 void CLight::Update(void)
 {
+	if (CInput::GetKey()->Press(DIK_I))
+	{
+		m_light[0].Direction.y += -0.1f;
+	}
+	if (CInput::GetKey()->Press(DIK_K))
+	{
+		m_light[0].Direction.y += 0.1f;
+	}
+	if (CInput::GetKey()->Press(DIK_J))
+	{
+		m_light[0].Direction.x += -0.1f;
+	}
+	if (CInput::GetKey()->Press(DIK_L))
+	{
+		m_light[0].Direction.x += 0.1f;
+	}
 }
 
 //=============================================================================

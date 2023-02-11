@@ -10,8 +10,13 @@
 #include "camera_game.h"
 #include "input.h"
 #include "object.h"
+#include "objectX.h"
 #include "debug_proc.h"
 #include "utility.h"
+#include "light.h"
+#include "application.h"
+
+#include "line.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -38,6 +43,7 @@ HRESULT CCameraGame::Init()
 	D3DXVECTOR3 distPos = m_posR - m_posV;
 	m_fDistance = sqrtf(distPos.x * distPos.x + distPos.z * distPos.z);
 	m_fDistance = sqrtf(distPos.y * distPos.y + (m_fDistance * m_fDistance));
+
 	return S_OK;
 }
 
@@ -53,12 +59,10 @@ void CCameraGame::Uninit()
 //-----------------------------------------------------------------------------
 void CCameraGame::Update()
 {
-	D3DXVECTOR3 move(0.0f,0.0f,0.0f);
-
 	Rotate();
 
-	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_posV = D3DXVECTOR3(0.0f, 0.0f, -175.0f);
+	m_posR = D3DXVECTOR3(0.0f, 15.0f, 30.0f);
+	m_posV = D3DXVECTOR3(0.0f, 0.0f, -250.0f);
 
 	// 計算用マトリックス
 	D3DXMATRIX mtxWorld;
@@ -72,7 +76,6 @@ void CCameraGame::Update()
 
 	// 位置を反映
 	D3DXVECTOR3 pos = CObject::SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1)->GetPos();	// プレイヤーを検索
-	pos.y += 45.0f;
 	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);	// 行列移動関数
 	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);	// 行列掛け算関数
 
@@ -80,31 +83,28 @@ void CCameraGame::Update()
 	D3DXVec3TransformCoord(&m_posV, &m_posV, &mtxWorld);
 	D3DXVec3TransformCoord(&m_posR, &m_posR, &mtxWorld);
 
+	D3DXVECTOR3 dist = m_posR - m_posV;
+	D3DXVec3Normalize(&dist, &dist);
 
-	if (m_posV.x <= -380.0f)
+	D3DXVECTOR3 outPos;
+
+	CObject::TypeAllFunc(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1, [&dist, this,&pos, &outPos](CObject* inObject)
 	{
-		m_posV.x = -380.0f;
-	}
-	if (m_posV.x >= 380.0f)
-	{
-		m_posV.x = 380.0f;
-	}
-	if (m_posV.z <= -380.0f)
-	{
-		m_posV.z = -380.0f;
-	}
-	if (m_posV.z >= 380.0f)
-	{
-		m_posV.z = 380.0f;
-	}
-	if (m_posV.y <= 5.0f)
-	{
-		m_posV.y = 5.0f;
-	}
-	if (m_posV.y >= 780.0f)
-	{
-		m_posV.y = 780.0f;
-	}
+		CObjectX* objectX = (CObjectX*)inObject;
+		if (objectX->SegmentAndAABB(m_posV, pos, &outPos))
+		{
+			CDebugProc::Print("outPos : %f,%f,%f\n", outPos.x, outPos.y, outPos.z);
+			m_posV = outPos;
+			objectX->AttachOutLine(false);
+		}
+		else
+		{
+			objectX->AttachOutLine();
+		}
+	});
+
+	CDebugProc::Print("PosR : %f,%f,%f\n", m_posR.x, m_posR.y, m_posR.z);
+	CDebugProc::Print("PosV : %f,%f,%f\n", m_posV.x, m_posV.y, m_posV.z);
 }
 
 //-----------------------------------------------------------------------------
@@ -151,12 +151,12 @@ void CCameraGame::Rotate()
 	// 正規化
 	NormalizeAngle(m_rot.y);
 
-	if (m_rot.x < -D3DX_PI * 0.5f + 0.1f)
+	if (m_rot.x < -D3DX_PI * 0.5f + 0.75f)
 	{// 向きが-D3DX_PI未満の時
-		m_rot.x = -D3DX_PI * 0.5f + 0.1f;
+		m_rot.x = -D3DX_PI * 0.5f + 0.75f;
 	}
-	if (m_rot.x > D3DX_PI * 0.5f - 0.1f)
+	if (m_rot.x > D3DX_PI * 0.5f - 0.75f)
 	{// 向きがD3DX_PI以上の時
-		m_rot.x = D3DX_PI * 0.5f - 0.1f;
+		m_rot.x = D3DX_PI * 0.5f - 0.75f;
 	}
 }

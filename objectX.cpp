@@ -174,9 +174,6 @@ void CObjectX::DrawMaterial()
 	D3DXVECTOR4 lightDir = D3DXVECTOR4(light.Direction.x, light.Direction.y, light.Direction.z, 0);
 
 	D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
-	m._11 = 1.0f;
-	m._22 = 1.0f;
-	m._33 = 1.0f;
 	D3DXVec4Transform(&v, &lightDir, &m);
 
 	D3DXVec3Normalize((D3DXVECTOR3*)&v, (D3DXVECTOR3*)&v);
@@ -1376,8 +1373,6 @@ bool CObjectX::SphereAndAABB(CObjectX * inObjectX, D3DXVECTOR3 * outPos)
 			*outPos = dist;
 		}
 
-		CDebugProc::Print("dist : %f,%f,%f\n", dist.x, dist.y, dist.z);
-		CDebugProc::Print("length : %f\n", length);
 		m_pos -= dist * (m_MaxVtx.x * 1.4f - length);
 	}
 
@@ -1403,15 +1398,17 @@ bool CObjectX::RayAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inNorma
 
 	// 交差判定
 	float p[3], d[3], min[3], max[3];
-	memcpy(p, &p_l, sizeof(D3DXVECTOR3));
-	memcpy(d, &dir_l, sizeof(D3DXVECTOR3));
-	memcpy(min, &(m_MinVtx * 0.5f), sizeof(D3DXVECTOR3));
-	memcpy(max, &(m_MaxVtx * 0.5f), sizeof(D3DXVECTOR3));
+	memcpy(p, &inPos, sizeof(D3DXVECTOR3));
+	memcpy(d, &inNormal, sizeof(D3DXVECTOR3));
+	D3DXVECTOR3 minPos = m_pos + (m_MinVtx);
+	D3DXVECTOR3 maxPos = m_pos + (m_MaxVtx);
+	memcpy(min, &minPos, sizeof(D3DXVECTOR3));
+	memcpy(max, &maxPos, sizeof(D3DXVECTOR3));
 
 	float t = -FLT_MAX;
 	float t_max = FLT_MAX;
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 3; i++)
 	{
 		if (abs(d[i]) < FLT_EPSILON)
 		{
@@ -1427,12 +1424,26 @@ bool CObjectX::RayAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inNorma
 			float odd = 1.0f / d[i];
 			float t1 = (min[i] - p[i]) * odd;
 			float t2 = (max[i] - p[i]) * odd;
-			if (t1 > t2) {
-				float tmp = t1; t1 = t2; t2 = tmp;
+
+			// t1の方が距離が離れている場合。
+			if (t1 > t2)
+			{
+				float tmp = t1;
+				t1 = t2;
+				t2 = tmp;
 			}
 
-			if (t1 > t) t = t1;
-			if (t2 < t_max) t_max = t2;
+			// tの方が距離が近い場合。t1をtに入れる
+			if (t1 > t)
+			{
+				t = t1;
+			}
+
+			// t_maxの方が遠い場合。t2をt_maxに入れる
+			if (t2 < t_max)
+			{
+				t_max = t2;
+			}
 
 			// スラブ交差チェック
 			if (t >= t_max)
@@ -1444,8 +1455,9 @@ bool CObjectX::RayAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inNorma
 
 	if (outPos != nullptr)
 	{
-		*outPos = inPos + (t * inNormal);
+		*outPos = inPos + t * inNormal;
 	}
+
 	return true;
 }
 
@@ -1453,12 +1465,9 @@ bool CObjectX::RayAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inNorma
 // 線分とAABBの当たり判定
 // Author : Yuda Kaito
 //-----------------------------------------------------------------------------
-bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inPos2)
+bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inPos2, D3DXVECTOR3* outPos)
 {
-	D3DXVECTOR3 dist = inPos - inPos2;
 	D3DXVECTOR3 hitPos(0.0f,0.0f,0.0f);
-
-	D3DXVec3Normalize(&dist,&dist);
 
 	D3DXVECTOR3 min;
 	D3DXVECTOR3 max;
@@ -1496,18 +1505,25 @@ bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inP
 		max.z = inPos.z;
 	}
 
+	D3DXVECTOR3 dist = inPos2 - inPos;
+	D3DXVec3Normalize(&dist, &dist);
+
 	if (RayAndAABB(inPos, dist, &hitPos))
 	{
-		if (min.x < hitPos.x &&
-			min.y < hitPos.y &&
-			min.z < hitPos.z &&
-			hitPos.x < max.x &&
-			hitPos.y < max.y &&
-			hitPos.z < max.z)
+		bool hitX = min.x < hitPos.x && hitPos.x < max.x;
+		bool hitY = min.y < hitPos.y && hitPos.y < max.y;
+		bool hitZ = min.z < hitPos.z && hitPos.z < max.z;
+
+		if (hitX && hitY &&hitZ)
 		{
+			if (outPos != nullptr)
+			{
+				*outPos = hitPos;
+			}
 			return true;
 		}
 	}
+
 	return false;
 }
 

@@ -83,7 +83,7 @@ void CStage::Update()
 	{
 		if (m_startCnt == m_enemy.at(i).popFream)
 		{
-			PopEnemy(m_enemy.at(i).type, m_enemy.at(i).pos, m_enemy.at(i).rot);
+//			PopEnemy(m_enemy.at(i).type, m_enemy.at(i).pos, m_enemy.at(i).rot);
 		}
 	}
 

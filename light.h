@@ -31,6 +31,9 @@ public:
 		
 	void Set(D3DLIGHTTYPE type, D3DXCOLOR col, D3DXVECTOR3 vec, int nNum);
 	D3DLIGHT9 GetLight(int num) { return m_light[num]; }
+
+	void SetLight(D3DXVECTOR3 inVec) { m_light[0].Direction = inVec; }
+
 private:
 	 D3DLIGHT9 m_light[LIGTH_MAX];	//ÉâÉCÉgèÓïÒ
 };
