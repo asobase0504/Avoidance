@@ -83,7 +83,7 @@ void CStage::Update()
 	{
 		if (m_startCnt == m_enemy.at(i).popFream)
 		{
-//			PopEnemy(m_enemy.at(i).type, m_enemy.at(i).pos, m_enemy.at(i).rot);
+			PopEnemy(m_enemy.at(i).type, m_enemy.at(i).pos, m_enemy.at(i).rot);
 		}
 	}
 
@@ -165,11 +165,11 @@ void CStage::SetWall(int index, const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot
 	objectX->SetScale(scale);
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
 	objectX->SetDisplayOperation();
+	objectX->AttachOutLine(false);
 	objectX->SetCollisionFlag(false);
 	//objectX->CalculationVtx();
 
 	m_wall[index] = objectX;
-	m_wall[index]->SetDisplayOperation();
 }
 
 //-----------------------------------------------------------------------------
@@ -230,6 +230,16 @@ void CStage::EnemyDeath()
 }
 
 //-----------------------------------------------------------------------------
+// Goal‚ðƒŠƒZƒbƒg‚·‚é
+//-----------------------------------------------------------------------------
+void CStage::ResetGoal()
+{
+	m_goal->Release();
+
+	SetGoal(m_goal->GetPos(), m_goal->GetTime());
+}
+
+//-----------------------------------------------------------------------------
 // ¶¬
 //-----------------------------------------------------------------------------
 CStage* CStage::Create()
@@ -247,12 +257,16 @@ CStage* CStage::Create()
 //-----------------------------------------------------------------------------
 // Goal‚ÌÝ’è
 //-----------------------------------------------------------------------------
-void CStage::SetGoal(const D3DXVECTOR3 & pos)
+void CStage::SetGoal(const D3DXVECTOR3 & pos,const int inTime)
 {
 	m_goal = CGoal::Create();
 	m_goal->LoadModel("BOX");
 	m_goal->SetPos(pos);
+	m_goal->SetTime(inTime);
+	m_goal->SetScale(D3DXVECTOR3(1.5f,1.5f,1.5f));
 	m_goal->SetRot(D3DXVECTOR3(D3DX_PI * 0.25f, D3DX_PI * 0.25f, D3DX_PI * 0.25f));
-	m_goal->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
+	m_goal->SetMoveRot(D3DXVECTOR3(0.01f, 0.01f, 0.0f));
+	m_goal->SetMaterialDiffuse(0, D3DXCOLOR(0.5f,0.5f,0.5f,0.4f));
+	m_goal->AttachOutLine();
 	m_goal->CalculationVtx();
 }

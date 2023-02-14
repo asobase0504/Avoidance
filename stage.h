@@ -51,7 +51,7 @@ public: // パブリック関数
 	void SetPos(const D3DXVECTOR3& inPos) { m_pos = inPos; }
 	const D3DXVECTOR3& GetPos() { return m_pos; }
 
-	void SetGoal(const D3DXVECTOR3& pos);
+	void SetGoal(const D3DXVECTOR3& pos, const int inTime);
 
 	void SetFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
 
@@ -69,7 +69,10 @@ public: // パブリック関数
 	void EnemyDeath();
 	void PopReset() { m_startCnt = -60; }
 
+	void ResetGoal();
+
 private: // プライベート関数
+
 private: // メンバー変数
 	CGoal* m_goal;
 	CPlain* m_floor;

@@ -6,6 +6,7 @@
 //=============================================================================
 #include <assert.h>
 #include "goal.h"
+#include "delay_process.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -32,6 +33,7 @@ HRESULT CGoal::Init()
 	CObjectX::Init();
 	LoadModel("BOX");
 	SetType(EType::GOAL);
+	SetCollisionFlag(false);
 	return S_OK;
 }
 
@@ -84,4 +86,15 @@ CGoal* CGoal::Create()
 	}
 
 	return goal;
+}
+
+void CGoal::SetTime(int inTime)
+{
+	m_goalTime = inTime;
+
+	CDelayProcess::DelayProcess(inTime, this, [this]()
+	{
+		SetMaterialDiffuse(0,D3DXCOLOR(1.0f,1.0f,0.0f,1.0f));
+		SetCollisionFlag(true);
+	});
 }

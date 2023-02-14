@@ -45,6 +45,7 @@ CGame::CGame():
 	m_stageNext(nullptr),
 	m_section(0),
 	m_fallCount(0),
+	m_stageSection(0),
 	m_nextText(nullptr),
 	m_retryText(nullptr),
 	m_backText(nullptr)
@@ -84,7 +85,7 @@ HRESULT CGame::Init(void)
 		CObject2d* bg = CObject2d::Create();
 		bg->SetPos(CApplication::CENTER_POS);
 		bg->SetSize(CApplication::CENTER_POS);
-		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0);
+		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1);
 		bg->SetColor(color);
 	}
 
@@ -97,7 +98,9 @@ HRESULT CGame::Init(void)
 		m_player->CalculationVtx();
 	}
 
-	m_stage = LoadAll("data/FILE/stage.json");
+	m_stagePath = LoadPath("data/FILE/stageGroup.json");
+
+	m_stage = LoadAll(m_stagePath[m_stageSection]);
 	m_stage->SetStart(false);
 
 	// マウスの位置ロック
@@ -146,7 +149,6 @@ void CGame::Update(void)
 	}
 
 	StageClear();
-	BackStaging();
 	PlayerDeath();
 }
 
@@ -243,7 +245,9 @@ void CGame::NextStage()
 
 	m_stage->Release();	// 終了処理
 
-	m_stageNext = LoadAll("data/FILE/stage.json");
+	m_stageSection++;
+
+	m_stageNext = LoadAll(m_stagePath[m_stageSection]);
 
 	m_stage = m_stageNext;		// 次のステージを現在のステージにする
 	m_stage->SetStart(false);	// スタートしてない状態にする
@@ -260,7 +264,7 @@ void CGame::RetryStage()
 
 	m_stage->Release();	// 終了処理
 
-	m_stageNext = LoadAll("data/FILE/stage.json");
+	m_stageNext = LoadAll(m_stagePath[m_stageSection]);
 
 	m_stage = m_stageNext;		// 次のステージを現在のステージにする
 	m_stage->SetStart(false);	// スタートしてない状態にする
@@ -294,51 +298,11 @@ void CGame::PlayerDeath()
 	if (m_isDeathStop)
 	{
 		m_stage->PopReset();
+		m_stage->ResetGoal();
 
 		if (!m_player->IsDied())
 		{
 			m_isDeathStop = false;
 		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// 後ろの演出
-// Author : Yuda Kaito
-//-----------------------------------------------------------------------------
-void CGame::BackStaging()
-{
-	// 背景の演出
-	static int cnt = 0;
-	cnt++;
-	if (cnt % 90 != 0)
-	{
-		return;
-	}
-
-	cnt = 0;
-
-	{
-		CBgBox* box = CBgBox::Create();
-		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
-		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-	}
-
-	{
-		CBgBox* box = CBgBox::Create();
-		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
-		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-	}
-
-	{
-		CBgBox* box = CBgBox::Create();
-		box->SetPos(D3DXVECTOR3(FloatRandam(9000.0f, 1000.0f), -9000.0f, FloatRandam(-1000.0f, -9000.0f)));
-		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
-	}
-
-	{
-		CBgBox* box = CBgBox::Create();
-		box->SetPos(D3DXVECTOR3(FloatRandam(-1000.0f, -9000.0f), -9000.0f, FloatRandam(9000.0f, 1000.0f)));
-		box->SetScale(D3DXVECTOR3(40.0f, 40.0f, 40.0f));
 	}
 }

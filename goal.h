@@ -32,10 +32,14 @@ public: // パブリック関数
 	void Goal(bool goal) { m_isGoal = goal; }
 	bool IsGoal() { return m_isGoal; }
 
+	void SetTime(int inTime);
+	int GetTime() { return m_goalTime; }
+
 private: // プライベート関数
 
 private: // メンバー変数
 	int m_endCnt;
 	bool m_isGoal;
+	int m_goalTime;
 };
 #endif

@@ -61,6 +61,8 @@ void CTaskGroup::PriorityProcess(int cnt, std::function<void(CTask*)> func)
 		return;
 	}
 
+	int taskCnt = 0;
+
 	CTask* now = m_list.at(cnt).top;
 
 	while (now != nullptr)
@@ -68,9 +70,12 @@ void CTaskGroup::PriorityProcess(int cnt, std::function<void(CTask*)> func)
 		CTask* next = now->GetNext();
 
 		func(now);
+		taskCnt++;
 
 		now = next;
 	}
+
+	CDebugProc::Print("Priority %d : %d\n",cnt, taskCnt);
 }
 
 //=============================================================================

@@ -40,16 +40,18 @@ private:
 	void NextStage();
 	void RetryStage();
 	void PlayerDeath();
-	void BackStaging();
 
 private:
 	CStage* m_stage;		// 今のステージ
 	CStage* m_stageNext;	// 次のステージ
-	CPlayer* m_player;
-	CCountdown* m_countdown;// カウントダウン
-	int m_section;			// 1面のステージ数
+	int m_stageSection;
+	std::vector<std::string> m_stagePath;
 
-	int m_fallCount;		// 落ちる時間
+	CPlayer* m_player;
+	CCountdown* m_countdown;	// カウントダウン
+	int m_section;				// 1面のステージ数
+
+	int m_fallCount;			// 落ちる時間
 
 	bool m_isDeathStop;
 
