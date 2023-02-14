@@ -88,6 +88,7 @@ void CCameraGame::Update()
 
 	D3DXVECTOR3 outPos;
 
+	// ƒJƒƒ‰‚Æ’n–Ê‚Ì“–‚½‚è”»’è
 	CObject::TypeAllFunc(CObject::EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1, [&dist, this,&pos, &outPos](CObject* inObject)
 	{
 		CObjectX* objectX = (CObjectX*)inObject;

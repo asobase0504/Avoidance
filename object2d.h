@@ -61,6 +61,7 @@ public:
 
 	LPDIRECT3DVERTEXBUFFER9 &GetVtx() { return m_pVtxBuff; }
 
+	bool PointAndAABB(const D3DXVECTOR3& inPos);
 private:
 	void Animation();
 

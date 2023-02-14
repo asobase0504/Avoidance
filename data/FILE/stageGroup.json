@@ -1,11 +1,11 @@
 {
   "STAGE": [
     "data/FILE/stage.json",
-    "data/FILE/stage1.json",
     "data/FILE/stage.json",
-    "data/FILE/stage1.json",
     "data/FILE/stage.json",
-    "data/FILE/stage1.json",
-    "data/FILE/stage2.json"
+    "data/FILE/stage.json",
+    "data/FILE/stage.json",
+    "data/FILE/stage.json",
+    "data/FILE/stage.json"
   ]
 }

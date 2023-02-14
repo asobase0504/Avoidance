@@ -30,6 +30,7 @@
 #include "pause.h"
 #include "bg_box.h"
 #include "countdown.h"
+#include "mouse_object.h"
 
 //-----------------------------------------------------------------------------
 // 定数
@@ -166,6 +167,12 @@ void CGame::StageClear()
 
 	if (m_fallCount == 0)
 	{
+		// マウスの位置ロック
+		CInput::GetKey()->GetMouse()->UseSetPosLock(false);
+
+		// マウスの見た目生成
+		m_mouseCursor = CMouseObject::Create();
+
 		// Enemyに全てリリース処理をかける
 		CObject::TypeAllFunc(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1, [](CObject* inObject)
 		{
@@ -202,9 +209,16 @@ void CGame::StageClear()
 
 		m_player->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
 
+		bool isLeftClick = CInput::GetKey()->Trigger(CMouse::MOUSE_KEY::MOUSE_KEY_LEFT);
+		bool isMouseNextHit = m_nextText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
+
 		// 次のステージに移行
-		if (CInput::GetKey()->Trigger(DIK_RETURN))
+		if (CInput::GetKey()->Trigger(DIK_RETURN) || isMouseNextHit)
 		{
+			// マウスの位置ロック
+			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
+			m_mouseCursor->Release();
+
 			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
 			m_fallCount = 0;
 			NextStage();
@@ -214,16 +228,28 @@ void CGame::StageClear()
 			m_backText->Release();
 		}
 
+		bool isMouseBackHit = m_backText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
+
 		// タイトルに移行
-		if (CInput::GetKey()->Trigger(DIK_BACK))
+		if (CInput::GetKey()->Trigger(DIK_BACK) || isMouseBackHit)
 		{
+			// マウスの位置ロック
+			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
+			m_mouseCursor->Release();
+
 			m_fallCount = 0;
 			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
 		}
 
+		bool isMouseRetryHit = m_retryText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
+
 		// リトライ
-		if (CInput::GetKey()->Trigger(DIK_R))
+		if (CInput::GetKey()->Trigger(DIK_R) || isMouseRetryHit)
 		{
+			// マウスの位置ロック
+			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
+			m_mouseCursor->Release();
+
 			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
 			m_fallCount = 0;
 			RetryStage();

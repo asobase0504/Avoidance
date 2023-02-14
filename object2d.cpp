@@ -195,6 +195,23 @@ CObject2d *CObject2d::Create(CTaskGroup::EPriority list)
 	return pObject;
 }
 
+//-----------------------------------------------------------------------------
+// 位置がobject内に入っているか否か
+// Author : Yuda Kaito
+//-----------------------------------------------------------------------------
+bool CObject2d::PointAndAABB(const D3DXVECTOR3 & inPos)
+{
+	bool hitX = m_pos.x + m_size.x > inPos.x && m_pos.x - m_size.x < inPos.x;
+	bool hitY = m_pos.y + m_size.y > inPos.y && m_pos.y - m_size.y < inPos.y;
+
+	if (hitX && hitY)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 //--------------------------------------------------
 // アニメーションの動き
 //--------------------------------------------------

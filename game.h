@@ -58,5 +58,7 @@ private:
 	CObject2d* m_nextText;
 	CObject2d* m_retryText;
 	CObject2d* m_backText;
+
+	CObject2d* m_mouseCursor;
 };
 #endif
