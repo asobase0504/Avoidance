@@ -11,11 +11,6 @@
 // include
 //-----------------------------------------------------------------------------
 #include <string>
-#include <windows.h>
-#include <stdio.h>
-#include <tchar.h>
-#include <locale.h>
-
 #include <iostream>
 #include <fstream>
 #include "nlohmann/json.hpp"
