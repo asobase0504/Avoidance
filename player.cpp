@@ -24,7 +24,7 @@
 const float CPlayer::SPEED = 6.5f;			// 移動量
 const float CPlayer::ATTENUATION = 0.45f;	// 移動減衰係数
 const float CPlayer::JUMPING_POWER = 8.5f;	// 跳躍力
-const float CPlayer::GRAVITY = 0.2f;		// 重力
+const float CPlayer::GRAVITY = 0.15f;		// 重力
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -56,7 +56,9 @@ CPlayer::~CPlayer()
 HRESULT CPlayer::Init()
 {
 	LoadModel("BOX");
+
 	CObjectX::Init();
+
 	AttachOutLine();
 
 	return S_OK;
@@ -75,6 +77,7 @@ void CPlayer::Uninit()
 //-----------------------------------------------------------------------------
 void CPlayer::NormalUpdate()
 {
+	// デバッグ
 	CDebugProc::Print("jumpDirection : %.2f,%.2f,%.2f\n", jumpDirection.x, jumpDirection.y, jumpDirection.z);
 	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
 	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
@@ -86,10 +89,10 @@ void CPlayer::NormalUpdate()
 		m_quaternionOld = m_quaternion;
 		Move();			// 移動
 		boost();		// 突進
-		OnHitGoal();	// Goalとの当たり判定
-		OnHitEnemy();	// Enemyとの当たり判定
 		Jump();			// ジャンプ
 		Landing();		// 落下
+		OnHitGoal();	// Goalとの当たり判定
+		OnHitEnemy();	// Enemyとの当たり判定
 
 		NextStageWait();
 
@@ -362,12 +365,13 @@ void CPlayer::OnHitEnemy()
 			for (int i = 0; i < 50; i++)
 			{
 				D3DXVECTOR3 pos = m_pos;
-				pos.x += FloatRandam(-20.0f, 20.0f);
-				pos.y += FloatRandam(-20.0f, 20.0f);
-				pos.z += FloatRandam(-20.0f, 20.0f);
+				pos.x += FloatRandom(-20.0f, 20.0f);
+				pos.y += FloatRandom(-20.0f, 20.0f);
+				pos.z += FloatRandom(-20.0f, 20.0f);
 				CPlayerDied::Create(pos);
-				SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			}
+
+			SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 			//CApplication::GetInstance()->Delay(60, 2);
 			m_isDied = true;	// Goal

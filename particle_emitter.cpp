@@ -82,18 +82,18 @@ void CParticleEmitter::PopParticle(void)
 
 	D3DXVECTOR3 myPos = m_pos;
 	// 生成位置の算出
-	myPos.x += FloatRandam(m_info.maxPopPos.x, -m_info.minPopPos.x);
-	myPos.y += FloatRandam(m_info.maxPopPos.y, -m_info.minPopPos.y);
-	myPos.z += FloatRandam(m_info.maxPopPos.z, -m_info.minPopPos.z);
+	myPos.x += FloatRandom(m_info.maxPopPos.x, -m_info.minPopPos.x);
+	myPos.y += FloatRandom(m_info.maxPopPos.y, -m_info.minPopPos.y);
+	myPos.z += FloatRandom(m_info.maxPopPos.z, -m_info.minPopPos.z);
 
 	// 色の算出
 	CParticle::SColor& popColor = popInfo.color;
 	popColor.nCntTransitionTime = 0;
 	if (popColor.bColRandom)
 	{// ランダムカラーを使用
-		popColor.colBigin.r = FloatRandam(popColor.colRandamMax.r, popColor.colRandamMin.r);
-		popColor.colBigin.g = FloatRandam(popColor.colRandamMax.g, popColor.colRandamMin.g);
-		popColor.colBigin.b = FloatRandam(popColor.colRandamMax.b, popColor.colRandamMin.b);
+		popColor.colBigin.r = FloatRandom(popColor.colRandamMax.r, popColor.colRandamMin.r);
+		popColor.colBigin.g = FloatRandom(popColor.colRandamMax.g, popColor.colRandamMin.g);
+		popColor.colBigin.b = FloatRandom(popColor.colRandamMax.b, popColor.colRandamMin.b);
 
 		if (popColor.bColTransition)
 		{// 目的の色の設定
@@ -102,9 +102,9 @@ void CParticleEmitter::PopParticle(void)
 				popColor.nEndTime = rand() % popInfo.nLife + 1;
 			}
 
-			popColor.destCol.r = FloatRandam(popColor.colRandamMax.r, popColor.colRandamMin.r);
-			popColor.destCol.g = FloatRandam(popColor.colRandamMax.g, popColor.colRandamMin.g);
-			popColor.destCol.b = FloatRandam(popColor.colRandamMax.b, popColor.colRandamMin.b);
+			popColor.destCol.r = FloatRandom(popColor.colRandamMax.r, popColor.colRandamMin.r);
+			popColor.destCol.g = FloatRandom(popColor.colRandamMax.g, popColor.colRandamMin.g);
+			popColor.destCol.b = FloatRandom(popColor.colRandamMax.b, popColor.colRandamMin.b);
 		}
 	}
 

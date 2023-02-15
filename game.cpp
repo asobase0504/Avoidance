@@ -165,7 +165,7 @@ void CGame::StageClear()
 		return;
 	}
 
-	if (m_fallCount == 0)
+	if (m_fallCount == FALL_TIME)
 	{
 		// マウスの位置ロック
 		CInput::GetKey()->GetMouse()->UseSetPosLock(false);
@@ -203,21 +203,31 @@ void CGame::StageClear()
 
 	m_fallCount++;
 
-	if (m_fallCount >= FALL_TIME)
+	if (m_fallCount > FALL_TIME)
 	{
-		m_fallCount = FALL_TIME;
+		m_fallCount = FALL_TIME + 1;
 
 		m_player->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
 
 		bool isLeftClick = CInput::GetKey()->Trigger(CMouse::MOUSE_KEY::MOUSE_KEY_LEFT);
 		bool isMouseNextHit = m_nextText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
 
+		// 触れたら大きくなる
+		if (m_nextText->PointAndAABB(m_mouseCursor->GetPos()))
+		{
+			m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+		}
+		else
+		{
+			m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+		}
+
 		// 次のステージに移行
 		if (CInput::GetKey()->Trigger(DIK_RETURN) || isMouseNextHit)
 		{
 			// マウスの位置ロック
 			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-			m_mouseCursor->Release();
+			m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
 
 			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
 			m_fallCount = 0;
@@ -228,14 +238,25 @@ void CGame::StageClear()
 			m_backText->Release();
 		}
 
+		// 戻るのテキスト内に入っており左クリックしているか
 		bool isMouseBackHit = m_backText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
+
+		// 触れたら大きくなる
+		if (m_backText->PointAndAABB(m_mouseCursor->GetPos()))
+		{
+			m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+		}
+		else
+		{
+			m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+		}
 
 		// タイトルに移行
 		if (CInput::GetKey()->Trigger(DIK_BACK) || isMouseBackHit)
 		{
 			// マウスの位置ロック
 			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-			m_mouseCursor->Release();
+			m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
 
 			m_fallCount = 0;
 			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
@@ -243,12 +264,22 @@ void CGame::StageClear()
 
 		bool isMouseRetryHit = m_retryText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
 
+		// 触れたら大きくなる
+		if (m_retryText->PointAndAABB(m_mouseCursor->GetPos()))
+		{
+			m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+		}
+		else
+		{
+			m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+		}
+
 		// リトライ
 		if (CInput::GetKey()->Trigger(DIK_R) || isMouseRetryHit)
 		{
 			// マウスの位置ロック
 			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-			m_mouseCursor->Release();
+			m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
 
 			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
 			m_fallCount = 0;

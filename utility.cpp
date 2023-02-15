@@ -57,7 +57,7 @@ bool Homing(D3DXVECTOR3 *pPosOut, const D3DXVECTOR3 &posNow, const D3DXVECTOR3 &
 //---------------------------------------------------------------------------
 // ¬”“_‚Ìƒ‰ƒ“ƒ_ƒ€
 //---------------------------------------------------------------------------
-float FloatRandam(float fMax, float fMin)
+float FloatRandom(float fMax, float fMin)
 {
 	return ((rand() / (float)RAND_MAX) * (fMax - fMin)) + fMin;
 }
@@ -65,7 +65,7 @@ float FloatRandam(float fMax, float fMin)
 //---------------------------------------------------------------------------
 // ®”‚Ìƒ‰ƒ“ƒ_ƒ€
 //---------------------------------------------------------------------------
-int IntRandam(int nMax, int nMin)
+int IntRandom(int nMax, int nMin)
 {
 	return (int)((rand() / (float)RAND_MAX) * (nMax - nMin)) + nMin;
 }

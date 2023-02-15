@@ -103,7 +103,7 @@ public:
 	const D3DXCOLOR& GetMaterialDiffuse(unsigned int index) { return m_materialDiffuse.at(index); }
 
 	/* 透明度 */
-	void SetColorAlpha(float inAlpha) { m_colorAlpha = inAlpha; }
+	void SetColorAlpha(float inAlpha) { m_color.a = inAlpha; }
 
 	/* OutLine */
 	void AttachOutLine(bool isOutLine = true) { m_hasOutLine = isOutLine; }
@@ -147,7 +147,6 @@ private:
 
 	CObjectX *m_pParent;		// 親モデルの情報
 	bool m_isCollision;			// 当たり判定が必要か
-	float m_colorAlpha;			// 透明度
 
 	bool m_hasOutLine;			// アウトラインを使うか
 

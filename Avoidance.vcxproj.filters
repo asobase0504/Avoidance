@@ -280,9 +280,6 @@
     <ClCompile Include="factory_enemy.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="stage_clear.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
-    </ClCompile>
     <ClCompile Include="countdown.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClCompile>
@@ -336,6 +333,12 @@
     </ClCompile>
     <ClCompile Include="tutorial.cpp">
       <Filter>00_Cord\00_Main\01_Mode\03_Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="goal_effect.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\02_Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="clear.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -519,9 +522,6 @@
     <ClInclude Include="factory_enemy.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="stage_clear.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
-    </ClInclude>
     <ClInclude Include="countdown.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClInclude>
@@ -576,6 +576,12 @@
     <ClInclude Include="tutorial.h">
       <Filter>00_Cord\00_Main\01_Mode\03_Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="goal_effect.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\02_Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="clear.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\FILE\texture.json">
@@ -587,9 +593,30 @@
     <None Include="data\FILE\model.json">
       <Filter>01_File\json</Filter>
     </None>
-    <None Include="data\FILE\stage.json">
+    <None Include="ClassDiagram.cd" />
+    <None Include="data\FILE\stage0.json">
       <Filter>01_File\json</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
+    <None Include="data\FILE\stage1.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\stage2.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\stage3.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\stage4.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\stage5.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\stage6.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\stageGroup.json">
+      <Filter>01_File\json</Filter>
+    </None>
   </ItemGroup>
 </Project>

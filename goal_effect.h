@@ -1,36 +1,41 @@
 //=============================================================================
 //
-// プレイヤーの残像ヘッター
+// ゴールの演出
 // Author:Yuda Kaito
 //
 //=============================================================================
-#ifndef _PLAYER_AFTERIMAGE_FALL_H_
-#define _PLAYER_AFTERIMAGE_FALL_H_
+#ifndef _GOAL_EFFECT_H_
+#define _GOAL_EFFECT_H_
 
 //-----------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------
 #include "objectX.h"
 
-class CPlayerAfterimageFall : public CObjectX
+//-----------------------------------------------------------------------------
+// エネミークラス
+//-----------------------------------------------------------------------------
+class CGoalEffect : public CObjectX
 {
 private: // 定数
-	static const int MAX_LIFE;
-	static const float ALPHA_COLOR;
+	static const D3DXVECTOR3 SCALE;
+	static const D3DXVECTOR3 MOVE_POWER;
+
 public: // パブリック関数
-	CPlayerAfterimageFall();
-	~CPlayerAfterimageFall();
+	CGoalEffect();
+	~CGoalEffect();
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
 	void NormalUpdate() override;	// 更新
-	void EndUpdate() override;		// 更新
 	void Draw() override;			// 描画
 
-	static CPlayerAfterimageFall* Create(const D3DXVECTOR3& inPos);	// 生成
+	void SetMove(const D3DXVECTOR3& inMove) override;
 
+	static CGoalEffect* Create(const D3DXVECTOR3& inPos);
+
+private: // プライベート関数
 private: // メンバー変数
-	int m_life;	// 寿命
+	int m_life;
 };
 #endif
-#pragma once

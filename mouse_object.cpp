@@ -43,7 +43,7 @@ HRESULT CMouseObject::Init()
 	CDelayProcess::DelayProcess(1, this, [this]()
 	{
 		CMouseEffect* effect = CMouseEffect::Create();
-		D3DXVECTOR3 pos(FloatRandam(m_pos.x + 5.0f, m_pos.x - 5.0f), FloatRandam(m_pos.y + 5.0f, m_pos.y - 5.0f), 0.0f);
+		D3DXVECTOR3 pos(FloatRandom(m_pos.x + 5.0f, m_pos.x - 5.0f), FloatRandom(m_pos.y + 5.0f, m_pos.y - 5.0f), 0.0f);
 		effect->SetPos(pos);
 		effect->SetSize(D3DXVECTOR3(8.0f, 8.0f, 0.0f));
 		effect->SetRot(m_rot);

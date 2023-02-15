@@ -46,7 +46,7 @@ bool Homing(D3DXVECTOR3 *pPosOut, const D3DXVECTOR3 &posNow, const D3DXVECTOR3 &
 // 引数2  : float fMin / 最小値
 // 返値  : float / ランダム値
 //--------------------------------------------------
-float FloatRandam(float fMax, float fMin);
+float FloatRandom(float fMax, float fMin);
 
 //--------------------------------------------------
 // 整数のランダム
@@ -54,7 +54,7 @@ float FloatRandam(float fMax, float fMin);
 // 引数2  : int nMin / 最小値
 // 返値  : int / ランダム値
 //--------------------------------------------------
-int IntRandam(int nMax, int nMin);
+int IntRandom(int nMax, int nMin);
 
 //--------------------------------------------------
 // sinカーブの値が1.0f～0.0fで帰ってくる

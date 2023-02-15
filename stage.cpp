@@ -260,7 +260,6 @@ CStage* CStage::Create()
 void CStage::SetGoal(const D3DXVECTOR3 & pos,const int inTime)
 {
 	m_goal = CGoal::Create();
-	m_goal->LoadModel("BOX");
 	m_goal->SetPos(pos);
 	m_goal->SetTime(inTime);
 	m_goal->SetScale(D3DXVECTOR3(1.5f,1.5f,1.5f));

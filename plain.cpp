@@ -71,8 +71,8 @@ void CPlain::EndUpdate()
 {
 	if(!begin)
 	{
-		SetMove(D3DXVECTOR3(FloatRandam(5.0f, -5.0f), 0.0f, FloatRandam(5.0f, -5.0f)));
-		SetMoveRot(D3DXVECTOR3(FloatRandam(0.015f, -0.015f), 0.0f, FloatRandam(0.0125f, -0.015f)));
+		SetMove(D3DXVECTOR3(FloatRandom(5.0f, -5.0f), 0.0f, FloatRandom(5.0f, -5.0f)));
+		SetMoveRot(D3DXVECTOR3(FloatRandom(0.015f, -0.015f), 0.0f, FloatRandom(0.0125f, -0.015f)));
 		begin = true;
 		SetCollisionFlag(false);
 	}

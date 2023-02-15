@@ -38,7 +38,7 @@ HRESULT CBgBox::Init()
 	SetType(CObject::NONE);
 	LoadModel("BOX");
 	SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
-	SetMove(D3DXVECTOR3(0.0f,FloatRandam(15.0f,3.0f),0.0f));
+	SetMove(D3DXVECTOR3(0.0f,FloatRandom(15.0f,3.0f),0.0f));
 	return S_OK;
 }
 

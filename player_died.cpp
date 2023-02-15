@@ -113,11 +113,11 @@ CPlayerDied* CPlayerDied::Create(const D3DXVECTOR3& inPos)
 	{
 		objectX->Init();
 		objectX->SetPos(inPos);
-		float scale = FloatRandam(0.45f, 0.85f);
+		float scale = FloatRandom(0.45f, 0.85f);
 		objectX->SetScale(D3DXVECTOR3(scale, scale, scale));
 		objectX->m_scaleOrigin = objectX->GetScale();;
-		objectX->SetRot(D3DXVECTOR3(FloatRandam(-D3DX_PI, D3DX_PI), FloatRandam(-D3DX_PI, D3DX_PI), FloatRandam(-D3DX_PI, D3DX_PI)));
-		objectX->SetMove(D3DXVECTOR3(FloatRandam(-7.5f, 7.5f), FloatRandam(0.5f, 15.5f), FloatRandam(-7.5f, 7.5f)));
+		objectX->SetRot(D3DXVECTOR3(FloatRandom(-D3DX_PI, D3DX_PI), FloatRandom(-D3DX_PI, D3DX_PI), FloatRandom(-D3DX_PI, D3DX_PI)));
+		objectX->SetMove(D3DXVECTOR3(FloatRandom(-7.5f, 7.5f), FloatRandom(0.5f, 15.5f), FloatRandom(-7.5f, 7.5f)));
 		objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
 	}
 

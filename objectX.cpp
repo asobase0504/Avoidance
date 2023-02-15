@@ -44,7 +44,6 @@ CObjectX::CObjectX(CTaskGroup::EPriority nPriority) :
 	m_NumMat(0),
 	m_pParent(nullptr),
 	m_isCollision(true),
-	m_colorAlpha(1.0f),
 	m_hasOutLine(false)
 {
 	//オブジェクトのタイプセット処理
@@ -214,12 +213,7 @@ void CObjectX::DrawMaterial()
 				Diffuse = D3DXVECTOR4(pMat[nCntMat].MatD3D.Diffuse.r, pMat[nCntMat].MatD3D.Diffuse.g, pMat[nCntMat].MatD3D.Diffuse.b, pMat[nCntMat].MatD3D.Diffuse.a);
 			}
 
-			// モデルの透明度を設定
-			/*
-			// ※現在適応されません。
-			// 原因：.fxファイルにてAmbientColorのalpha値を1.0fに固定しているため
-			*/
-			Diffuse.w = m_colorAlpha;
+			Diffuse.w = m_color.a;
 
 			pEffect->SetVector(m_hvDiffuse, &Diffuse);
 		}

@@ -9,6 +9,7 @@
 #include "utility.h"
 
 const int CPlayerAfterimageFall::MAX_LIFE = 10;
+const float CPlayerAfterimageFall::ALPHA_COLOR = 0.45f;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -34,6 +35,8 @@ HRESULT CPlayerAfterimageFall::Init()
 	LoadModel("BOX");
 
 	m_life = MAX_LIFE;
+	AttachOutLine();
+	SetColorAlpha(ALPHA_COLOR);
 
 	return S_OK;
 }
@@ -90,7 +93,7 @@ CPlayerAfterimageFall* CPlayerAfterimageFall::Create(const D3DXVECTOR3& inPos)
 	{
 		objectX->Init();
 		objectX->SetPos(inPos);
-		objectX->SetMove(D3DXVECTOR3(0.0f,FloatRandam(25.0f,35.5f),0.0f));
+		objectX->SetMove(D3DXVECTOR3(0.0f,FloatRandom(25.0f,35.5f),0.0f));
 	}
 
 	return objectX;

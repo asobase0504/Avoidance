@@ -98,8 +98,8 @@ CEnemyOneWayDied* CEnemyOneWayDied::Create(const D3DXVECTOR3& inPos)
 	{
 		objectX->Init();
 		objectX->SetPos(inPos);
-		objectX->SetRot(D3DXVECTOR3(FloatRandam(-D3DX_PI, D3DX_PI), FloatRandam(-D3DX_PI, D3DX_PI), FloatRandam(-D3DX_PI, D3DX_PI)));
-		objectX->SetMove(D3DXVECTOR3(FloatRandam(-5.5f,5.5f),7.5f, FloatRandam(-5.5f, 5.5f)));
+		objectX->SetRot(D3DXVECTOR3(FloatRandom(-D3DX_PI, D3DX_PI), FloatRandom(-D3DX_PI, D3DX_PI), FloatRandom(-D3DX_PI, D3DX_PI)));
+		objectX->SetMove(D3DXVECTOR3(FloatRandom(-5.5f,5.5f),7.5f, FloatRandom(-5.5f, 5.5f)));
 		objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_3));
 	}
 

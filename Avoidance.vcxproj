@@ -178,6 +178,7 @@
     <ClCompile Include="enemy_reflection.cpp" />
     <ClCompile Include="enemy_planprogress.cpp" />
     <ClCompile Include="goal.cpp" />
+    <ClCompile Include="goal_effect.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="load_stage.cpp" />
@@ -228,7 +229,7 @@
     <ClCompile Include="score.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="stage.cpp" />
-    <ClCompile Include="stage_clear.cpp" />
+    <ClCompile Include="clear.cpp" />
     <ClCompile Include="task.cpp" />
     <ClCompile Include="task_group.cpp" />
     <ClCompile Include="text.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="enemy_reflection.h" />
     <ClInclude Include="enemy_planprogress.h" />
     <ClInclude Include="goal.h" />
+    <ClInclude Include="goal_effect.h" />
     <ClInclude Include="inputjoypad.h" />
     <ClInclude Include="inputkeydata.h" />
     <ClInclude Include="line.h" />
@@ -309,7 +311,7 @@
     <ClInclude Include="score.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="stage.h" />
-    <ClInclude Include="stage_clear.h" />
+    <ClInclude Include="clear.h" />
     <ClInclude Include="task.h" />
     <ClInclude Include="task_group.h" />
     <ClInclude Include="text.h" />
@@ -324,7 +326,14 @@
     <None Include="ClassDiagram.cd" />
     <None Include="data\FILE\color.json" />
     <None Include="data\FILE\model.json" />
-    <None Include="data\FILE\stage.json" />
+    <None Include="data\FILE\stage0.json" />
+    <None Include="data\FILE\stage1.json" />
+    <None Include="data\FILE\stage2.json" />
+    <None Include="data\FILE\stage3.json" />
+    <None Include="data\FILE\stage4.json" />
+    <None Include="data\FILE\stage5.json" />
+    <None Include="data\FILE\stage6.json" />
+    <None Include="data\FILE\stageGroup.json" />
     <None Include="data\FILE\texture.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

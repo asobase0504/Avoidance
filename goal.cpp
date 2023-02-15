@@ -6,6 +6,7 @@
 //=============================================================================
 #include <assert.h>
 #include "goal.h"
+#include "goal_effect.h"
 #include "delay_process.h"
 
 //-----------------------------------------------------------------------------
@@ -30,8 +31,8 @@ CGoal::~CGoal()
 HRESULT CGoal::Init()
 {
 	// 現在のモーション番号の保管
-	CObjectX::Init();
 	LoadModel("BOX");
+	CObjectX::Init();
 	SetType(EType::GOAL);
 	SetCollisionFlag(false);
 	return S_OK;
@@ -88,6 +89,9 @@ CGoal* CGoal::Create()
 	return goal;
 }
 
+//-----------------------------------------------------------------------------
+// ゴール可能になる時間
+//-----------------------------------------------------------------------------
 void CGoal::SetTime(int inTime)
 {
 	m_goalTime = inTime;
@@ -96,5 +100,15 @@ void CGoal::SetTime(int inTime)
 	{
 		SetMaterialDiffuse(0,D3DXCOLOR(1.0f,1.0f,0.0f,1.0f));
 		SetCollisionFlag(true);
+
+		auto effect = [this]()
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				CGoalEffect::Create(GetPos());
+			}
+		};
+
+		CDelayProcess::DelayProcess(3,this, effect,-1);
 	});
 }

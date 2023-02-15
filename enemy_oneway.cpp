@@ -75,9 +75,9 @@ void CEnemyOneWay::EndUpdate()
 	for (int i = 0;i < 10;i++)
 	{
 		D3DXVECTOR3 pos = m_pos;
-		pos.x += FloatRandam(-20.0f, 20.0f);
-		pos.y += FloatRandam(-20.0f, 20.0f);
-		pos.z += FloatRandam(-20.0f, 20.0f);
+		pos.x += FloatRandom(-20.0f, 20.0f);
+		pos.y += FloatRandom(-20.0f, 20.0f);
+		pos.z += FloatRandom(-20.0f, 20.0f);
 		CEnemyOneWayDied::Create(pos);
 	}
 

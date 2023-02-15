@@ -32,12 +32,15 @@ public: // パブリック関数
 
 	static CPlayer* Create();	// 生成
 
+	// ゴール状態
 	void SetIsGoal(bool isGoal) { m_isGoal = isGoal; }
 	bool GetIsGoal() { return m_isGoal; }
 
+	// 移動許可
 	void SetIsMove(bool isMove) { m_isMove = isMove; }
 	bool IsMove() { return m_isMove; }
 
+	// 死亡状態
 	bool IsDied() { return m_isDied; }
 
 private: // プライベート関数

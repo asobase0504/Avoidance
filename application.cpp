@@ -268,12 +268,16 @@ void CApplication::SetMode(MODE mode)
 
 	// ‰Šú‰»ˆ—
 	if (FAILED(m_pMode->Init()))	//‰æ–ÊƒTƒCƒY
-	{//‰Šú‰»ˆ—‚ª¸”s‚µ‚½ê‡
-		return ;
+	{
+		//‰Šú‰»ˆ—‚ª¸”s‚µ‚½ê‡
+		return;
 	}
 }
 
 
+//=============================================================================
+// ’x‚­‚È‚éˆ—
+//=============================================================================
 void CApplication::Delay(int intime, int inDelay)
 {
 	m_needDelay = true;
