@@ -16,12 +16,12 @@
 //-----------------------------------------------------------------------------
 CObject::CObject(CTaskGroup::EPriority inPriority, CTaskGroup::EPushMethod inMethod) :
 	CTask(inPriority, inMethod),
-	m_pos(0.0f, 0.0f, 0.0f),		// 位置
-	m_posOld(0.0f, 0.0f, 0.0f),		// 過去の位置
-	m_move(0.0f, 0.0f, 0.0f),		// 移動量
-	m_rot(0.0f, 0.0f, 0.0f),		// 向き
-	m_moveRot(0.0f, 0.0f, 0.0f),	// 回転量
-	m_size(0.0f, 0.0f, 0.0f),		// 大きさ
+	m_pos(0.0f, 0.0f, 0.0f),			// 位置
+	m_posOld(0.0f, 0.0f, 0.0f),			// 過去の位置
+	m_move(0.0f, 0.0f, 0.0f),			// 移動量
+	m_rot(0.0f, 0.0f, 0.0f),			// 向き
+	m_moveRot(0.0f, 0.0f, 0.0f),		// 回転量
+	m_size(0.0f, 0.0f, 0.0f),			// 大きさ
 	m_color(1.0f, 1.0f, 1.0f,1.0f),		// 色
 	m_type(NONE),
 	m_updateStatus(EUpdateStatus::POP),

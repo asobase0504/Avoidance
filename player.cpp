@@ -19,6 +19,8 @@
 #include "color.h"
 #include "delay_process.h"
 
+#include "circle_shadow.h"
+
 //-----------------------------------------------------------------------------
 // íËêî
 //-----------------------------------------------------------------------------
@@ -61,6 +63,8 @@ HRESULT CPlayer::Init()
 	CObjectX::Init();
 
 	AttachOutLine();
+
+	CCircleShadow::Create(this);
 
 	return S_OK;
 }
