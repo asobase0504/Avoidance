@@ -95,7 +95,7 @@ void CCameraGame::Update()
 		if (objectX->SegmentAndAABB(m_posV, pos, &outPos))
 		{
 			CDebugProc::Print("outPos : %f,%f,%f\n", outPos.x, outPos.y, outPos.z);
-			m_posV = outPos;
+			m_posV = outPos + dist * 20.0f;
 			objectX->AttachOutLine(false);
 		}
 		else

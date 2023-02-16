@@ -1374,83 +1374,66 @@ bool CObjectX::SphereAndAABB(CObjectX * inObjectX, D3DXVECTOR3 * outPos)
 }
 
 //-----------------------------------------------------------------------------
-// RayとOBBの当たり判定
+// RayとAABBの当たり判定
 // Author : Yuda Kaito
 //-----------------------------------------------------------------------------
 bool CObjectX::RayAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inNormal, D3DXVECTOR3* outPos)
 {
-	// 光線を境界ボックスの空間へ移動
-	D3DXMATRIX invMat;
-	D3DXMatrixInverse(&invMat, 0, &m_mtxWorld);
+	float tmin = (m_MinVtx.x + m_pos.x - inPos.x) / inNormal.x;
+	float tmax = (m_MaxVtx.x + m_pos.x - inPos.x) / inNormal.x;
 
-	D3DXVECTOR3 p_l, dir_l;
-	D3DXVec3TransformCoord(&p_l, &inPos, &invMat);
-	invMat._41 = 0.0f;
-	invMat._42 = 0.0f;
-	invMat._43 = 0.0f;
-	D3DXVec3TransformCoord(&dir_l, &inNormal, &invMat);
-
-	// 交差判定
-	float p[3], d[3], min[3], max[3];
-	memcpy(p, &inPos, sizeof(D3DXVECTOR3));
-	memcpy(d, &inNormal, sizeof(D3DXVECTOR3));
-	D3DXVECTOR3 minPos = m_pos + (m_MinVtx);
-	D3DXVECTOR3 maxPos = m_pos + (m_MaxVtx);
-	memcpy(min, &minPos, sizeof(D3DXVECTOR3));
-	memcpy(max, &maxPos, sizeof(D3DXVECTOR3));
-
-	float t = -FLT_MAX;
-	float t_max = FLT_MAX;
-
-	for (int i = 0; i < 3; i++)
+	if (tmin > tmax)
 	{
-		if (abs(d[i]) < FLT_EPSILON)
-		{
-			if (p[i] < min[i] || p[i] > max[i])
-			{
-				return false; // 交差していない
-			}
-		}
-		else
-		{
-			// スラブとの距離を算出
-			// t1が近スラブ、t2が遠スラブとの距離
-			float odd = 1.0f / d[i];
-			float t1 = (min[i] - p[i]) * odd;
-			float t2 = (max[i] - p[i]) * odd;
-
-			// t1の方が距離が離れている場合。
-			if (t1 > t2)
-			{
-				float tmp = t1;
-				t1 = t2;
-				t2 = tmp;
-			}
-
-			// tの方が距離が近い場合。t1をtに入れる
-			if (t1 > t)
-			{
-				t = t1;
-			}
-
-			// t_maxの方が遠い場合。t2をt_maxに入れる
-			if (t2 < t_max)
-			{
-				t_max = t2;
-			}
-
-			// スラブ交差チェック
-			if (t >= t_max)
-			{
-				return false;
-			}
-		}
+		std::swap(tmin, tmax);
 	}
 
-	if (outPos != nullptr)
+	float tymin = (m_MinVtx.y + m_pos.y - inPos.y) / inNormal.y;
+	float tymax = (m_MaxVtx.y + m_pos.y - inPos.y) / inNormal.y;
+
+	if (tymin > tymax)
 	{
-		*outPos = inPos + t * inNormal;
+		std::swap(tymin, tymax);
 	}
+
+	if ((tmin > tymax) || (tymin > tmax))
+	{
+		return false;
+	}
+
+	if (tymin > tmin)
+	{
+		tmin = tymin;
+	}
+
+	if (tymax < tmax)
+	{
+		tmax = tymax;
+	}
+
+	float tzmin = (m_MinVtx.z + m_pos.z - inPos.z) / inNormal.z;
+	float tzmax = (m_MaxVtx.z + m_pos.z - inPos.z) / inNormal.z;
+
+	if (tzmin > tzmax)
+	{
+		std::swap(tzmin, tzmax);
+	}
+
+	if ((tmin > tzmax) || (tzmin > tmax))
+	{
+		return false;
+	}
+
+	if (tzmin > tmin)
+	{
+		tmin = tzmin;
+	}
+
+	if (tzmax < tmax)
+	{
+		tmax = tzmax;
+	}
+
+	*outPos = inPos + inNormal * tmin;
 
 	return true;
 }
@@ -1461,7 +1444,36 @@ bool CObjectX::RayAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inNorma
 //-----------------------------------------------------------------------------
 bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inPos2, D3DXVECTOR3* outPos)
 {
-	D3DXVECTOR3 hitPos(0.0f,0.0f,0.0f);
+	// 線分の両端点がAABB内に含まれているかどうかを判定する。
+	{
+		D3DXVECTOR3 min = m_pos + m_MinVtx;
+		D3DXVECTOR3 max = m_pos + m_MaxVtx;
+
+		bool isBoxContainsPos;
+		{
+			bool isContainsX = inPos.x > min.x && inPos.x < max.x;
+			bool isContainsY = inPos.y > min.y && inPos.y < max.y;
+			bool isContainsZ = inPos.z > min.z && inPos.z < max.z;
+
+			isBoxContainsPos = isContainsX && isContainsY && isContainsZ;
+		}
+
+		bool isBoxContainsPos2;
+		{
+			bool isContainsX = inPos2.x > min.x && inPos2.x < max.x;
+			bool isContainsY = inPos2.y > min.y && inPos2.y < max.y;
+			bool isContainsZ = inPos2.z > min.z && inPos2.z < max.z;
+
+			isBoxContainsPos2 = isContainsX && isContainsY && isContainsZ;
+		}
+
+		if (isBoxContainsPos || isBoxContainsPos2)
+		{
+			*outPos = inPos;
+			return true;
+		}
+	}
+	D3DXVECTOR3 hitPos(0.0f, 0.0f, 0.0f);
 
 	D3DXVECTOR3 min;
 	D3DXVECTOR3 max;
@@ -1508,7 +1520,7 @@ bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inP
 		bool hitY = min.y < hitPos.y && hitPos.y < max.y;
 		bool hitZ = min.z < hitPos.z && hitPos.z < max.z;
 
-		if (hitX && hitY &&hitZ)
+		if (hitX && hitY && hitZ)
 		{
 			if (outPos != nullptr)
 			{
@@ -1520,7 +1532,6 @@ bool CObjectX::SegmentAndAABB(const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inP
 
 	return false;
 }
-
 
 //-----------------------------------------------------------------------------
 // 現在地とAABBの最小距離
