@@ -43,9 +43,6 @@ public: // パブリック関数
 	void Update() override;		// 更新
 	void Draw() override;		// 描画
 
-	void SetScale(const float inScale);			// 大きさの設定
-	const float GetScale() { return m_scale; }	// 大きさの取得
-
 	static CStage* Create();	// 生成
 
 	void SetPos(const D3DXVECTOR3& inPos) { m_pos = inPos; }
@@ -74,15 +71,16 @@ public: // パブリック関数
 private: // プライベート関数
 
 private: // メンバー変数
-	CGoal* m_goal;
-	CPlain* m_floor;
-	CPlain* m_wall[5];
-	float m_scale;
 
 	D3DXVECTOR3 m_pos;
 
-	std::unordered_map<int, CPlain*> m_midairFloor;
-	std::unordered_map<int, SEnemyPop> m_enemy;
+	/* マップ */
+	CGoal* m_goal;		// ゴール
+	CPlain* m_floor;	// 床
+	CPlain* m_wall[5];	// 壁
+	std::unordered_map<int, CPlain*> m_midairFloor;	// 空中床
+	std::unordered_map<int, SEnemyPop> m_enemy;		// 出現予定のエネミー
+
 	int m_startCnt;
 
 	bool m_isFrag;

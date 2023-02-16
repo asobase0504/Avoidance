@@ -13,11 +13,15 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const int CPlayerDied::MAX_LIFE = 210;
+const unsigned int CPlayerDied::MAX_LIFE = 100;
+const unsigned int CPlayerDied::AGGREGATE_TIME = 60;
+const float CPlayerDied::SPATTER_SPEED = 8.5f;
+const float CPlayerDied::GRAVITY = -0.95f;
 D3DXVECTOR3 CPlayerDied::m_posOrigin(0.0f, 0.0f, 0.0f);
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CPlayerDied::CPlayerDied()
 {
@@ -25,6 +29,7 @@ CPlayerDied::CPlayerDied()
 
 //-----------------------------------------------------------------------------
 // デストラクタ
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CPlayerDied::~CPlayerDied()
 {
@@ -32,6 +37,7 @@ CPlayerDied::~CPlayerDied()
 
 //-----------------------------------------------------------------------------
 // 初期化
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 HRESULT CPlayerDied::Init()
 {
@@ -48,6 +54,7 @@ HRESULT CPlayerDied::Init()
 
 //-----------------------------------------------------------------------------
 // 終了
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CPlayerDied::Uninit()
 {
@@ -56,28 +63,26 @@ void CPlayerDied::Uninit()
 
 //-----------------------------------------------------------------------------
 // 更新
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CPlayerDied::NormalUpdate()
 {
 	m_life--;
 
-	//float scale = 1.5f - (ease::InBounce((float)m_life / (float)MAX_LIFE));
-
-	//SetScale(m_scaleOrigin * scale);
-
 	if (!m_hit)
 	{
-		if (m_life > 40)
+		if (m_life > AGGREGATE_TIME)
 		{
-			AddMove(D3DXVECTOR3(0.0f, -0.75f, 0.0f));
+			AddMove(D3DXVECTOR3(0.0f, GRAVITY, 0.0f));
 		}
 
 		m_hit = OnHitPlain();
 	}
 
-	if (m_life == 40)
+	if (m_life == AGGREGATE_TIME)
 	{
-		SetMove((m_posOrigin - m_pos) / 40.0f);
+		SetMoveRot(D3DXVECTOR3(FloatRandom(-0.15f,0.15f), FloatRandom(-0.15f, 0.15f), FloatRandom(-0.15f, 0.15f)));
+		SetMove((m_posOrigin - m_pos) / AGGREGATE_TIME);
 	}
 
 	if (m_life <= 0)
@@ -88,6 +93,7 @@ void CPlayerDied::NormalUpdate()
 
 //-----------------------------------------------------------------------------
 // 更新
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CPlayerDied::EndUpdate()
 {
@@ -96,6 +102,7 @@ void CPlayerDied::EndUpdate()
 
 //-----------------------------------------------------------------------------
 // 描画
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CPlayerDied::Draw()
 {
@@ -104,6 +111,7 @@ void CPlayerDied::Draw()
 
 //-----------------------------------------------------------------------------
 // 生成
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CPlayerDied* CPlayerDied::Create(const D3DXVECTOR3& inPos)
 {
@@ -117,13 +125,17 @@ CPlayerDied* CPlayerDied::Create(const D3DXVECTOR3& inPos)
 		objectX->SetScale(D3DXVECTOR3(scale, scale, scale));
 		objectX->m_scaleOrigin = objectX->GetScale();;
 		objectX->SetRot(D3DXVECTOR3(FloatRandom(-D3DX_PI, D3DX_PI), FloatRandom(-D3DX_PI, D3DX_PI), FloatRandom(-D3DX_PI, D3DX_PI)));
-		objectX->SetMove(D3DXVECTOR3(FloatRandom(-7.5f, 7.5f), FloatRandom(0.5f, 15.5f), FloatRandom(-7.5f, 7.5f)));
+		objectX->SetMove(D3DXVECTOR3(FloatRandom(-SPATTER_SPEED, SPATTER_SPEED), FloatRandom(0.5f, 15.5f), FloatRandom(-SPATTER_SPEED, SPATTER_SPEED)));
 		objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_2));
 	}
 
 	return objectX;
 }
 
+//-----------------------------------------------------------------------------
+// 地面との当たり判定
+// Author:Yuda Kaito
+//-----------------------------------------------------------------------------
 bool CPlayerDied::OnHitPlain()
 {
 	// 最初に見つけた指定したタイプのobjectを持ってくる

@@ -80,6 +80,9 @@
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\01_UI">
       <UniqueIdentifier>{2876465f-111d-4b9d-9d2b-53dec1d9c9c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\03_Tutorial">
+      <UniqueIdentifier>{bbf60cf0-c644-4182-9a33-c11de77736a6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main">
       <UniqueIdentifier>{471a56a9-5168-4905-ae90-32de897d4e90}</UniqueIdentifier>
     </Filter>
@@ -92,17 +95,14 @@
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Factory">
       <UniqueIdentifier>{11407601-94e9-49f4-b00c-8dfb9e1d5711}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type">
+      <UniqueIdentifier>{679e5f82-dba9-462d-b25a-c1b6ba292a35}</UniqueIdentifier>
+    </Filter>
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\01_Player">
       <UniqueIdentifier>{70dc601d-8be8-41c5-8579-d6ae0f8683bb}</UniqueIdentifier>
     </Filter>
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\02_Stage">
       <UniqueIdentifier>{0e478b54-43cd-49c7-9983-697542d6a536}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Main\00_Enemy\Type">
-      <UniqueIdentifier>{679e5f82-dba9-462d-b25a-c1b6ba292a35}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\03_Tutorial">
-      <UniqueIdentifier>{bbf60cf0-c644-4182-9a33-c11de77736a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -338,6 +338,9 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\02_Stage</Filter>
     </ClCompile>
     <ClCompile Include="clear.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="select.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -580,6 +583,9 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Main\02_Stage</Filter>
     </ClInclude>
     <ClInclude Include="clear.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="select.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClInclude>
   </ItemGroup>

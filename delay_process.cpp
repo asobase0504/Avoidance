@@ -8,6 +8,7 @@
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
+// Author : Yuda Kaito
 //-----------------------------------------------------------------------------
 CDelayProcess::CDelayProcess(CTask* inTask) : CTask(inTask->GetPriority(), CTaskGroup::EPushMethod::PUSH_NEXT, inTask)
 {
@@ -17,6 +18,7 @@ CDelayProcess::CDelayProcess(CTask* inTask) : CTask(inTask->GetPriority(), CTask
 
 //-----------------------------------------------------------------------------
 // デストラクタ
+// Author : Yuda Kaito
 //-----------------------------------------------------------------------------
 CDelayProcess::~CDelayProcess()
 {
@@ -24,6 +26,7 @@ CDelayProcess::~CDelayProcess()
 
 //-----------------------------------------------------------------------------
 // 初期化
+// Author : Yuda Kaito
 //-----------------------------------------------------------------------------
 HRESULT CDelayProcess::Init()
 {
@@ -32,6 +35,7 @@ HRESULT CDelayProcess::Init()
 
 //-----------------------------------------------------------------------------
 // 更新
+// Author : Yuda Kaito
 //-----------------------------------------------------------------------------
 void CDelayProcess::Update()
 {
@@ -61,8 +65,9 @@ void CDelayProcess::Update()
 
 //-----------------------------------------------------------------------------
 // 処理の登録
+// Author : Yuda Kaito
 //-----------------------------------------------------------------------------
-void CDelayProcess::DelayProcess(int inCount, CTask* inTask, std::function<void()> inFunc, int inLoopCount)
+void CDelayProcess::DelayProcess(const unsigned int inCount, CTask* inTask, std::function<void()> inFunc, int inLoopCount)
 {
 	CDelayProcess* processs = new CDelayProcess(inTask);
 	processs->m_task = inTask;

@@ -161,9 +161,6 @@ void CCountdown::NormalUpdate()
 {
 	m_count++;
 
-	float size;
-	float size2;
-
 	D3DXVECTOR3 addSize(sinf(m_count * 0.15f), sinf(m_count * 0.15f), sinf(m_count * 0.15f));
 
 	static bool onoff = true;

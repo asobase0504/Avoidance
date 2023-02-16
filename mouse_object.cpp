@@ -36,6 +36,10 @@ HRESULT CMouseObject::Init()
 {
 	CObject2d::Init();
 	D3DXVECTOR3 pos = CInput::GetKey()->GetMouse()->GetMouseCursorPos();
+
+	// カーソルのロックを切る
+	CInput::GetKey()->GetMouse()->UseSetPosLock(false);
+
 	SetPos(pos);
 	SetSize(D3DXVECTOR3(10.0f, 10.0f, 0.0f));
 	SetColor(D3DXCOLOR(1.0f, 0.0f, 0.5f, 1.0f));

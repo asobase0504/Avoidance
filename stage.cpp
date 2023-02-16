@@ -49,6 +49,19 @@ HRESULT CStage::Init()
 //-----------------------------------------------------------------------------
 void CStage::Uninit()
 {
+	m_goal->Release();	// ÉSÅ[Éã
+	m_floor->Release();	// è∞
+
+	for (int i = 0; i < 5; i++)
+	{
+		m_wall[i]->Release();	// ï«
+	}
+
+	for (int i = 0; i < (int)m_midairFloor.size(); i++)
+	{
+		m_midairFloor.at(i)->Release();	// ãÛíÜè∞
+	}
+
 	CTask::Uninit();
 }
 
@@ -118,24 +131,6 @@ void CStage::Draw()
 }
 
 //-----------------------------------------------------------------------------
-// ëÂÇ´Ç≥ÇÃê›íË
-//-----------------------------------------------------------------------------
-void CStage::SetScale(const float inScale)
-{
-	m_scale = inScale;
-	m_floor->SetPos(D3DXVECTOR3(0.0f, -15.0f, 0.0f));
-	m_floor->SetScale(D3DXVECTOR3(m_scale, 1.5f, m_scale));
-	m_wall[0]->SetPos(D3DXVECTOR3(0.0f, 10.0f * m_scale, 10.0f * m_scale));
-	m_wall[0]->SetScale(D3DXVECTOR3(m_scale, m_scale, 0.5f));
-	m_wall[1]->SetPos(D3DXVECTOR3(0.0f, 10.0f * m_scale, -10.0f * m_scale));
-	m_wall[1]->SetScale(D3DXVECTOR3(m_scale, m_scale, 0.5f));
-	m_wall[2]->SetPos(D3DXVECTOR3(10.0f * m_scale, 10.0f * m_scale, 0.0f));
-	m_wall[2]->SetScale(D3DXVECTOR3(0.5f, m_scale, m_scale));
-	m_wall[3]->SetPos(D3DXVECTOR3(-10.0f * m_scale, 10.0f * m_scale, 0.0f));
-	m_wall[3]->SetScale(D3DXVECTOR3(0.5f, m_scale, m_scale));
-}
-
-//-----------------------------------------------------------------------------
 // è∞ÇÃê›íu
 //-----------------------------------------------------------------------------
 void CStage::SetFloor(const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot, const D3DXVECTOR3 & scale)
@@ -145,7 +140,6 @@ void CStage::SetFloor(const D3DXVECTOR3 & pos, const D3DXVECTOR3 & rot, const D3
 	objectX->SetPos(pos);
 	objectX->SetRot(rot);
 	objectX->SetScale(scale);
-	m_scale = scale.x;
 	objectX->SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1));
 	objectX->SetDisplayOperation();
 	//objectX->CalculationVtx();

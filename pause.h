@@ -17,6 +17,7 @@
 //-----------------------------------------------------------------------------
 class CMouseObject;
 class CObject2d;
+class CSelect;
 
 //=============================================================================
 // ポーズクラス
@@ -24,16 +25,6 @@ class CObject2d;
 class CPause :public CObject
 {
 public:
-	//選択できる種類
-	enum ESelectType
-	{
-		MODE_NONE = 0,	// 選択していない
-		MODE_BACK,		// ゲーム画面に戻る
-		MODE_RETURN,	// ゲームをやり直す
-		MODE_END,		// タイトルに戻る
-		MODE_MAX
-	};
-
 	CPause();
 	~CPause();
 
@@ -49,10 +40,12 @@ public:
 
 private:
 	bool m_onPause;
-	ESelectType m_nextMode;
 	CObject2d* m_bg;
-	CObject2d* m_selectText[4];
-	CMouseObject* m_mouseCursor;
-};
 
+	CMouseObject* m_mouseCursor;
+
+	CSelect* m_back;
+	CSelect* m_retry;
+	CSelect* m_titleBack;
+};
 #endif 

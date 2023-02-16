@@ -12,10 +12,19 @@
 //-----------------------------------------------------------------------------
 #include "objectX.h"
 
+//-----------------------------------------------------------------------------
+// プレイヤーの死亡エフェクト
+// Author:Yuda Kaito
+//-----------------------------------------------------------------------------
 class CPlayerDied : public CObjectX
 {
 public: // 定数
-	static const int MAX_LIFE;
+	static const unsigned int MAX_LIFE;			// 生存時間
+	static const unsigned int AGGREGATE_TIME;	// 集合する時間
+	static const float SPATTER_SPEED;			// 飛び散る速度
+	static const float ROT_RANDOM_LIMIT;		// 加算角度の上限
+	static const float GRAVITY;					// 重力
+
 public: // パブリック関数
 	CPlayerDied();
 	~CPlayerDied();
@@ -28,6 +37,8 @@ public: // パブリック関数
 
 	static CPlayerDied* Create(const D3DXVECTOR3& inPos);	// 生成
 	static void SetOriginPos(const D3DXVECTOR3& inPos) { m_posOrigin = inPos; }
+
+private: // メンバー関数
 	bool OnHitPlain();	// Polygonとの当たり判定
 
 private: // メンバー変数

@@ -227,6 +227,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="score.cpp" />
+    <ClCompile Include="select.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="clear.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="score.h" />
+    <ClInclude Include="select.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="clear.h" />

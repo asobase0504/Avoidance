@@ -23,6 +23,7 @@ public:
 	enum ERole
 	{
 		ROLE_OBJECT = 0,
+		ROLE_MODE,
 		ROLE_CAMERA,
 		ROLE_LIGHT,
 		ROLE_STAGE,

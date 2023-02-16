@@ -17,6 +17,7 @@
 #include "collision.h"
 #include "goal.h"
 #include "color.h"
+#include "delay_process.h"
 
 //-----------------------------------------------------------------------------
 // ’è”
@@ -144,14 +145,10 @@ void CPlayer::NormalUpdate()
 	}
 	else
 	{
-		static int cnt = 0;
-
-		cnt++;
-		if (cnt >= CPlayerDied::MAX_LIFE)
+		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
 		{
-			cnt = 0;
 			m_isDied = false;
-		}
+		});
 	}
 }
 

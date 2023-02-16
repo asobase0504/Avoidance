@@ -15,6 +15,7 @@
 #include "input.h"
 #include "color.h"
 #include "utility.h"
+#include "delay_process.h"
 
 /* 3D系統 */
 #include "camera_game.h"
@@ -31,6 +32,7 @@
 #include "bg_box.h"
 #include "countdown.h"
 #include "mouse_object.h"
+#include "select.h"
 
 //-----------------------------------------------------------------------------
 // 定数
@@ -130,7 +132,7 @@ void CGame::Uninit(void)
 //-----------------------------------------------------------------------------
 void CGame::Update(void)
 {
-	// ステージが始まるまでの間隔
+	// ステージが始まるまでのカウントダウン
 	if (m_countdown != nullptr)
 	{
 		if (m_countdown->IsEnd())
@@ -142,8 +144,8 @@ void CGame::Update(void)
 		}
 	}
 
-	// ポーズ
-	if (CInput::GetKey()->Trigger(DIK_P))
+	// ステージがクリアされてなくて、カウントダウン中でもなく、プレイヤーが死んでいない場合
+	if (CInput::GetKey()->Trigger(DIK_P) && !m_stage->IsEnd() && m_countdown == nullptr && !m_player->IsDied())
 	{
 		CPause* pause = new CPause;
 		pause->Init();
@@ -165,40 +167,110 @@ void CGame::StageClear()
 		return;
 	}
 
-	if (m_fallCount == FALL_TIME)
+	if (m_fallCount == 0)
 	{
-		// マウスの位置ロック
-		CInput::GetKey()->GetMouse()->UseSetPosLock(false);
+		/* ステージのリセット */
+		m_stage->SetStart(false);	// スタートしてない状態にする
+		m_stage->PopReset();		// 敵が湧かないようにする
 
-		// マウスの見た目生成
-		m_mouseCursor = CMouseObject::Create();
-
-		// Enemyに全てリリース処理をかける
+		// Enemy全てにリリース処理をかける
 		CObject::TypeAllFunc(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1, [](CObject* inObject)
 		{
 			inObject->Release();
 		});
 
-		m_nextText = CObject2d::Create(CTaskGroup::EPriority::LEVEL_2D_UI);
+		// UIを並べる場所を設定
 		D3DXVECTOR3 pos = CApplication::CENTER_POS;
 		pos.x += 375.0f;
 		pos.y += 180.0f;
-		pos.y -= 70.0f;
-		m_nextText->SetPos(pos);
-		m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		m_nextText->SetTexture("TEXT_NEXT");
 
-		m_retryText = CObject2d::Create(CTaskGroup::EPriority::LEVEL_2D_UI);
-		pos.y += 70.0f;
-		m_retryText->SetPos(pos);
-		m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		m_retryText->SetTexture("TEXT_RETRY");
+		{// 次へUIの作成
+			pos.y -= 70.0f;
+			m_nextText = CSelect::Create(pos);
+			m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+			m_nextText->SetTexture("TEXT_NEXT");
+			m_nextText->SetFunctionSelection([](CSelect* inSelect)
+			{
+				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+			});
+			m_nextText->SetFunctionNoSelection([](CSelect* inSelect)
+			{
+				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 
-		m_backText = CObject2d::Create(CTaskGroup::EPriority::LEVEL_2D_UI);
-		pos.y += 70.0f;
-		m_backText->SetPos(pos);
-		m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		m_backText->SetTexture("TEXT_TITLE");
+			});
+			m_nextText->SetFunctionClick([this](CSelect* inSelect)
+			{
+				// マウスの位置ロック
+				CInput::GetKey()->GetMouse()->UseSetPosLock(true);
+				m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
+
+				m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
+				m_fallCount = 0;
+				NextStage();
+
+				m_nextText->Release();
+				m_retryText->Release();
+				m_backText->Release();
+			});
+		}
+
+		{// もう一度UIの作成
+			pos.y += 70.0f;
+			m_retryText = CSelect::Create(pos);
+			m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+			m_retryText->SetTexture("TEXT_RETRY");
+			// カーソルに合わせたら行う処理
+			m_retryText->SetFunctionSelection([](CSelect* inSelect)
+			{
+				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+			});
+			// カーソルに合わせてない処理
+			m_retryText->SetFunctionNoSelection([](CSelect* inSelect)
+			{
+				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+
+			});
+			m_retryText->SetFunctionClick([this](CSelect* inSelect)
+			{
+				// マウスの位置ロック
+				CInput::GetKey()->GetMouse()->UseSetPosLock(true);
+				m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
+
+				RetryStage();
+
+				m_nextText->Release();
+				m_retryText->Release();
+				m_backText->Release();
+			});
+		}
+
+		{// タイトルに戻るUIの作成
+			pos.y += 70.0f;
+			m_backText = CSelect::Create(pos);
+			m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+			m_backText->SetTexture("TEXT_TITLE");
+			m_backText->SetFunctionSelection([](CSelect* inSelect)
+			{
+				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+			});
+			m_backText->SetFunctionNoSelection([](CSelect* inSelect)
+			{
+				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+
+			});
+			m_backText->SetFunctionClick([this](CSelect* inSelect)
+			{
+				// マウスの位置ロック
+				CInput::GetKey()->GetMouse()->UseSetPosLock(true);
+				inSelect->SetUpdateStatus(CObject::EUpdateStatus::END);
+
+				m_fallCount = 0;
+				CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
+			});
+		}
+
+		// マウスの見た目の作成(位置の固定化を解除)
+		m_mouseCursor = CMouseObject::Create();
 	}
 
 	m_fallCount++;
@@ -208,87 +280,6 @@ void CGame::StageClear()
 		m_fallCount = FALL_TIME + 1;
 
 		m_player->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
-
-		bool isLeftClick = CInput::GetKey()->Trigger(CMouse::MOUSE_KEY::MOUSE_KEY_LEFT);
-		bool isMouseNextHit = m_nextText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
-
-		// 触れたら大きくなる
-		if (m_nextText->PointAndAABB(m_mouseCursor->GetPos()))
-		{
-			m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
-		}
-		else
-		{
-			m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		}
-
-		// 次のステージに移行
-		if (CInput::GetKey()->Trigger(DIK_RETURN) || isMouseNextHit)
-		{
-			// マウスの位置ロック
-			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-			m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
-
-			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
-			m_fallCount = 0;
-			NextStage();
-
-			m_nextText->Release();
-			m_retryText->Release();
-			m_backText->Release();
-		}
-
-		// 戻るのテキスト内に入っており左クリックしているか
-		bool isMouseBackHit = m_backText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
-
-		// 触れたら大きくなる
-		if (m_backText->PointAndAABB(m_mouseCursor->GetPos()))
-		{
-			m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
-		}
-		else
-		{
-			m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		}
-
-		// タイトルに移行
-		if (CInput::GetKey()->Trigger(DIK_BACK) || isMouseBackHit)
-		{
-			// マウスの位置ロック
-			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-			m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
-
-			m_fallCount = 0;
-			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_TITLE);
-		}
-
-		bool isMouseRetryHit = m_retryText->PointAndAABB(m_mouseCursor->GetPos()) && isLeftClick;
-
-		// 触れたら大きくなる
-		if (m_retryText->PointAndAABB(m_mouseCursor->GetPos()))
-		{
-			m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
-		}
-		else
-		{
-			m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		}
-
-		// リトライ
-		if (CInput::GetKey()->Trigger(DIK_R) || isMouseRetryHit)
-		{
-			// マウスの位置ロック
-			CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-			m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
-
-			m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
-			m_fallCount = 0;
-			RetryStage();
-
-			m_nextText->Release();
-			m_retryText->Release();
-			m_backText->Release();
-		}
 	}
 }
 
@@ -317,13 +308,21 @@ void CGame::NextStage()
 //-----------------------------------------------------------------------------
 void CGame::RetryStage()
 {
+	m_player->SetPos(D3DXVECTOR3(0.0f, 100.0f, 0.0f));
+	m_fallCount = 0;
+
 	m_countdown = CCountdown::Create(CApplication::CENTER_POS);
+
+	// Enemyに全てリリース処理をかける
+	CObject::TypeAllFunc(CObject::EType::ENEMY, CTaskGroup::EPriority::LEVEL_3D_1, [](CObject* inObject)
+	{
+		inObject->Release();
+	});
 
 	m_stage->Release();	// 終了処理
 
-	m_stageNext = LoadAll(m_stagePath[m_stageSection]);
+	m_stage = LoadAll(m_stagePath[m_stageSection]);		// 現在のステージをもう一度読み込む
 
-	m_stage = m_stageNext;		// 次のステージを現在のステージにする
 	m_stage->SetStart(false);	// スタートしてない状態にする
 	m_player->SetIsGoal(false);	// プレイヤーがゴールしていない状態にする
 }
@@ -336,13 +335,19 @@ void CGame::PlayerDeath()
 {
 	if (m_player->IsDied() && !m_isDeathStop)
 	{
-		D3DXVECTOR3 pos = m_stage->GetPos();
-		pos.y += 60.0f;
+		// プレイヤーの位置をステージの中心のちょっと上に変更する
+		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE - CPlayerDied::AGGREGATE_TIME, this, [this]()
+		{
+			D3DXVECTOR3 pos = m_stage->GetPos();
+			pos.y += 20.0f;
 
-		CPlayerDied::SetOriginPos(pos);
-		pos -= m_player->GetPos();
-		pos /= 210.0f;
-		m_player->AddMove(pos);
+			CPlayerDied::SetOriginPos(pos);
+			pos -= m_player->GetPos();
+
+			pos /= (float)CPlayerDied::AGGREGATE_TIME;
+			m_player->AddMove(pos);
+		});
+
 		m_isDeathStop = true;
 
 		// Enemyに全てリリース処理をかける

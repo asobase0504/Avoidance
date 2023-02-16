@@ -19,6 +19,7 @@ class CStage;
 class CCountdown;
 class CPlayer;
 class CObject2d;
+class CSelect;
 
 //=============================================================================
 // ÉQÅ[ÉÄÉNÉâÉX
@@ -35,10 +36,11 @@ public:
 	void Uninit() override;
 	void Update() override;
 
+	void RetryStage();
+
 private:
 	void StageClear();
 	void NextStage();
-	void RetryStage();
 	void PlayerDeath();
 
 private:
@@ -55,9 +57,9 @@ private:
 
 	bool m_isDeathStop;
 
-	CObject2d* m_nextText;
-	CObject2d* m_retryText;
-	CObject2d* m_backText;
+	CSelect* m_nextText;
+	CSelect* m_retryText;
+	CSelect* m_backText;
 
 	CObject2d* m_mouseCursor;
 };
