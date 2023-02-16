@@ -104,6 +104,9 @@
     <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage">
       <UniqueIdentifier>{0e478b54-43cd-49c7-9983-697542d6a536}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow">
+      <UniqueIdentifier>{a8546a1f-2436-4945-84a9-fc5c6f3f4ae8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="result.cpp">
@@ -344,7 +347,10 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClCompile>
     <ClCompile Include="circle_shadow.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="model_shadow.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -592,7 +598,10 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClInclude>
     <ClInclude Include="circle_shadow.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="model_shadow.h">
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -605,7 +614,6 @@
     <None Include="data\FILE\model.json">
       <Filter>01_File\json</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
     <None Include="data\FILE\stage0.json">
       <Filter>01_File\json</Filter>
     </None>

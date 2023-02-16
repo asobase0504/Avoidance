@@ -40,6 +40,7 @@ HRESULT CEnemy::Init()
 	SetMaterialDiffuse(0, CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_3));
 
 	AttachOutLine();
+	AttachShadow();
 
 	return S_OK;
 }

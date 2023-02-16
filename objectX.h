@@ -66,6 +66,7 @@ public:
 	void Draw() override;
 	void DrawMaterial();
 	void DrawOutLine();
+	void DrawShadow();
 	void Projection();			// 平行投影処理
 
 	/* 生成処理 */
@@ -106,7 +107,9 @@ public:
 	void SetColorAlpha(float inAlpha) { m_color.a = inAlpha; }
 
 	/* OutLine */
-	void AttachOutLine(bool isOutLine = true) { m_hasOutLine = isOutLine; }
+	void AttachOutLine(bool isAttach = true) { m_hasOutLine = isAttach; }
+	/* Shadow */
+	void AttachShadow(bool isAttach = true) { m_hasShadow = isAttach; }
 
 	/* 当たり判定 */
 	void SetCollisionFlag(bool inFlag) { m_isCollision = inFlag; }	// 当たり判定の有無を設定
@@ -126,7 +129,7 @@ private:
 	void ComputeReferenceEdgesAndBasis(const D3DXVECTOR3& eR, const D3DXVECTOR3& rtx_pos, const D3DXMATRIX& rtx_mtxRot, D3DXVECTOR3 n, int axis, char* out, D3DXMATRIX* basis, D3DXVECTOR3* e);
 	int Clip(const D3DXVECTOR3& rPos, const D3DXVECTOR3& e, char* clipEdges, const D3DXMATRIX& basis, ClipVertex* incident, ClipVertex* outVerts, float* outDepths);
 
-private:
+protected:
 	//-------------------------------------------------------------------------
 	// メンバー変数
 	//-------------------------------------------------------------------------
@@ -149,6 +152,7 @@ private:
 	bool m_isCollision;			// 当たり判定が必要か
 
 	bool m_hasOutLine;			// アウトラインを使うか
+	bool m_hasShadow;			// アウトラインを使うか
 
 	//=========================================
 	//ハンドル一覧

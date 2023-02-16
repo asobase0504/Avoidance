@@ -182,6 +182,7 @@
     <ClCompile Include="inputjoypad.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="load_stage.cpp" />
+    <ClCompile Include="model_shadow.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="mouse_effect.cpp" />
     <ClCompile Include="mouse_object.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="inputkeydata.h" />
     <ClInclude Include="line.h" />
     <ClInclude Include="load_stage.h" />
+    <ClInclude Include="model_shadow.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="mouse_effect.h" />
     <ClInclude Include="mouse_object.h" />
@@ -327,7 +329,6 @@
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
     <None Include="data\FILE\color.json" />
     <None Include="data\FILE\model.json" />
     <None Include="data\FILE\stage0.json" />

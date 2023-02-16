@@ -44,7 +44,8 @@ CObjectX::CObjectX(CTaskGroup::EPriority nPriority) :
 	m_NumMat(0),
 	m_pParent(nullptr),
 	m_isCollision(true),
-	m_hasOutLine(false)
+	m_hasOutLine(false),
+	m_hasShadow(false)
 {
 	//オブジェクトのタイプセット処理
 	CObject::SetType(CObject::MODEL);
@@ -116,6 +117,7 @@ void CObjectX::Draw()
 
 	DrawMaterial();
 	DrawOutLine();
+	DrawShadow();
 }
 
 //-----------------------------------------------------------------------------
@@ -284,6 +286,75 @@ void CObjectX::DrawOutLine()
 	m_materialDiffuse[0] = D3DXCOLOR(0.0f,0.0f,0.0f,1.0f);
 	DrawMaterial();
 	m_materialDiffuse[0] = color;
+}
+
+//-----------------------------------------------------------------------------
+// 影を描画
+//-----------------------------------------------------------------------------
+void CObjectX::DrawShadow()
+{
+	if (!m_hasShadow)
+	{
+		return;
+	}
+
+	// 変数宣言
+	D3DXMATRIX mtxShadow;
+	D3DXPLANE planeField;
+
+	// シャドウマトリックスの初期化
+	D3DXMatrixIdentity(&mtxShadow);
+
+	// Y軸を最低にする
+	D3DXVECTOR3 pos(D3DXVECTOR3(0.0f, -FLT_MAX, 0.0f));
+
+	// 全ての地面と当たり判定を行う
+	CObject::TypeAllFunc(EType::PLAIN, CTaskGroup::EPriority::LEVEL_3D_1, [this,&pos](CObject* inObject)
+	{
+		CObjectX* plain = (CObjectX*)inObject;
+
+		D3DXVECTOR3 outPos;
+
+		if (plain->RayAndAABB(m_pos, D3DXVECTOR3(0.0f, -1.0f, 0.0f), &outPos))
+		{
+			outPos.y += 1.0f;
+
+			bool isParentThanOn = m_pos.y > outPos.y;	// 親より上
+			bool isThisThanDown = pos.y < outPos.y;		// 予定されてる位置より上
+
+			if (isParentThanOn && isThisThanDown)
+			{
+				pos = outPos;
+			}
+		}
+	});
+
+	D3DXVECTOR3 normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXPlaneFromPointNormal(&planeField, &pos, &normal);
+
+	D3DXVECTOR4 vecLight;	// 影の方向
+	vecLight = D3DXVECTOR4(0.0f, -1.0f, 0.0f, 0.0f) * -1.0f;	// 真下に影を落とす
+
+	D3DXMatrixShadow(&mtxShadow, &vecLight, &planeField);
+
+	// ワールドマトリックスと掛け合わせる
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxShadow);
+
+	std::vector<D3DXCOLOR> diffuseList;
+	diffuseList.resize(m_NumMat);
+
+	for (int i = 0; i < m_NumMat; i++)
+	{
+		diffuseList.at(i) = GetMaterialDiffuse(i);
+		SetMaterialDiffuse(i,D3DXCOLOR(0.15f,0.15f,0.15f,1.0f));
+	}
+
+	DrawMaterial();
+
+	for (int i = 0; i < m_NumMat; i++)
+	{
+		SetMaterialDiffuse(i, diffuseList.at(i));
+	}
 }
 
 //-----------------------------------------------------------------------------

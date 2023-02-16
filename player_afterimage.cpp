@@ -38,6 +38,7 @@ HRESULT CPlayerAfterimage::Init()
 	SetColorAlpha(ALPHA_COLOR);
 
 	AttachOutLine();
+	AttachShadow();
 
 	return S_OK;
 }

@@ -19,7 +19,7 @@
 #include "color.h"
 #include "delay_process.h"
 
-#include "circle_shadow.h"
+#include "model_shadow.h"
 
 //-----------------------------------------------------------------------------
 // íËêî
@@ -63,8 +63,9 @@ HRESULT CPlayer::Init()
 	CObjectX::Init();
 
 	AttachOutLine();
+	AttachShadow();
 
-	CCircleShadow::Create(this);
+	//CModelShadow::Create(this);
 
 	return S_OK;
 }
