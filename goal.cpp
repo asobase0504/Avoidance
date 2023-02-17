@@ -38,7 +38,7 @@ HRESULT CGoal::Init()
 	CObjectX::Init();
 	SetType(EType::GOAL);
 	SetCollisionFlag(false);
-	AttachShadow();
+	AttachShadow(false);
 	return S_OK;
 }
 
@@ -113,7 +113,7 @@ void CGoal::SetTime(int inTime)
 
 		auto effect = [this]()
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				CGoalEffect::Create(GetPos());
 			}

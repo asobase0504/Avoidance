@@ -14,8 +14,8 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const D3DXVECTOR3 CGoalEffect::SCALE = D3DXVECTOR3(0.5f, 1.4f, 0.5f);
-const D3DXVECTOR3 CGoalEffect::MOVE_POWER = D3DXVECTOR3(0.0f, 3.5f, 0.0f);
+const D3DXVECTOR3 CGoalEffect::SCALE = D3DXVECTOR3(0.5f, 1.0f, 0.5f);
+const D3DXVECTOR3 CGoalEffect::MOVE_POWER = D3DXVECTOR3(0.0f, 2.5f, 0.0f);
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -64,7 +64,7 @@ void CGoalEffect::NormalUpdate()
 
 	D3DXVECTOR3 scale = GetScale();
 	scale.x -= 0.02f;
-	scale.y -= 0.01f;
+	scale.y -= 0.005f;
 	scale.z -= 0.02f;
 	SetScale(scale);
 
