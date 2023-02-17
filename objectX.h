@@ -129,7 +129,7 @@ private:
 	void ComputeReferenceEdgesAndBasis(const D3DXVECTOR3& eR, const D3DXVECTOR3& rtx_pos, const D3DXMATRIX& rtx_mtxRot, D3DXVECTOR3 n, int axis, char* out, D3DXMATRIX* basis, D3DXVECTOR3* e);
 	int Clip(const D3DXVECTOR3& rPos, const D3DXVECTOR3& e, char* clipEdges, const D3DXMATRIX& basis, ClipVertex* incident, ClipVertex* outVerts, float* outDepths);
 
-protected:
+private:
 	//-------------------------------------------------------------------------
 	// メンバー変数
 	//-------------------------------------------------------------------------
@@ -157,7 +157,7 @@ protected:
 	//=========================================
 	//ハンドル一覧
 	//=========================================
-	IDirect3DTexture9	*pTex0 = NULL;	// テクスチャ保存用
+	IDirect3DTexture9	*pTex0;	// テクスチャ保存用
 	D3DXHANDLE			m_hmWVP;		// ワールド～射影行列
 	D3DXHANDLE			m_hmWIT;		// ローカル - ワールド変換行列
 	D3DXHANDLE			m_hvLightDir;	// ライトの方向

@@ -45,10 +45,12 @@ CObjectX::CObjectX(CTaskGroup::EPriority nPriority) :
 	m_pParent(nullptr),
 	m_isCollision(true),
 	m_hasOutLine(false),
-	m_hasShadow(false)
+	m_hasShadow(false),
+	pTex0(nullptr)
 {
 	//オブジェクトのタイプセット処理
 	CObject::SetType(CObject::MODEL);
+	D3DXMatrixIdentity(&m_mtxWorld);
 	D3DXMatrixIdentity(&m_mtxRot);
 	m_materialDiffuse.clear();
 }
@@ -343,7 +345,7 @@ void CObjectX::DrawShadow()
 	std::vector<D3DXCOLOR> diffuseList;
 	diffuseList.resize(m_NumMat);
 
-	for (int i = 0; i < m_NumMat; i++)
+	for (int i = 0; i < (int)m_NumMat; i++)
 	{
 		diffuseList.at(i) = GetMaterialDiffuse(i);
 		SetMaterialDiffuse(i,D3DXCOLOR(0.15f,0.15f,0.15f,1.0f));
@@ -351,7 +353,7 @@ void CObjectX::DrawShadow()
 
 	DrawMaterial();
 
-	for (int i = 0; i < m_NumMat; i++)
+	for (int i = 0; i < (int)m_NumMat; i++)
 	{
 		SetMaterialDiffuse(i, diffuseList.at(i));
 	}

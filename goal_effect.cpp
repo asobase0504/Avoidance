@@ -128,7 +128,6 @@ CGoalEffect* CGoalEffect::Create(const D3DXVECTOR3 & inPos)
 
 	if (FloatRandom(-1.0f, 1.0f) <= 0.0f)
 	{
-		float random = FloatRandom(0.0f, 1.0f) * 0.25f;
 		effect->SetColorAlpha(0.35f);
 		effect->SetScale(MOVE_POWER * 2.0f);
 	}

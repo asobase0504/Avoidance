@@ -215,5 +215,5 @@ void CMouse::SetCursorPosLock()
 	pos.x += windowInfo.rcWindow.left;
 	pos.y += windowInfo.rcWindow.top + 35; //ウィンドウのタイトルバーの分（35px）をプラス
 
-	SetCursorPos(pos.x, pos.y);
+	SetCursorPos((int)pos.x, (int)pos.y);
 }

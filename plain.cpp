@@ -60,8 +60,6 @@ void CPlain::Uninit()
 //-----------------------------------------------------------------------------
 void CPlain::NormalUpdate()
 {
-	CObject* player = SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1);
-	CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_CAMERA, CTaskGroup::EPriority::LEVEL_3D_1);
 }
 
 //-----------------------------------------------------------------------------

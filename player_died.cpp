@@ -82,7 +82,7 @@ void CPlayerDied::NormalUpdate()
 	if (m_life == AGGREGATE_TIME)
 	{
 		SetMoveRot(D3DXVECTOR3(FloatRandom(-0.15f,0.15f), FloatRandom(-0.15f, 0.15f), FloatRandom(-0.15f, 0.15f)));
-		SetMove((m_posOrigin - m_pos) / AGGREGATE_TIME);
+		SetMove((m_posOrigin - m_pos) / (float)AGGREGATE_TIME);
 	}
 
 	if (m_life <= 0)

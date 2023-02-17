@@ -349,9 +349,6 @@
     <ClCompile Include="circle_shadow.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
     </ClCompile>
-    <ClCompile Include="model_shadow.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="result.h">
@@ -598,9 +595,6 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClInclude>
     <ClInclude Include="circle_shadow.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
-    </ClInclude>
-    <ClInclude Include="model_shadow.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
     </ClInclude>
   </ItemGroup>
