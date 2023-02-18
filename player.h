@@ -16,7 +16,8 @@
 class CPlayer : public CObjectX
 {
 private: // 定数
-	static const float SPEED;			// スピード
+	static const float MAX_SPEED;		// 最大移動量
+	static const float SPEED;			// 移動量
 	static const float ATTENUATION;		// 減衰係数
 	static const float JUMPING_POWER;	// 跳躍力
 	static const float GRAVITY;			// 重力

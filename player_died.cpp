@@ -13,11 +13,11 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const unsigned int CPlayerDied::MAX_LIFE = 100;
-const unsigned int CPlayerDied::AGGREGATE_TIME = 60;
-const float CPlayerDied::SPATTER_SPEED = 8.5f;
-const float CPlayerDied::GRAVITY = -0.95f;
-D3DXVECTOR3 CPlayerDied::m_posOrigin(0.0f, 0.0f, 0.0f);
+const unsigned int CPlayerDied::MAX_LIFE = 100;			// 生存時間
+const unsigned int CPlayerDied::AGGREGATE_TIME = 60;	// 集合する時間
+const float CPlayerDied::SPATTER_SPEED = 8.5f;			// 飛び散る速度
+const float CPlayerDied::GRAVITY = -1.25f;				// 加算角度の上限
+D3DXVECTOR3 CPlayerDied::m_posOrigin(0.0f, 0.0f, 0.0f);	// 重力
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -48,6 +48,7 @@ HRESULT CPlayerDied::Init()
 	m_life = MAX_LIFE;
 	m_hit = false;
 	AttachOutLine();
+	AttachShadow();
 
 	return S_OK;
 }

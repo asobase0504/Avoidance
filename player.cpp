@@ -22,8 +22,9 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CPlayer::SPEED = 6.5f;			// 移動量
-const float CPlayer::ATTENUATION = 0.45f;	// 移動減衰係数
+const float CPlayer::MAX_SPEED = 5.5f;		// 移動量
+const float CPlayer::SPEED = 5.5f;			// 移動量
+const float CPlayer::ATTENUATION = 0.25f;	// 移動減衰係数
 const float CPlayer::JUMPING_POWER = 8.5f;	// 跳躍力
 const float CPlayer::GRAVITY = 0.15f;		// 重力
 
@@ -60,10 +61,8 @@ HRESULT CPlayer::Init()
 
 	CObjectX::Init();
 
-	AttachOutLine();
-	AttachShadow();
-
-	//CModelShadow::Create(this);
+	AttachOutLine();	// アウトラインを着ける
+	AttachShadow();		// 影を着ける
 
 	return S_OK;
 }
@@ -81,77 +80,78 @@ void CPlayer::Uninit()
 //-----------------------------------------------------------------------------
 void CPlayer::NormalUpdate()
 {
-	// デバッグ
+
+#ifdef _DEBUG
+
+#if 1	// デバッグ表示
+	CDebugProc::Print("----------------------------------------------------------------\n");
 	CDebugProc::Print("jumpDirection : %.2f,%.2f,%.2f\n", jumpDirection.x, jumpDirection.y, jumpDirection.z);
 	CDebugProc::Print("quaternion  : %.2f,%.2f,%.2f\n", m_quaternion.x, m_quaternion.y, m_quaternion.z);
 	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
 	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
+	CDebugProc::Print("----------------------------------------------------------------\n");
+#endif
 
-	if (!m_isDied)
+	CInput* input = CInput::GetKey();
+
+	if (input->Press(DIK_0))
 	{
-		m_quaternionOld = m_quaternion;
-		Move();			// 移動
-		boost();		// 突進
-		Jump();			// ジャンプ
-		Landing();		// 落下
-		OnHitGoal();	// Goalとの当たり判定
-		OnHitEnemy();	// Enemyとの当たり判定
-
-		NextStageWait();
-
-		CInput* input = CInput::GetKey();
-
-#ifdef _DEBUG
-		if (input->Press(DIK_0))
-		{
-			SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
-			SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		}
-		if (input->Press(DIK_9))
-		{
-			SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		}
+		SetPos(D3DXVECTOR3(0.0f, 30.0f, 0.0f));
+		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+	if (input->Press(DIK_9))
+	{
+		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
 #endif // _DEBUG
 
-		// 何かの拍子で下に行った場合の対処法
-		if (m_pos.y < -5000.0f)
-		{
-			SetPos(D3DXVECTOR3(m_pos.x, 1200.0f, m_pos.z));
-		}
+	if (m_isDied)
+	{
+		return;
+	}
 
-		// 軌跡パーティクル
-		static int time = 0;
-		time++;
-		if (m_isGoal)
+	m_quaternionOld = m_quaternion;
+	Move();			// 移動
+	boost();		// 突進
+	Jump();			// ジャンプ
+	Landing();		// 落下
+	OnHitGoal();	// Goalとの当たり判定
+	OnHitEnemy();	// Enemyとの当たり判定
+
+	NextStageWait();	// 次のステージまで待機させる
+
+	// 何かの拍子で下に行った場合の対処法
+	if (m_pos.y < -500.0f)
+	{
+		SetPos(D3DXVECTOR3(m_pos.x, 50.0f, m_pos.z));
+		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	}
+
+	// 追従軌跡パーティクル
+	static int time = 0;
+	time++;
+	if (m_isGoal)
+	{
+		// 落下軌跡
+		//if (time % 2 == 0)
 		{
-			// 落下軌跡
-			//if (time % 2 == 0)
-			{
-				time = 0;
-				CPlayerAfterimageFall* afterimage = CPlayerAfterimageFall::Create(m_pos);
-				afterimage->SetMtxRot(GetMtxRot());
-				afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
-			}
-		}
-		else
-		{
-			// 移動軌跡
-			if (time % 2 == 0)
-			{
-				time = 0;
-				CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
-				afterimage->SetMtxRot(GetMtxRot());
-				afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
-			}
+			time = 0;
+			CPlayerAfterimageFall* afterimage = CPlayerAfterimageFall::Create(m_pos);
+			afterimage->SetMtxRot(GetMtxRot());
+			afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
 		}
 	}
 	else
 	{
-		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
+		// 移動軌跡
+		if (time % 2 == 0)
 		{
-			m_isDied = false;
-		});
+			time = 0;
+			CPlayerAfterimage* afterimage = CPlayerAfterimage::Create(m_pos);
+			afterimage->SetMtxRot(GetMtxRot());
+			afterimage->SetMaterialDiffuse(0, GetMaterialDiffuse(0));
+		}
 	}
 }
 
@@ -230,14 +230,32 @@ void CPlayer::Move()
 	// 入力があった場合移動量に反映
 	if (D3DXVec3Length(&moveInput) != 0.0f)
 	{
-		if (fabs(m_move.x) < fabs(moveInput.x * SPEED))
+		if (fabs(m_move.x) < fabs(moveInput.x * MAX_SPEED))
 		{
-			m_move.x = moveInput.x * SPEED;
+			m_move.x += moveInput.x * SPEED;
+
+			if (m_move.x > MAX_SPEED)
+			{
+				m_move.x = MAX_SPEED;
+			}
+			else if (m_move.x < -MAX_SPEED)
+			{
+				m_move.x = -MAX_SPEED;
+			}
 		}
 
-		if (fabs(m_move.z) < fabs(moveInput.z * SPEED))
+		if (fabs(m_move.z) < fabs(moveInput.z * MAX_SPEED))
 		{
-			m_move.z = moveInput.z * SPEED;
+			m_move.z += moveInput.z * SPEED;
+
+			if (m_move.z > MAX_SPEED)
+			{
+				m_move.z = MAX_SPEED;
+			}
+			else if (m_move.z < -MAX_SPEED)
+			{
+				m_move.z = -MAX_SPEED;
+			}
 		}
 	}
 
@@ -283,10 +301,7 @@ void CPlayer::Jump()
 		m_jumpCount++;
 		m_isJump = true;
 
-		//jumpDirection.x *= 6.0f;
-		//jumpDirection.z *= 6.0f;
 		m_pos += 1.0f * jumpDirection;
-		m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		m_move += JUMPING_POWER * jumpDirection;
 	}
 }
@@ -300,8 +315,7 @@ void CPlayer::boost()
 	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
 	{
 		m_jumpCount++;
-		m_move.x *= 7.0f;
-		m_move.z *= 7.0f;
+		m_move.y += JUMPING_POWER * 0.25;
 	}
 }
 
@@ -371,10 +385,20 @@ void CPlayer::OnHitEnemy()
 				CPlayerDied::Create(pos);
 			}
 
+			CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(ROLE_CAMERA, CTaskGroup::LEVEL_3D_1);
+			camera->Shake(15.0f,100.0f);
+
 			SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 			//CApplication::GetInstance()->Delay(60, 2);
 			m_isDied = true;	// Goal
+
+			// リスポーン時間が過ぎたら生き返る
+			CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
+			{
+				m_isDied = false;
+			});
+
 		}
 	});
 }

@@ -38,7 +38,7 @@ HRESULT CGoal::Init()
 	CObjectX::Init();
 	SetType(EType::GOAL);
 	SetCollisionFlag(false);
-	AttachShadow(false);
+	AttachShadow();
 	return S_OK;
 }
 

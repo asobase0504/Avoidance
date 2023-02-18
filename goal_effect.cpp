@@ -44,6 +44,7 @@ HRESULT CGoalEffect::Init()
 	SetMaterialDiffuse(0, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	//SetColorAlpha(0.35f);
 	//AttachOutLine();
+	//AttachShadow();
 	m_life = 20;
 	return S_OK;
 }
