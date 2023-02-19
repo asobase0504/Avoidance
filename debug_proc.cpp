@@ -22,6 +22,7 @@
 //--------------------------------------------------------------------
 LPD3DXFONT CDebugProc::m_pFont = nullptr;	// フォント情報
 std::string CDebugProc::m_aStr;				// 登録文字列
+bool CDebugProc::m_use = false;	// フォント情報
 
 //=============================================================================
 // 文字列の登録
@@ -30,6 +31,10 @@ std::string CDebugProc::m_aStr;				// 登録文字列
 //=============================================================================
 void CDebugProc::Print(const char *pFormat, ...)
 {
+#ifndef _DEBUG
+	return;
+#endif // _DEBUG
+
 	// 変数
 	char aStrCpy[0xfff] = {};
 
@@ -39,9 +44,7 @@ void CDebugProc::Print(const char *pFormat, ...)
 	vsprintf(&aStrCpy[0], pFormat, args);
 	va_end(args);
 
-//#ifdef _DEBUG
 	m_aStr += aStrCpy;
-//#endif // DEBUG
 }
 
 //=============================================================================
@@ -51,6 +54,11 @@ void CDebugProc::Print(const char *pFormat, ...)
 //=============================================================================
 void CDebugProc::Draw(void)
 {
+	if (m_use)
+	{
+		return;
+	}
+
 	RECT rect = { 0, 0, 1280, 720 };
 
 	// テキスト描画
@@ -85,6 +93,10 @@ CDebugProc::~CDebugProc()
 //=============================================================================
 void CDebugProc::Init()
 {// デバイスへのポインタの取得
+#ifdef _DEBUG
+	m_use = true;
+#endif // _DEBUG
+
 	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
 	// デバッグ情報表示用フォントの生成
@@ -99,6 +111,10 @@ void CDebugProc::Init()
 //=============================================================================
 void CDebugProc::Uninit()
 {
+#ifndef _DEBUG
+	return;
+#endif // _DEBUG
+
 	// デバッグ情報表示用フォントの破棄
 	if (m_pFont != nullptr)
 	{

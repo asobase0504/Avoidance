@@ -121,7 +121,10 @@ void CObject::TypeAllFunc(CObject::EType inType, CTaskGroup::EPriority inPriorit
 	{
 		CObject* next = now->NextSameType();	// “¯‚¶ƒ^ƒCƒv‚Ìobject‚ğ‚Á‚Ä‚­‚é
 
-		inFunc(now);
+		if (now != nullptr)
+		{
+			inFunc(now);
+		}
 
 		now = next;
 	}

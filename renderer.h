@@ -68,8 +68,6 @@ private:	// メンバー変数
 	LPDIRECT3D9 m_pD3D;				// Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9 m_pD3DDevice;	// Deviceオブジェクト
 
-#ifdef _DEBUG
 	CDebugProc* m_debugProc;
-#endif
 };
 #endif

@@ -46,13 +46,18 @@ const int CGame::FALL_TIME = 145;
 CGame::CGame():
 	m_stage(nullptr),
 	m_stageNext(nullptr),
+	m_stageSection(0),
+	m_player(nullptr),
+	m_countdown(nullptr),
 	m_section(0),
 	m_fallCount(0),
-	m_stageSection(0),
+	m_isDeathStop(false),
 	m_nextText(nullptr),
 	m_retryText(nullptr),
-	m_backText(nullptr)
+	m_backText(nullptr),
+	m_mouseCursor(nullptr)
 {
+	m_stagePath.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -88,7 +93,7 @@ HRESULT CGame::Init(void)
 		CObject2d* bg = CObject2d::Create();
 		bg->SetPos(CApplication::CENTER_POS);
 		bg->SetSize(CApplication::CENTER_POS);
-		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_1);
+		D3DXCOLOR color = CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0);
 		bg->SetColor(color);
 	}
 
@@ -189,15 +194,19 @@ void CGame::StageClear()
 			m_nextText = CSelect::Create(pos);
 			m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 			m_nextText->SetTexture("TEXT_NEXT");
+
+			// 選択していたらこの処理を行う
 			m_nextText->SetFunctionSelection([](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
 			});
+			// 選択されていなかったらこの処理を行う
 			m_nextText->SetFunctionNoSelection([](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 
 			});
+			// クリックしたらこの処理を行う
 			m_nextText->SetFunctionClick([this](CSelect* inSelect)
 			{
 				// マウスの位置ロック
@@ -219,17 +228,19 @@ void CGame::StageClear()
 			m_retryText = CSelect::Create(pos);
 			m_retryText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 			m_retryText->SetTexture("TEXT_RETRY");
-			// カーソルに合わせたら行う処理
+
+			// 選択していたらこの処理を行う
 			m_retryText->SetFunctionSelection([](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
 			});
-			// カーソルに合わせてない処理
+			// 選択されていなかったらこの処理を行う
 			m_retryText->SetFunctionNoSelection([](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 
 			});
+			// クリックしたらこの処理を行う
 			m_retryText->SetFunctionClick([this](CSelect* inSelect)
 			{
 				// マウスの位置ロック
@@ -249,15 +260,19 @@ void CGame::StageClear()
 			m_backText = CSelect::Create(pos);
 			m_backText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 			m_backText->SetTexture("TEXT_TITLE");
+
+			// 選択していたらこの処理を行う
 			m_backText->SetFunctionSelection([](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
 			});
+			// 選択されていなかったらこの処理を行う
 			m_backText->SetFunctionNoSelection([](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 
 			});
+			// クリックしたらこの処理を行う
 			m_backText->SetFunctionClick([this](CSelect* inSelect)
 			{
 				// マウスの位置ロック
@@ -339,9 +354,10 @@ void CGame::PlayerDeath()
 		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE - CPlayerDied::AGGREGATE_TIME, this, [this]()
 		{
 			D3DXVECTOR3 pos = m_stage->GetPos();
-			pos.y += 20.0f;
+			pos.y += 50.0f;
 
 			CPlayerDied::SetOriginPos(pos);
+
 			pos -= m_player->GetPos();
 
 			pos /= (float)CPlayerDied::AGGREGATE_TIME;
@@ -360,10 +376,10 @@ void CGame::PlayerDeath()
 	if (m_isDeathStop)
 	{
 		m_stage->PopReset();
-		m_stage->ResetGoal();
 
 		if (!m_player->IsDied())
 		{
+			m_stage->ResetGoal();
 			m_isDeathStop = false;
 		}
 	}

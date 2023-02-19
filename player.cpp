@@ -80,8 +80,7 @@ void CPlayer::Uninit()
 //-----------------------------------------------------------------------------
 void CPlayer::NormalUpdate()
 {
-
-#ifdef _DEBUG
+//#ifdef _DEBUG
 
 #if 1	// デバッグ表示
 	CDebugProc::Print("----------------------------------------------------------------\n");
@@ -90,10 +89,29 @@ void CPlayer::NormalUpdate()
 	CDebugProc::Print("quaternionOld  : %.2f,%.2f,%.2f\n", m_quaternionOld.x, m_quaternionOld.y, m_quaternionOld.z);
 	CDebugProc::Print("pos  : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	CDebugProc::Print("move : %.2f,%.2f,%.2f\n", m_move.x, m_move.y, m_move.z);
+	CDebugProc::Print("m_isDied : %s\n", m_isDied ? "true" : "false");
 	CDebugProc::Print("----------------------------------------------------------------\n");
 #endif
 
 	CInput* input = CInput::GetKey();
+
+	if (input->Trigger(DIK_F1))
+	{
+		// リスポーン時間が過ぎたら生き返る
+		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
+		{
+			m_isDied = false;
+		});
+	}
+
+	if (input->Press(DIK_F2))
+	{
+		// リスポーン時間が過ぎたら生き返る
+		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
+		{
+			m_isDied = false;
+		});
+	}
 
 	if (input->Press(DIK_0))
 	{
@@ -104,7 +122,7 @@ void CPlayer::NormalUpdate()
 	{
 		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
-#endif // _DEBUG
+//#endif // _DEBUG
 
 	if (m_isDied)
 	{
@@ -302,7 +320,7 @@ void CPlayer::Jump()
 		m_isJump = true;
 
 		m_pos += 1.0f * jumpDirection;
-		m_move += JUMPING_POWER * jumpDirection;
+		m_move = JUMPING_POWER * jumpDirection;
 	}
 }
 
@@ -315,7 +333,7 @@ void CPlayer::boost()
 	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
 	{
 		m_jumpCount++;
-		m_move.y += JUMPING_POWER * 0.25;
+		m_move.y += JUMPING_POWER * 0.45f;
 	}
 }
 
@@ -373,33 +391,36 @@ void CPlayer::OnHitEnemy()
 			return;
 		}
 
-		if (OBBAndOBB((CObjectX*)inObject))
+		if (!OBBAndOBB((CObjectX*)inObject))
 		{
-			// 死亡演出
-			for (int i = 0; i < 50; i++)
-			{
-				D3DXVECTOR3 pos = m_pos;
-				pos.x += FloatRandom(-20.0f, 20.0f);
-				pos.y += FloatRandom(-20.0f, 20.0f);
-				pos.z += FloatRandom(-20.0f, 20.0f);
-				CPlayerDied::Create(pos);
-			}
-
-			CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(ROLE_CAMERA, CTaskGroup::LEVEL_3D_1);
-			camera->Shake(15.0f,100.0f);
-
-			SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-			//CApplication::GetInstance()->Delay(60, 2);
-			m_isDied = true;	// Goal
-
-			// リスポーン時間が過ぎたら生き返る
-			CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
-			{
-				m_isDied = false;
-			});
-
+			return;
 		}
+
+		// 死亡演出
+		for (int i = 0; i < 50; i++)
+		{
+			D3DXVECTOR3 pos = m_pos;
+			pos.x += FloatRandom(-20.0f, 20.0f);
+			pos.y += FloatRandom(-20.0f, 20.0f);
+			pos.z += FloatRandom(-20.0f, 20.0f);
+			CPlayerDied::Create(pos);
+		}
+
+		// カメラを揺らす
+		CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(ROLE_CAMERA, CTaskGroup::LEVEL_3D_1);
+		camera->Shake(15.0f, 100.0f);
+
+		// 移動量をなくす
+		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+		// 死んだことにする
+		m_isDied = true;
+
+		// リスポーン時間が過ぎたら生き返る
+		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
+		{
+			m_isDied = false;
+		});
 	});
 }
 

@@ -12,8 +12,12 @@
 //-----------------------------------------------------------------------------
 CDelayProcess::CDelayProcess(CTask* inTask) : CTask(inTask->GetPriority(), CTaskGroup::EPushMethod::PUSH_NEXT, inTask)
 {
-	m_count = 0;
-	m_func = nullptr;
+	m_task = nullptr;		// 処理を行うタスク
+	m_func = nullptr;		// 処理
+	m_executionTime = 0;	// 必要タイム
+	m_count = 0;			// 現在タイム
+	m_loopCount = 0;		// 繰り返す処理
+	SetRole(ROLE_NONE);
 }
 
 //-----------------------------------------------------------------------------
@@ -45,6 +49,9 @@ void CDelayProcess::Update()
 	}
 
 	m_count--;
+
+	CDebugProc::Print("m_loopCount  : %d\n", m_loopCount);
+	CDebugProc::Print("DelayCount  : %d\n", m_count);
 
 	if (m_count <= 0)
 	{

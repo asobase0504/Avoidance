@@ -21,6 +21,9 @@
 //-----------------------------------------------------------------------------
 CSelect::CSelect() : CObject2d(CTaskGroup::EPriority::LEVEL_2D_UI)
 {
+	m_click = nullptr;
+	m_selection = nullptr;
+	m_noSelection = nullptr;
 }
 
 //-----------------------------------------------------------------------------

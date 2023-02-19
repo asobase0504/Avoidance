@@ -22,7 +22,8 @@ public:
 	// É^ÉCÉv
 	enum ERole
 	{
-		ROLE_OBJECT = 0,
+		ROLE_NONE = 0,
+		ROLE_OBJECT,
 		ROLE_MODE,
 		ROLE_CAMERA,
 		ROLE_LIGHT,

@@ -33,6 +33,7 @@ HRESULT CTitleLogo::Init()
 {
 	CObject2d::Init();
 	D3DXVECTOR3 pos = CApplication::CENTER_POS;
+	pos.y -= 50.0f;
 	SetPos(pos);
 	SetTexture("TITLE_LOGO");
 	m_count = 0;

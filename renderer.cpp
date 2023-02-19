@@ -121,11 +121,10 @@ HRESULT CRenderer::Init(HWND hWnd, bool bWindow)
 	// シェーダーの読込み
 	D3DXCreateEffectFromFile(m_pD3DDevice, "Effect.fx", NULL, NULL, 0, NULL, &pEffect, nullptr);
 
-#ifdef _DEBUG
-
 	m_debugProc = new CDebugProc;
 	m_debugProc->Init();
-#endif
+	m_debugProc = nullptr;
+
 	return S_OK;
 }
 
@@ -134,7 +133,6 @@ HRESULT CRenderer::Init(HWND hWnd, bool bWindow)
 //-----------------------------------------------------------------------------
 void CRenderer::Uninit()
 {
-#ifdef _DEBUG
 	// デバッグ情報表示用フォントの破棄
 	if (m_debugProc != nullptr)
 	{
@@ -142,7 +140,6 @@ void CRenderer::Uninit()
 		delete m_debugProc;
 		m_debugProc = nullptr;
 	}
-#endif // _DEBUG
 
 	// デバイスの破棄
 	if (m_pD3DDevice != nullptr)
@@ -164,10 +161,9 @@ void CRenderer::Uninit()
 //-----------------------------------------------------------------------------
 void CRenderer::Update()
 {
-// FPS表示
 #ifdef _DEBUG
 	CDebugProc::Print(_T("FPS : %d\n"), GetTime());
-#endif _DEBUG
+#endif // !_DEBUG
 
 	CApplication::GetInstance()->GetTaskGroup()->Update();
 }
@@ -185,9 +181,7 @@ void CRenderer::Draw()
 	{
 		CApplication::GetInstance()->GetTaskGroup()->Draw();
 
-#ifdef _DEBUG
 		CDebugProc::Draw();
-#endif // _DEBUG
 
 		// Direct3Dによる描画の終了
 		m_pD3DDevice->EndScene();

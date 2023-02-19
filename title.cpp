@@ -25,6 +25,7 @@
 
 #include "title_logo.h"
 #include "mouse_object.h"
+#include "select.h"
 
 //=============================================================================
 // コンストラクタ
@@ -104,6 +105,26 @@ HRESULT CTitle::Init(void)
 	// マウスの見た目生成
 	CMouseObject::Create();
 
+	{
+		D3DXVECTOR3 pos = CApplication::CENTER_POS;
+		pos.y += 120.0f;
+		m_start = CSelect::Create(pos);
+		m_start->SetSize(D3DXVECTOR3(300.0f,50.0f,0.0f));
+
+		m_start->SetFunctionClick([this](CSelect* inSelect)
+		{
+			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_GAME);
+		});
+		m_start->SetFunctionSelection([this](CSelect* inSelect)
+		{
+			m_start->SetSize(D3DXVECTOR3(300.0f * 1.05f, 50.0f * 1.05f, 0.0f));
+		});
+		m_start->SetFunctionNoSelection([this](CSelect* inSelect)
+		{
+			m_start->SetSize(D3DXVECTOR3(300.0f, 50.0f, 0.0f));
+		});
+	}
+
 	return S_OK;
 }
 
@@ -120,8 +141,4 @@ void CTitle::Uninit(void)
 //=============================================================================
 void CTitle::Update(void)
 {
-	if (CInput::GetKey()->Trigger(KEY_DOWN) || CInput::GetKey()->Trigger(CMouse::MOUSE_KEY_LEFT))
-	{
-		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_GAME);
-	}
 }
