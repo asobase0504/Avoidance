@@ -77,7 +77,7 @@ void CCameraGame::Update()
 	// 位置を反映
 	D3DXVECTOR3 pos = CObject::SearchType(CObject::EType::PLAYER, CTaskGroup::EPriority::LEVEL_3D_1)->GetPos();	// プレイヤーを検索
 	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);	// 行列移動関数
-	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);	// 行列掛け算関数
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);	// 行列掛け算関数as
 
 	// D3DXVECTOR3に反映
 	D3DXVec3TransformCoord(&m_posV, &m_posV, &mtxWorld);

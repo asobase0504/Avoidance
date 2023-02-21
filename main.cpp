@@ -12,6 +12,7 @@
 #include "resource1.h"
 #include "input.h"
 #include "application.h"
+#include "imgui_property.h"
 
 //-----------------------------------------------------------------------------
 // プロトタイプ宣言
@@ -34,6 +35,7 @@ static CApplication* pApplication;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, int nCmdShow)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	WNDCLASSEX wcex =
 	{
 		sizeof(WNDCLASSEX),
@@ -76,6 +78,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
 	{//初期化処理が失敗した場合
 		return -1;
 	}
+
+	pApplication->SetWcex(wcex);
 
 	// 分解能を設定
 	timeBeginPeriod(1);
@@ -161,6 +165,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
 //-----------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+	{
+		return true;
+	}
+
 	switch (uMsg)
 	{
 	case WM_COMMAND:

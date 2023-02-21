@@ -37,7 +37,7 @@ const char* CImguiProperty::WINDOW_NAME = "test";
 // コンストラクタ
 //--------------------------------------------------
 CImguiProperty::CImguiProperty() :
-	CTask(CTaskGroup::EPriority::LEVEL_2D_UI)
+	CTask(CTaskGroup::EPriority::LEVEL_DEBUG)
 {
 }
 
@@ -65,7 +65,7 @@ HWND CImguiProperty::Init(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
 
 	// 文字の設定
 	ImGuiIO& io = ImGui::GetIO();
-	//io.Fonts->AddFontDefault();
+	io.Fonts->AddFontDefault();
 	io.Fonts->AddFontFromFileTTF(FontPath, FontSize, nullptr, io.Fonts->GetGlyphRangesJapanese());
 
 	// スタイルの設定

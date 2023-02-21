@@ -56,7 +56,7 @@ BOOL CALLBACK CInputJoyPad::EnumJoysticksCallback(const DIDEVICEINSTANCE *pdidIn
 }
 
 //デバイスに対してスティックの範囲等を指定
-BOOL CALLBACK CInputJoyPad::EnumAxesCallback(const DIDEVICEOBJECTINSTANCE *pdidoi, VOID *pContext)
+BOOL CALLBACK CInputJoyPad::EnumAxesCallback(const DIDEVICEOBJECTINSTANCE */*pdidoi*/, VOID *pContext)
 {
 	LPDIRECTINPUTDEVICE8 pInputDevice = (LPDIRECTINPUTDEVICE8)pContext;
 	// 入力範囲のセット

@@ -151,4 +151,8 @@ void CTitle::Uninit(void)
 //=============================================================================
 void CTitle::Update(void)
 {
+	if (CInput::GetKey()->Trigger(DIK_F7))
+	{
+		CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_EDIT);
+	}
 }

@@ -104,7 +104,7 @@ void CGoal::SetTime(int inTime)
 	// 設定された時間が経てば実行
 	CDelayProcess::DelayProcess(inTime, this, [this]()
 	{
-		SetMaterialDiffuse(0,D3DXCOLOR(1.0f,1.0f,0.0f,1.0f));
+		SetMaterialDiffuse(0,D3DXCOLOR(1.0f,1.0f,1.0f,1.0f));
 		SetCollisionFlag(true);
 
 		// 永遠にエフェクトを生成する

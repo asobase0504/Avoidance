@@ -209,7 +209,7 @@ void CStage::AddEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTO
 //-----------------------------------------------------------------------------
 // 敵の出現
 //-----------------------------------------------------------------------------
-void CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inRot)
+CEnemy* CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTOR3 & inRot)
 {
 	CEnemy* enemy = nullptr;
 
@@ -223,6 +223,24 @@ void CStage::PopEnemy(const int type, const D3DXVECTOR3 & inPos, const D3DXVECTO
 	enemy->Init();
 	enemy->SetPos(inPos);
 	enemy->SetRot(inRot);
+
+	return enemy;
+}
+
+//-----------------------------------------------------------------------------
+// エネミーを止めた状態で出す
+//-----------------------------------------------------------------------------
+void CStage::StopPopEnemy()
+{
+	CEnemy* enemy;
+
+	for (int i = 0; i < (int)m_enemy.size(); i++)
+	{
+		if (m_startCnt == m_enemy.at(i).popFream)
+		{
+			enemy = PopEnemy(m_enemy.at(i).type, m_enemy.at(i).pos, m_enemy.at(i).rot);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -269,6 +287,5 @@ void CStage::SetGoal(const D3DXVECTOR3 & pos,const int inTime)
 	m_goal->SetRot(D3DXVECTOR3(D3DX_PI * 0.25f, D3DX_PI * 0.25f, D3DX_PI * 0.25f));
 	m_goal->SetMoveRot(D3DXVECTOR3(0.01f, 0.01f, 0.0f));
 	m_goal->SetMaterialDiffuse(0, D3DXCOLOR(0.5f,0.5f,0.5f,0.4f));
-	m_goal->AttachOutLine();
 	m_goal->CalculationVtx();
 }

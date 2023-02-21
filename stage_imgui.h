@@ -4,8 +4,8 @@
 // Author  : Yuda Kaito
 // 
 //**************************************************
-#ifndef _STAGE_IMGUI_H_	// このマクロが定義されてなかったら
-#define _STAGE_IMGUI_H_	// 2重インクルード防止のマクロ定義
+#ifndef _STAGE_IMGUI_H_		// このマクロが定義されてなかったら
+#define _STAGE_IMGUI_H_		// 2重インクルード防止のマクロ定義
 
 //==================================================
 // インクルード
@@ -29,7 +29,7 @@ public:
 	~CStageImgui();
 
 	HWND Init(HWND hWnd, LPDIRECT3DDEVICE9 pDevice) override;
-	void Uninit(HWND hWnd, WNDCLASSEX wcex) override;
+	void Uninit(HWND hWnd, WNDCLASSEX wcex);
 	void Update() override;
 	void Draw() override;
 

@@ -40,7 +40,7 @@ public:
 	{
 		MODE_TITLE = 0,		// タイトル画面
 		MODE_GAME,			// ゲーム画面
-		MODE_RESULT,		// リザルト画面
+		MODE_EDIT,			// エディタ画面
 		MODE_FADE,			// フェード画面
 		MODE_RANKING,		// ランキング画面
 		MODE_GAMEOVER,		// ゲームオーバー画面
@@ -64,6 +64,11 @@ public:	// メンバー関数
 	void Uninit();
 	void Update();
 	void Draw();
+
+	void SetWcex(WNDCLASSEX inWcex) { m_wcex = inWcex; }
+	WNDCLASSEX GetWcex() { return m_wcex; }
+
+	HWND GetWindow() { return m_hWindow; }
 
 	CRenderer* GetRenderer() { return m_pRenderer; }
 	CTexture* GetTexture() { return m_pTexture; }
@@ -95,5 +100,8 @@ private:
 	int m_delayTime;
 	int m_delayInterval;
 	int m_delayCnt;
+
+	HWND m_hWindow;
+	WNDCLASSEX m_wcex;
 };
 #endif

@@ -119,7 +119,7 @@ float4 ToonPS(VS_OUTPUT In) : COLOR0
 	//法線ベクトル。
 	float3 N = In.Normal;
 
-	float p = (max(vAmbient, dot(N, L)));
+	float p = (max(vAmbient, dot(N, L))) + (max(vAmbient, dot(N, -L)));
 	p = p * 0.5f + 0.5f;
 	p = p * p;
 	

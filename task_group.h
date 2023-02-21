@@ -42,6 +42,7 @@ public:
 		LEVEL_2D_UI,
 		LEVEL_3D_UI,
 		LEVEL_FADE,
+		LEVEL_DEBUG,
 		LEVEL_MAX
 	};
 

@@ -78,6 +78,11 @@ void CStageImgui::Uninit(HWND hWnd, WNDCLASSEX wcex)
 //--------------------------------------------------
 void CStageImgui::Update()
 {
+	if (CInput::GetKey()->Trigger(DIK_M))
+	{
+		s_window = !s_window;
+	}
+
 	CImguiProperty::Update();
 
 	if (!s_window)
@@ -114,7 +119,7 @@ void CStageImgui::Update()
 	if (ImGui::Button("SAVE"))
 	{
 		CStage* stage = (CStage*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(CTask::ERole::ROLE_STAGE, CTaskGroup::EPriority::LEVEL_SYSTEM);
-		SaveAll(stage,"data/FILE/stage.json");
+		SaveAll(stage, "data/FILE/stage.json");
 	}
 	ImGui::SameLine();
 
@@ -123,11 +128,11 @@ void CStageImgui::Update()
 
 	ImGui::Separator();	// 区切り線
 
-	//エフェクト関係
+						//エフェクト関係
 	static bool a = false;
 	static std::vector<std::string> itemList;
 
-	if(!a)
+	if (!a)
 	{
 		a = true;
 		itemList.push_back("Stage");
@@ -141,7 +146,7 @@ void CStageImgui::Update()
 		for (int i = 0; i < itemList.size(); ++i)
 		{
 			const bool is_selected = (s_currentItem == itemList[i].c_str());
-			
+
 			if (ImGui::Selectable(itemList[i].c_str(), is_selected))
 			{
 				s_currentItem = itemList[i].c_str();
@@ -159,7 +164,7 @@ void CStageImgui::Update()
 	{
 		StageProperty();
 	}
-	else if(strcmp(s_currentItem, "Enemy") == 0)
+	else if (strcmp(s_currentItem, "Enemy") == 0)
 	{
 		EnemyProperty();
 	}
@@ -206,12 +211,12 @@ void CStageImgui::SetStageBase()
 {
 	CStage* stage = (CStage*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(ROLE_STAGE, CTaskGroup::EPriority::LEVEL_SYSTEM);
 
-	{
-		ImGui::Text("---- Scale ----");
-		float scale = stage->GetScale();
-		ImGui::SliderFloat("Scale", &scale, 0.0f, scale + 1.0f);
-		stage->SetScale(scale);
-	}
+	//{
+	//	ImGui::Text("---- Scale ----");
+	//	float scale = stage->GetScale();
+	//	ImGui::SliderFloat("Scale", &scale, 0.0f, scale + 1.0f);
+	//	stage->SetScale(scale);
+	//}
 }
 
 //--------------------------------------------------
@@ -227,7 +232,7 @@ void CStageImgui::StageArrangement()
 
 	D3DXCOLOR color(CApplication::GetInstance()->GetColor()->GetColor(CColor::COLOR_0));
 	color.a = 0.55f;
-	m_player->SetMaterialDiffuse(0,color);
+	m_player->SetMaterialDiffuse(0, color);
 
 	ImGui::Text("/* PosReset */");
 	if (ImGui::Button("AllReset"))

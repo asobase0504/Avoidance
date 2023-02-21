@@ -23,6 +23,7 @@
 #include "game.h"
 #include "result.h"
 #include "nameset.h"
+#include "stage_edit.h"
 #include "ranking.h"
 #include "tutorial.h"
 #include "multiply.h"
@@ -71,6 +72,9 @@ CApplication::~CApplication()
 //=============================================================================
 HRESULT CApplication::Init(HWND hWnd, HINSTANCE hInstance)
 {
+	// Window情報のポインタ保存
+	m_hWindow = hWnd;
+
 	// 根幹グループの初期化処理
 	m_pTaskGroup = new CTaskGroup;
 	if (FAILED(m_pTaskGroup->Init()))
@@ -253,8 +257,8 @@ void CApplication::SetMode(MODE mode)
 	case CApplication::MODE_GAME:
 		m_pMode = new CGame;
 		break;
-	case CApplication::MODE_RESULT:
-		m_pMode = new CResult;
+	case CApplication::MODE_EDIT:
+		m_pMode = new CStageEdit;
 		break;
 	case CApplication::MODE_NAMESET:
 		m_pMode = new CNameSet;

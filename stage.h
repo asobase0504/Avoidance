@@ -51,13 +51,17 @@ public: // パブリック関数
 	void SetGoal(const D3DXVECTOR3& pos, const int inTime);
 
 	void SetFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
+	CPlain* GetFloor() { return m_floor; }
 
 	void SetWall(int index, const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
+	std::vector<CPlain*> GetWall() { return std::vector<CPlain*>(std::begin(m_wall), std::end(m_wall)); }
 
 	void AddFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
+	std::unordered_map<int, CPlain*> GetMidairFloor() { return m_midairFloor; }
 
 	void AddEnemy(const int type, const D3DXVECTOR3& inPos, const D3DXVECTOR3& inRot, const int inFream);
-	void PopEnemy(const int type, const D3DXVECTOR3& inPos, const D3DXVECTOR3& inRot);
+	CEnemy* PopEnemy(const int type, const D3DXVECTOR3& inPos, const D3DXVECTOR3& inRot);
+	void StopPopEnemy();
 	std::unordered_map<int, SEnemyPop> GetEnemy() { return m_enemy; }
 
 	void SetStart(bool start) { m_isStart = start; }

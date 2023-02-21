@@ -126,7 +126,7 @@ void CTaskGroup::Draw()
 			continue;
 		}
 
-		// 画面クリア(バックバッファ＆Zバッファのクリア)
+		// 画面クリア(Zバッファのクリア)
 		CRenderer::GetInstance()->GetDevice()->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
 		{
