@@ -15,7 +15,8 @@
 //-----------------------------------------------------------------------------
 CGoal::CGoal() :
 	m_endCnt(0),
-	m_isGoal(false)
+	m_isGoal(false),
+	m_isEnd(false)
 {
 }
 
@@ -65,12 +66,6 @@ void CGoal::NormalUpdate()
 //-----------------------------------------------------------------------------
 void CGoal::EndUpdate()
 {
-	m_endCnt++;
-
-	if (m_endCnt > 180)
-	{
-		Release();
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -106,11 +101,13 @@ void CGoal::SetTime(int inTime)
 {
 	m_goalTime = inTime;
 
+	// 設定された時間が経てば実行
 	CDelayProcess::DelayProcess(inTime, this, [this]()
 	{
 		SetMaterialDiffuse(0,D3DXCOLOR(1.0f,1.0f,0.0f,1.0f));
 		SetCollisionFlag(true);
 
+		// 永遠にエフェクトを生成する
 		auto effect = [this]()
 		{
 			for (int i = 0; i < 5; i++)

@@ -140,6 +140,8 @@ void CGame::Update(void)
 	// ステージが始まるまでのカウントダウン
 	if (m_countdown != nullptr)
 	{
+		m_player->SetIsMove(false);		// プレイヤーの移動を無効にする
+
 		if (m_countdown->IsEnd())
 		{
 			m_countdown->SetUpdateStatus(CObject::EUpdateStatus::END);

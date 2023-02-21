@@ -83,29 +83,29 @@
     <Filter Include="00_Cord\00_Main\01_Mode\03_Tutorial">
       <UniqueIdentifier>{bbf60cf0-c644-4182-9a33-c11de77736a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject">
-      <UniqueIdentifier>{471a56a9-5168-4905-ae90-32de897d4e90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy">
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Enemy">
       <UniqueIdentifier>{d56a522c-3de1-4ba3-acd8-505c8e2112f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Abstract">
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Abstract">
       <UniqueIdentifier>{9e954ce8-1867-4bf7-8e8d-aa6d2c64e016}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Factory">
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Factory">
       <UniqueIdentifier>{11407601-94e9-49f4-b00c-8dfb9e1d5711}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type">
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type">
       <UniqueIdentifier>{679e5f82-dba9-462d-b25a-c1b6ba292a35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player">
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\03_Player">
       <UniqueIdentifier>{70dc601d-8be8-41c5-8579-d6ae0f8683bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage">
+    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\04_Stage">
       <UniqueIdentifier>{0e478b54-43cd-49c7-9983-697542d6a536}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow">
+    <Filter Include="00_Cord\02_Object\03_Shadow">
       <UniqueIdentifier>{a8546a1f-2436-4945-84a9-fc5c6f3f4ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Cord\00_Main\01_Mode\04_Edit">
+      <UniqueIdentifier>{4e42b533-c287-4f3d-8a40-061836675471}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -278,55 +278,55 @@
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClCompile>
     <ClCompile Include="enemy.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Abstract</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Abstract</Filter>
     </ClCompile>
     <ClCompile Include="factory_enemy.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Factory</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Factory</Filter>
     </ClCompile>
     <ClCompile Include="countdown.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClCompile>
     <ClCompile Include="player_afterimage.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClCompile>
     <ClCompile Include="goal.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClCompile>
     <ClCompile Include="plain.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClCompile>
     <ClCompile Include="stage.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClCompile>
     <ClCompile Include="player_died.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClCompile>
     <ClCompile Include="player_afterimage_fall.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClCompile>
     <ClCompile Include="enemy_homing.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClCompile>
     <ClCompile Include="enemy_homing_bomb.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClCompile>
     <ClCompile Include="enemy_laser.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClCompile>
     <ClCompile Include="enemy_oneway.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClCompile>
     <ClCompile Include="enemy_oneway_died.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClCompile>
     <ClCompile Include="enemy_planprogress.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClCompile>
     <ClCompile Include="enemy_reflection.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClCompile>
     <ClCompile Include="delay_process.cpp">
       <Filter>00_Cord\00_Main\00_Main</Filter>
@@ -338,7 +338,7 @@
       <Filter>00_Cord\00_Main\01_Mode\03_Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="goal_effect.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClCompile>
     <ClCompile Include="clear.cpp">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
@@ -347,7 +347,13 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClCompile>
     <ClCompile Include="circle_shadow.cpp">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
+      <Filter>00_Cord\02_Object\03_Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_property.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\04_Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_imgui.cpp">
+      <Filter>00_Cord\00_Main\01_Mode\04_Edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,55 +532,55 @@
       <Filter>00_Cord\00_Main\01_Mode\01_Title</Filter>
     </ClInclude>
     <ClInclude Include="enemy.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Abstract</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Abstract</Filter>
     </ClInclude>
     <ClInclude Include="factory_enemy.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Factory</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Factory</Filter>
     </ClInclude>
     <ClInclude Include="countdown.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClInclude>
     <ClInclude Include="player_afterimage.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClInclude>
     <ClInclude Include="goal.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClInclude>
     <ClInclude Include="plain.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClInclude>
     <ClInclude Include="stage.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClInclude>
     <ClInclude Include="player_died.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClInclude>
     <ClInclude Include="player_afterimage_fall.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\01_Player</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\03_Player</Filter>
     </ClInclude>
     <ClInclude Include="enemy_homing.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClInclude>
     <ClInclude Include="enemy_homing_bomb.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClInclude>
     <ClInclude Include="enemy_laser.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClInclude>
     <ClInclude Include="enemy_oneway.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClInclude>
     <ClInclude Include="enemy_oneway_died.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClInclude>
     <ClInclude Include="enemy_planprogress.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClInclude>
     <ClInclude Include="enemy_reflection.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\00_Enemy\Type</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_Enemy\Type</Filter>
     </ClInclude>
     <ClInclude Include="delay_process.h">
       <Filter>00_Cord\00_Main\00_Main</Filter>
@@ -586,7 +592,7 @@
       <Filter>00_Cord\00_Main\01_Mode\03_Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="goal_effect.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\02_Stage</Filter>
+      <Filter>00_Cord\00_Main\01_Mode\02_Game\04_Stage</Filter>
     </ClInclude>
     <ClInclude Include="clear.h">
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
@@ -595,7 +601,13 @@
       <Filter>00_Cord\00_Main\01_Mode\02_Game\01_UI</Filter>
     </ClInclude>
     <ClInclude Include="circle_shadow.h">
-      <Filter>00_Cord\00_Main\01_Mode\02_Game\02_3DObject\03_Shadow</Filter>
+      <Filter>00_Cord\02_Object\03_Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_property.h">
+      <Filter>00_Cord\00_Main\01_Mode\04_Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_imgui.h">
+      <Filter>00_Cord\00_Main\01_Mode\04_Edit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -608,28 +620,28 @@
     <None Include="data\FILE\model.json">
       <Filter>01_File\json</Filter>
     </None>
-    <None Include="data\FILE\stage0.json">
-      <Filter>01_File\json</Filter>
-    </None>
-    <None Include="data\FILE\stage1.json">
-      <Filter>01_File\json</Filter>
-    </None>
-    <None Include="data\FILE\stage2.json">
-      <Filter>01_File\json</Filter>
-    </None>
-    <None Include="data\FILE\stage3.json">
-      <Filter>01_File\json</Filter>
-    </None>
-    <None Include="data\FILE\stage4.json">
-      <Filter>01_File\json</Filter>
-    </None>
-    <None Include="data\FILE\stage5.json">
-      <Filter>01_File\json</Filter>
-    </None>
-    <None Include="data\FILE\stage6.json">
-      <Filter>01_File\json</Filter>
-    </None>
     <None Include="data\FILE\stageGroup.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\STAGE\stage0.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\STAGE\stage1.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\STAGE\stage2.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\STAGE\stage3.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\STAGE\stage4.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\STAGE\stage5.json">
+      <Filter>01_File\json</Filter>
+    </None>
+    <None Include="data\FILE\STAGE\stage6.json">
       <Filter>01_File\json</Filter>
     </None>
   </ItemGroup>

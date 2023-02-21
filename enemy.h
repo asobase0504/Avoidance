@@ -24,6 +24,7 @@ public: // パブリック関数
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
+	void PopUpdate() override;		// 更新
 	void NormalUpdate() override;	// 更新
 	void EndUpdate() override;		// 更新
 

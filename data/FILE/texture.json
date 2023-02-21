@@ -4,9 +4,11 @@
     [ "GIZAGIZA", "data\/TEXTURE\/gizagiza.png" ],
     [ "NUMBER", "data\/TEXTURE\/number002.png" ],
     [ "STOP_LOGO", "data\/TEXTURE\/stop.png" ],
+    [ "TEXT_START", "data\/TEXTURE\/TITLE\/GameStart.png" ],
     [ "TEXT_TITLE", "data\/TEXTURE\/TEXT\/title.png" ],
     [ "TEXT_RETRY", "data\/TEXTURE\/TEXT\/retry.png" ],
     [ "TEXT_NEXT", "data\/TEXTURE\/TEXT\/next.png" ],
+    [ "TEXT_BACK", "data\/TEXTURE\/TEXT\/back.png" ],
     [ "TOON", "data\/TEXTURE\/toon.png" ],
     [ "CIRCLE_SHADOW", "data\/TEXTURE\/shadow.png" ]
   ]

@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>nlohmann;imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
     </ClCompile>
@@ -179,6 +179,7 @@
     <ClCompile Include="enemy_planprogress.cpp" />
     <ClCompile Include="goal.cpp" />
     <ClCompile Include="goal_effect.cpp" />
+    <ClCompile Include="imgui_property.cpp" />
     <ClCompile Include="inputjoypad.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="load_stage.cpp" />
@@ -232,6 +233,7 @@
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="clear.cpp" />
+    <ClCompile Include="stage_imgui.cpp" />
     <ClCompile Include="task.cpp" />
     <ClCompile Include="task_group.cpp" />
     <ClCompile Include="text.cpp" />
@@ -264,6 +266,7 @@
     <ClInclude Include="enemy_planprogress.h" />
     <ClInclude Include="goal.h" />
     <ClInclude Include="goal_effect.h" />
+    <ClInclude Include="imgui_property.h" />
     <ClInclude Include="inputjoypad.h" />
     <ClInclude Include="inputkeydata.h" />
     <ClInclude Include="line.h" />
@@ -316,6 +319,7 @@
     <ClInclude Include="sound.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="clear.h" />
+    <ClInclude Include="stage_imgui.h" />
     <ClInclude Include="task.h" />
     <ClInclude Include="task_group.h" />
     <ClInclude Include="text.h" />
@@ -329,14 +333,14 @@
   <ItemGroup>
     <None Include="data\FILE\color.json" />
     <None Include="data\FILE\model.json" />
-    <None Include="data\FILE\stage0.json" />
-    <None Include="data\FILE\stage1.json" />
-    <None Include="data\FILE\stage2.json" />
-    <None Include="data\FILE\stage3.json" />
-    <None Include="data\FILE\stage4.json" />
-    <None Include="data\FILE\stage5.json" />
-    <None Include="data\FILE\stage6.json" />
     <None Include="data\FILE\stageGroup.json" />
+    <None Include="data\FILE\STAGE\stage0.json" />
+    <None Include="data\FILE\STAGE\stage1.json" />
+    <None Include="data\FILE\STAGE\stage2.json" />
+    <None Include="data\FILE\STAGE\stage3.json" />
+    <None Include="data\FILE\STAGE\stage4.json" />
+    <None Include="data\FILE\STAGE\stage5.json" />
+    <None Include="data\FILE\STAGE\stage6.json" />
     <None Include="data\FILE\texture.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

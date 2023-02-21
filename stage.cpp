@@ -14,6 +14,7 @@
 #include "player.h"
 #include "plain.h"
 #include "input.h"
+#include "debug_proc.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -70,6 +71,14 @@ void CStage::Uninit()
 //-----------------------------------------------------------------------------
 void CStage::Update()
 {
+#if 1	// デバッグ表示
+	CDebugProc::Print("----------------------------------------------------------------\n");
+	CDebugProc::Print("★★★ Goal ★★★\n");
+	CDebugProc::Print("Pos : %.2f,%.2f,%.2f\n", m_goal->GetPos().x, m_goal->GetPos().y, m_goal->GetPos().z);
+	CDebugProc::Print("isGoal : %s\n", m_goal->IsGoal() ? "true" : "false");
+	CDebugProc::Print("----------------------------------------------------------------\n");
+#endif
+
 	// スタートするまで更新が通らない
 	if (!m_isStart)
 	{

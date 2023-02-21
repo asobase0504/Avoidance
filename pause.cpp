@@ -48,7 +48,7 @@ HRESULT CPause::Init(void)
 	m_bg->SetPos(CApplication::CENTER_POS);
 	m_bg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.25f));
 
-	float y = 200.0f;
+	float y = 100.0f;
 
 	{// –ß‚éUI‚Ìì¬
 		D3DXVECTOR3 pos(CApplication::CENTER_POS);
@@ -56,15 +56,15 @@ HRESULT CPause::Init(void)
 
 		m_back = CSelect::Create(pos);
 		m_back->SetPouseUpdate(true);
-		m_back->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		m_back->SetTexture("TEXT_RETRY");
+		m_back->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
+		m_back->SetTexture("TEXT_BACK");
 		m_back->SetFunctionSelection([](CSelect* inSelect)
 		{
-			inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f) * 1.5f);
 		});
 		m_back->SetFunctionNoSelection([](CSelect* inSelect)
 		{
-			inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
 
 		});
 		m_back->SetFunctionClick([this](CSelect* inSelect)
@@ -81,15 +81,15 @@ HRESULT CPause::Init(void)
 
 		m_retry = CSelect::Create(pos);
 		m_retry->SetPouseUpdate(true);
-		m_retry->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+		m_retry->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
 		m_retry->SetTexture("TEXT_RETRY");
 		m_retry->SetFunctionSelection([](CSelect* inSelect)
 		{
-			inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f) * 1.5f);
 		});
 		m_retry->SetFunctionNoSelection([](CSelect* inSelect)
 		{
-			inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
 
 		});
 		m_retry->SetFunctionClick([this](CSelect* inSelect)
@@ -108,15 +108,15 @@ HRESULT CPause::Init(void)
 
 		m_titleBack = CSelect::Create(pos);
 		m_titleBack->SetPouseUpdate(true);
-		m_titleBack->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
-		m_titleBack->SetTexture("TEXT_RETRY");
+		m_titleBack->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
+		m_titleBack->SetTexture("TEXT_TITLE");
 		m_titleBack->SetFunctionSelection([](CSelect* inSelect)
 		{
-			inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f) * 1.5f);
 		});
 		m_titleBack->SetFunctionNoSelection([](CSelect* inSelect)
 		{
-			inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
+			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
 
 		});
 		m_titleBack->SetFunctionClick([this](CSelect* inSelect)

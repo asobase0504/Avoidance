@@ -31,9 +31,10 @@ bool CDebugProc::m_use = false;	// フォント情報
 //=============================================================================
 void CDebugProc::Print(const char *pFormat, ...)
 {
-#ifndef _DEBUG
-	return;
-#endif // _DEBUG
+	if (!m_use)
+	{
+		return;
+	}
 
 	// 変数
 	char aStrCpy[0xfff] = {};
@@ -54,7 +55,7 @@ void CDebugProc::Print(const char *pFormat, ...)
 //=============================================================================
 void CDebugProc::Draw(void)
 {
-	if (m_use)
+	if (!m_use)
 	{
 		return;
 	}
@@ -96,6 +97,7 @@ void CDebugProc::Init()
 #ifdef _DEBUG
 	m_use = true;
 #endif // _DEBUG
+	m_use = true;
 
 	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 
@@ -111,9 +113,10 @@ void CDebugProc::Init()
 //=============================================================================
 void CDebugProc::Uninit()
 {
-#ifndef _DEBUG
-	return;
-#endif // _DEBUG
+	if (!m_use)
+	{
+		return;
+	}
 
 	// デバッグ情報表示用フォントの破棄
 	if (m_pFont != nullptr)

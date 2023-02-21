@@ -40,6 +40,7 @@ private: // プライベート関数
 private: // メンバー変数
 	int m_endCnt;
 	bool m_isGoal;
+	bool m_isEnd;
 	int m_goalTime;
 };
 #endif

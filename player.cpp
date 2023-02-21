@@ -22,11 +22,11 @@
 //-----------------------------------------------------------------------------
 // 定数
 //-----------------------------------------------------------------------------
-const float CPlayer::MAX_SPEED = 5.5f;		// 移動量
-const float CPlayer::SPEED = 5.5f;			// 移動量
-const float CPlayer::ATTENUATION = 0.25f;	// 移動減衰係数
-const float CPlayer::JUMPING_POWER = 8.5f;	// 跳躍力
-const float CPlayer::GRAVITY = 0.15f;		// 重力
+const float CPlayer::MAX_SPEED = 5.25f;		// 移動量
+const float CPlayer::SPEED = 5.25f;			// 移動量
+const float CPlayer::ATTENUATION = 0.3f;	// 移動減衰係数
+const float CPlayer::JUMPING_POWER = 7.5f;	// 跳躍力
+const float CPlayer::GRAVITY = 0.175f;		// 重力
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -80,7 +80,7 @@ void CPlayer::Uninit()
 //-----------------------------------------------------------------------------
 void CPlayer::NormalUpdate()
 {
-//#ifdef _DEBUG
+#ifdef _DEBUG
 
 #if 1	// デバッグ表示
 	CDebugProc::Print("----------------------------------------------------------------\n");
@@ -122,7 +122,7 @@ void CPlayer::NormalUpdate()
 	{
 		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
-//#endif // _DEBUG
+#endif // _DEBUG
 
 	if (m_isDied)
 	{
@@ -334,6 +334,7 @@ void CPlayer::boost()
 	{
 		m_jumpCount++;
 		m_move.y += JUMPING_POWER * 0.45f;
+		m_move = D3DXVECTOR3(0.0f, 3.0f, 0.0f);
 	}
 }
 
@@ -408,7 +409,7 @@ void CPlayer::OnHitEnemy()
 
 		// カメラを揺らす
 		CCamera* camera = (CCamera*)CApplication::GetInstance()->GetTaskGroup()->SearchRoleTop(ROLE_CAMERA, CTaskGroup::LEVEL_3D_1);
-		camera->Shake(15.0f, 100.0f);
+		camera->Shake(15.0f, 60.0f);
 
 		// 移動量をなくす
 		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));

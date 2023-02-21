@@ -46,6 +46,7 @@ HRESULT CEnemyLaser::Init()
 	SetScale(SCALE);
 	SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	m_moveScale = 0.2f;
+	m_hit = false;
 	return S_OK;
 }
 
@@ -58,32 +59,24 @@ void CEnemyLaser::Uninit()
 }
 
 //-----------------------------------------------------------------------------
-// 出現中更新
-//-----------------------------------------------------------------------------
-void CEnemyLaser::PopUpdate()
-{
-	m_startCnt++;
-	if (m_startCnt % MOVE_START_TIME == 0)
-	{
-		//SetMove(MOVE_POWER);
-		SetUpdateStatus(EUpdateStatus::NORMAL);
-	}
-}
-
-//-----------------------------------------------------------------------------
 // 更新
 //-----------------------------------------------------------------------------
 void CEnemyLaser::NormalUpdate()
 {
-	SetMove(MOVE_POWER);
-	D3DXVECTOR3 scale = GetScale();
-	SetScale(D3DXVECTOR3(scale.x, scale.y + m_moveScale, scale.z));
+	if (!m_hit)
+	{
+		SetMove(MOVE_POWER);
+		D3DXVECTOR3 scale = GetScale();
+		SetScale(D3DXVECTOR3(scale.x, scale.y + m_moveScale, scale.z));
+	}
 
 	CEnemy::NormalUpdate();
 
-	if (OnHitPlain())
+	if (OnHitPlain() && !m_hit)
 	{
- 		CDelayProcess::DelayProcess(60, this, [this]() { SetUpdateStatus(EUpdateStatus::END); });
+		m_hit = true;
+		SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
+		CDelayProcess::DelayProcess(60, this, [this]() { SetUpdateStatus(EUpdateStatus::END); });
 	}
 }
 

@@ -21,6 +21,7 @@ const int CEnemyPlanProgress::MOVE_START_TIME = 80;
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CEnemyPlanProgress::CEnemyPlanProgress()
 {
@@ -29,6 +30,7 @@ CEnemyPlanProgress::CEnemyPlanProgress()
 
 //-----------------------------------------------------------------------------
 // デストラクタ
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 CEnemyPlanProgress::~CEnemyPlanProgress()
 {
@@ -36,6 +38,7 @@ CEnemyPlanProgress::~CEnemyPlanProgress()
 
 //-----------------------------------------------------------------------------
 // 初期化
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 HRESULT CEnemyPlanProgress::Init()
 {
@@ -55,6 +58,7 @@ HRESULT CEnemyPlanProgress::Init()
 
 //-----------------------------------------------------------------------------
 // 終了
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::Uninit()
 {
@@ -64,14 +68,17 @@ void CEnemyPlanProgress::Uninit()
 
 //-----------------------------------------------------------------------------
 // 出現中更新
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::PopUpdate()
 {
+	CEnemy::PopUpdate();
 	SeeTarget();
 }
 
 //-----------------------------------------------------------------------------
 // 更新
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::NormalUpdate()
 {
@@ -85,6 +92,7 @@ void CEnemyPlanProgress::NormalUpdate()
 
 //-----------------------------------------------------------------------------
 // 終了更新
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::EndUpdate()
 {
@@ -94,15 +102,17 @@ void CEnemyPlanProgress::EndUpdate()
 
 //-----------------------------------------------------------------------------
 // 描画
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::Draw()
 {
 	CEnemy::Draw();
-	m_guideLine->SetLine(m_pos, m_rot, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -700.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	m_guideLine->SetLine(m_pos, m_rot, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -800.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
 //-----------------------------------------------------------------------------
 // 移動量の設定
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::SetMove(const D3DXVECTOR3 & inMove)
 {
@@ -117,6 +127,7 @@ void CEnemyPlanProgress::SetMove(const D3DXVECTOR3 & inMove)
 
 //-----------------------------------------------------------------------------
 // 移動量の設定
+// Author:Yuda Kaito
 //-----------------------------------------------------------------------------
 void CEnemyPlanProgress::SeeTarget()
 {

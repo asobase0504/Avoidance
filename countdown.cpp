@@ -9,6 +9,8 @@
 #include "object2d.h"
 #include "utility.h"
 #include "delay_process.h"
+#include "application.h"
+#include "sound.h"
 
 //-----------------------------------------------------------------------------
 // ’è”
@@ -38,8 +40,27 @@ CCountdown::~CCountdown()
 //-----------------------------------------------------------------------------
 HRESULT CCountdown::Init()
 {
+	//CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN);
 	m_count = 0;
 	m_end = false;
+
+	CDelayProcess::DelayProcess(30, this, []()
+	{
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN3);
+	}, 1);
+	CDelayProcess::DelayProcess(60, this, []()
+	{
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN4);
+	}, 1);
+	CDelayProcess::DelayProcess(90, this, []()
+	{
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN2);
+	}, 1);
+	CDelayProcess::DelayProcess(130, this, []()
+	{
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN);
+	}, 1);
+
 	return S_OK;
 }
 

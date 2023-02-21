@@ -33,7 +33,6 @@ public: // パブリック関数
 
 	HRESULT Init() override;		// 初期化
 	void Uninit() override;			// 破棄
-	void PopUpdate() override;		// 更新
 	void NormalUpdate() override;	// 更新
 	void EndUpdate() override;		// 終了更新
 	void Draw() override;	// 更新
@@ -47,5 +46,6 @@ private: // メンバー変数
 	int m_startCnt;
 	float m_moveScale;
 	CLine* m_guideLine;
+	bool m_hit;
 };
 #endif

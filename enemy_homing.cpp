@@ -44,12 +44,6 @@ HRESULT CEnemyHoming::Init()
 	CEnemy::Init();
 	SetScale(SCALE);
 
-	CDelayProcess::DelayProcess(MOVE_START_TIME, this, [this]()
-	{
-		SeeTarget();
-		SetMove(MOVE_POWER);
-	}, MOVE_END_TIME);
-
 	return S_OK;
 }
 
@@ -61,12 +55,18 @@ void CEnemyHoming::Uninit()
 	CEnemy::Uninit();
 }
 
-//-----------------------------------------------------------------------------
-// èoåªíÜçXêV
-//-----------------------------------------------------------------------------
 void CEnemyHoming::PopUpdate()
 {
-	SetUpdateStatus(EUpdateStatus::NORMAL);
+	CEnemy::PopUpdate();
+
+	if (m_updateStatus == EUpdateStatus::NORMAL)
+	{
+		CDelayProcess::DelayProcess(MOVE_START_TIME, this, [this]()
+		{
+			SeeTarget();
+			SetMove(MOVE_POWER);
+		}, MOVE_END_TIME);
+	}
 }
 
 //-----------------------------------------------------------------------------

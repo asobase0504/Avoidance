@@ -50,8 +50,7 @@ void CDelayProcess::Update()
 
 	m_count--;
 
-	CDebugProc::Print("m_loopCount  : %d\n", m_loopCount);
-	CDebugProc::Print("DelayCount  : %d\n", m_count);
+	CDebugProc::Print("Delay  : %d ,%d\n", m_loopCount, m_count);
 
 	if (m_count <= 0)
 	{
