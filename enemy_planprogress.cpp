@@ -47,12 +47,6 @@ HRESULT CEnemyPlanProgress::Init()
 	m_guideLine = CLine::Create();
 	SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
 
-	CDelayProcess::DelayProcess(MOVE_START_TIME, this, [this]()
-	{
-		SetMove(MOVE_POWER);
-		SetUpdateStatus(EUpdateStatus::NORMAL);
-	});
-
 	return S_OK;
 }
 

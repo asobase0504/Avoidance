@@ -3,6 +3,7 @@
 #include "file.h"
 #include "objectX.h"
 #include "plain.h"
+#include "goal.h"
 
 #include <string>
 #include <fstream>
@@ -153,6 +154,11 @@ void SaveAll(CStage* inStage, const std::string& filename)
 
 	CStage* stage = inStage;
 	nlohmann::json saveJson;
+
+	{// ƒS[ƒ‹
+		saveJson["GOAL"]["POS"] = Vector3ToVectorFloat(stage->GetGoal()->GetPos());
+		saveJson["GOAL"]["TIME"] = stage->GetGoal()->GetTime();
+	}
 
 	{// °
 		saveJson["FLOOR"]["POS"] = Vector3ToVectorFloat(stage->GetFloor()->GetPos());

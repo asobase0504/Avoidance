@@ -41,6 +41,5 @@ public: // パブリック関数
 private: // プライベート関数
 
 private: // メンバー変数
-	CLine* m_guideLine;
 };
 #endif

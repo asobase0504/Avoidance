@@ -21,11 +21,7 @@
 /* シーンモード */
 #include "title.h"
 #include "game.h"
-#include "result.h"
-#include "nameset.h"
 #include "stage_edit.h"
-#include "ranking.h"
-#include "tutorial.h"
 #include "multiply.h"
 
 //-----------------------------------------------------------------------------
@@ -259,12 +255,6 @@ void CApplication::SetMode(MODE mode)
 		break;
 	case CApplication::MODE_EDIT:
 		m_pMode = new CStageEdit;
-		break;
-	case CApplication::MODE_NAMESET:
-		m_pMode = new CNameSet;
-		break;
-	case CApplication::MODE_TUTORIAL:
-		m_pMode = new CTutorial;
 		break;
 	default:
 		break;

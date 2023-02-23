@@ -58,9 +58,12 @@ HRESULT CPause::Init(void)
 		m_back->SetPouseUpdate(true);
 		m_back->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
 		m_back->SetTexture("TEXT_BACK");
-		m_back->SetFunctionSelection([](CSelect* inSelect)
+		m_back->SetSelect(true);
+
+		m_back->SetFunctionSelection([this](CSelect* inSelect)
 		{
 			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f) * 1.5f);
+
 		});
 		m_back->SetFunctionNoSelection([](CSelect* inSelect)
 		{
@@ -83,7 +86,7 @@ HRESULT CPause::Init(void)
 		m_retry->SetPouseUpdate(true);
 		m_retry->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
 		m_retry->SetTexture("TEXT_RETRY");
-		m_retry->SetFunctionSelection([](CSelect* inSelect)
+		m_retry->SetFunctionSelection([this](CSelect* inSelect)
 		{
 			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f) * 1.5f);
 		});
@@ -110,7 +113,7 @@ HRESULT CPause::Init(void)
 		m_titleBack->SetPouseUpdate(true);
 		m_titleBack->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f));
 		m_titleBack->SetTexture("TEXT_TITLE");
-		m_titleBack->SetFunctionSelection([](CSelect* inSelect)
+		m_titleBack->SetFunctionSelection([this](CSelect* inSelect)
 		{
 			inSelect->SetSize(D3DXVECTOR3(200.0f, 35.0f, 0.0f) * 1.5f);
 		});
@@ -154,8 +157,51 @@ void CPause::NormalUpdate(void)
 {
 	CInput* input = CInput::GetKey();
 
-	if (input->Trigger(DIK_P))
+	if (input->Trigger(DIK_P) || input->Trigger(JOYPAD_START,0))
 	{
 		SetUpdateStatus(EUpdateStatus::END);
+	}
+
+	if (m_back->GetSelect())
+	{
+		if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
+		{
+			m_retry->SetSelect(true);
+			m_back->SetSelect(false);
+		}
+
+		if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
+		{
+			m_titleBack->SetSelect(true);
+			m_back->SetSelect(false);
+		}
+	}
+	else if (m_retry->GetSelect())
+	{
+		if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
+		{
+			m_titleBack->SetSelect(true);
+			m_retry->SetSelect(false);
+		}
+
+		if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
+		{
+			m_back->SetSelect(true);
+			m_retry->SetSelect(false);
+		}
+	}
+	else if (m_titleBack->GetSelect())
+	{
+		if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
+		{
+			m_back->SetSelect(true);
+			m_titleBack->SetSelect(false);
+		}
+
+		if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
+		{
+			m_retry->SetSelect(true);
+			m_titleBack->SetSelect(false);
+		}
 	}
 }

@@ -17,7 +17,7 @@
 // 定数
 //-----------------------------------------------------------------------------
 const D3DXVECTOR3 CEnemyOneWay::SCALE = D3DXVECTOR3(1.5f, 1.5f, 1.5f);
-const D3DXVECTOR3 CEnemyOneWay::MOVE_POWER = D3DXVECTOR3(0.0f, -5.5f, 0.0f);
+const D3DXVECTOR3 CEnemyOneWay::MOVE_POWER = D3DXVECTOR3(0.0f, -10.5f, 0.0f);
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -41,7 +41,6 @@ HRESULT CEnemyOneWay::Init()
 {
 	CEnemy::Init();
 	SetScale(SCALE);
-	m_guideLine = CLine::Create();
 	return S_OK;
 }
 
@@ -50,7 +49,6 @@ HRESULT CEnemyOneWay::Init()
 //-----------------------------------------------------------------------------
 void CEnemyOneWay::Uninit()
 {
-	m_guideLine->Release();
 	CEnemy::Uninit();
 }
 
@@ -72,7 +70,7 @@ void CEnemyOneWay::NormalUpdate()
 //-----------------------------------------------------------------------------
 void CEnemyOneWay::EndUpdate()
 {
-	for (int i = 0;i < 10;i++)
+	for (int i = 0;i < 3;i++)
 	{
 		D3DXVECTOR3 pos = m_pos;
 		pos.x += FloatRandom(-20.0f, 20.0f);
@@ -90,7 +88,6 @@ void CEnemyOneWay::EndUpdate()
 void CEnemyOneWay::Draw()
 {
 	CEnemy::Draw();
-	m_guideLine->SetLine(m_pos, m_rot, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -700.0f, 0.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
 //-----------------------------------------------------------------------------

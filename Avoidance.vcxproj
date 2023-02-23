@@ -216,7 +216,6 @@
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="motion_model3D.cpp" />
     <ClCompile Include="name.cpp" />
-    <ClCompile Include="nameset.cpp" />
     <ClCompile Include="number.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="object2d.cpp" />
@@ -236,9 +235,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ranking.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="result.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="select.cpp" />
     <ClCompile Include="circle_shadow.cpp" />
@@ -317,7 +314,6 @@
     <ClInclude Include="motion.h" />
     <ClInclude Include="motion_model3D.h" />
     <ClInclude Include="name.h" />
-    <ClInclude Include="nameset.h" />
     <ClInclude Include="number.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="object2d.h" />
@@ -334,10 +330,8 @@
     <ClInclude Include="player_afterimage_fall.h" />
     <ClInclude Include="player_died.h" />
     <ClInclude Include="precompile.h" />
-    <ClInclude Include="ranking.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="result.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="select.h" />
     <ClInclude Include="circle_shadow.h" />

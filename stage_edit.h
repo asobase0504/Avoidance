@@ -43,6 +43,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 
+	void SetType(EEditType inType) { m_type = inType; }
 	EEditType GetType() { return m_type; }
 
 private:

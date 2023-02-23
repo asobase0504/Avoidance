@@ -104,20 +104,17 @@
     <Filter Include="02_Imgui">
       <UniqueIdentifier>{0f1bd4d7-ef88-4f45-86c6-2d4a99e89f72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\01_File">
+    <Filter Include="01_File">
       <UniqueIdentifier>{2516cd92-e29e-4ebd-80f1-224a1c9391c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\01_File\json">
+    <Filter Include="01_File\json">
       <UniqueIdentifier>{f6673166-4a18-4ba6-94e9-991bbd411838}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\01_File\fx">
+    <Filter Include="01_File\fx">
       <UniqueIdentifier>{72a862dc-8ae0-4fe9-8b09-3e8ea90a4237}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="result.cpp">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClCompile>
     <ClCompile Include="particle_manager.cpp">
       <Filter>00_Cord\02_Object\10_Particle</Filter>
     </ClCompile>
@@ -133,17 +130,11 @@
     <ClCompile Include="number.cpp">
       <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
     </ClCompile>
-    <ClCompile Include="ranking.cpp">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClCompile>
     <ClCompile Include="fade.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
       <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
-    </ClCompile>
-    <ClCompile Include="nameset.cpp">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClCompile>
     <ClCompile Include="mode.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
@@ -402,9 +393,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="result.h">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClInclude>
     <ClInclude Include="particle_manager.h">
       <Filter>00_Cord\02_Object\10_Particle</Filter>
     </ClInclude>
@@ -423,17 +411,11 @@
     <ClInclude Include="Resource.h">
       <Filter>リソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ranking.h">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClInclude>
     <ClInclude Include="fade.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="text.h">
       <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
-    </ClInclude>
-    <ClInclude Include="nameset.h">
-      <Filter>00_Cord\00_Main\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
@@ -696,37 +678,37 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\FILE\texture.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\color.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\model.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\stageGroup.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\STAGE\stage0.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\STAGE\stage1.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\STAGE\stage2.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\STAGE\stage3.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\STAGE\stage4.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\STAGE\stage5.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
     <None Include="data\FILE\STAGE\stage6.json">
-      <Filter>00_Cord\01_File\json</Filter>
+      <Filter>01_File\json</Filter>
     </None>
   </ItemGroup>
 </Project>

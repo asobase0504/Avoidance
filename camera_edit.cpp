@@ -123,7 +123,9 @@ void CCameraEdit::Rotate()
 	CDebugProc::Print("CursorMove : %.2f,%.2f,%.2f\n", cursorMove.x, cursorMove.y, cursorMove.z);
 	CDebugProc::Print("JoyPadMove : %.2f,%.2f,%.2f\n", joyPadMove.x, joyPadMove.y, joyPadMove.z);
 
-	if (D3DXVec3Length(&joyPadMove) == 0.0f)
+	float length = D3DXVec3Length(&joyPadMove);
+
+	if (length == 0.0f)
 	{ // JoyPad‚Ì“ü—Í‚ª‚È‚©‚Á‚½ê‡ƒJ[ƒ\ƒ‹‚ÌˆÚ“®—Ê‚ğ‘ã“ü
 		move = D3DXVECTOR3(cursorMove.y, cursorMove.x, cursorMove.z) * 0.1f;
 	}

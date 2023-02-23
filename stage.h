@@ -49,6 +49,7 @@ public: // パブリック関数
 	const D3DXVECTOR3& GetPos() { return m_pos; }
 
 	void SetGoal(const D3DXVECTOR3& pos, const int inTime);
+	CGoal* GetGoal() { return m_goal; }
 
 	void SetFloor(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXVECTOR3& scale);
 	CPlain* GetFloor() { return m_floor; }

@@ -42,10 +42,7 @@ public:
 		MODE_GAME,			// ゲーム画面
 		MODE_EDIT,			// エディタ画面
 		MODE_FADE,			// フェード画面
-		MODE_RANKING,		// ランキング画面
-		MODE_GAMEOVER,		// ゲームオーバー画面
 		MODE_TUTORIAL,		// チュートリアル画面
-		MODE_NAMESET,		// 名前入力画面
 		MODE_MAX
 	};
 

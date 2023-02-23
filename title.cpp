@@ -119,20 +119,25 @@ HRESULT CTitle::Init(void)
 		m_startShadow->SetTexture("TEXT_START");
 		m_startShadow->SetColor(D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
 
-		m_start->SetFunctionClick([this](CSelect* inSelect)
+		m_start->SetFunctionClick([this](CSelect*)
 		{
 			CApplication::GetInstance()->GetFade()->NextMode(CApplication::MODE_GAME);
 		});
-		m_start->SetFunctionSelection([this](CSelect* inSelect)
+		m_start->SetFunctionSelection([this](CSelect*)
 		{
 			m_start->SetSize(D3DXVECTOR3(150.0f * 1.15f, 25.0f * 1.15f, 0.0f));
 			m_startShadow->SetSize(D3DXVECTOR3(150.0f, 25.0f, 0.0f)* 1.15f);
 		});
-		m_start->SetFunctionNoSelection([this](CSelect* inSelect)
+		m_start->SetFunctionNoSelection([this](CSelect*)
 		{
 			m_start->SetSize(D3DXVECTOR3(150.0f, 25.0f, 0.0f));
 			m_startShadow->SetSize(D3DXVECTOR3(150.0f, 25.0f, 0.0f));
 		});
+
+		if (CInput::GetKey()->GetAcceptJoyPadCount() != 0)
+		{
+			m_start->SetSelect(true);
+		}
 	}
 
 	return S_OK;

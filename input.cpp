@@ -548,6 +548,7 @@ D3DXVECTOR3 CInput::VectorMoveKey()
 D3DXVECTOR3 CInput::VectorMoveJoyStick(bool bleftandright, int nNum)
 {
 	D3DXVECTOR3 VectorMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	if (m_pJoyPad->GetJoyPadNumMax() == 0)
 	{
 		return VectorMove;

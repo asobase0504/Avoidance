@@ -131,9 +131,15 @@ void CPlayer::NormalUpdate()
 
 	m_quaternionOld = m_quaternion;
 	Move();			// 移動
-	boost();		// 突進
-	Jump();			// ジャンプ
+
 	Landing();		// 落下
+
+	if (CInput::GetKey()->Trigger(DIK_SPACE) || CInput::GetKey()->Trigger(JOYPAD_A,0))
+	{
+		boost();	// 突進
+		Jump();		// ジャンプ
+	}
+
 	OnHitGoal();	// Goalとの当たり判定
 	OnHitEnemy();	// Enemyとの当たり判定
 
@@ -231,7 +237,7 @@ void CPlayer::Move()
 	}
 
 	// JoyPadの入力があった場合はJoyPadに変更する
-	D3DXVECTOR3 joypadInput = input->VectorMoveJoyStick(false);
+	D3DXVECTOR3 joypadInput = input->VectorMoveJoyStick(true);
 	if (D3DXVec3LengthSq(&joypadInput) != 0.0f)
 	{
 		moveInput.x = joypadInput.x;
@@ -314,7 +320,7 @@ void CPlayer::Jump()
 	}
 
 	// 跳躍
-	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 0))
+	if (m_jumpCount == 0)
 	{
 		m_jumpCount++;
 		m_isJump = true;
@@ -329,13 +335,13 @@ void CPlayer::Jump()
 //-----------------------------------------------------------------------------
 void CPlayer::boost()
 {
-	// 突進
-	if (CInput::GetKey()->Trigger(DIK_SPACE) && (m_jumpCount == 1))
-	{
-		m_jumpCount++;
-		m_move.y += JUMPING_POWER * 0.45f;
-		m_move = D3DXVECTOR3(0.0f, 3.0f, 0.0f);
-	}
+	//// 突進
+	//if (m_jumpCount == 1)
+	//{
+	//	m_jumpCount++;
+	//	m_move.y += JUMPING_POWER * 0.45f;
+	//	m_move = D3DXVECTOR3(0.0f, 3.0f, 0.0f);
+	//}
 }
 
 //-----------------------------------------------------------------------------

@@ -152,7 +152,7 @@ void CGame::Update(void)
 	}
 
 	// ステージがクリアされてなくて、カウントダウン中でもなく、プレイヤーが死んでいない場合
-	if (CInput::GetKey()->Trigger(DIK_P) && !m_stage->IsEnd() && m_countdown == nullptr && !m_player->IsDied())
+	if ((CInput::GetKey()->Trigger(DIK_P) || CInput::GetKey()->Trigger(JOYPAD_START, 0)) && !m_stage->IsEnd() && m_countdown == nullptr && !m_player->IsDied())
 	{
 		CPause* pause = new CPause;
 		pause->Init();
@@ -196,11 +196,24 @@ void CGame::StageClear()
 			m_nextText = CSelect::Create(pos);
 			m_nextText->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f));
 			m_nextText->SetTexture("TEXT_NEXT");
+			m_nextText->SetSelect(true);
 
 			// 選択していたらこの処理を行う
-			m_nextText->SetFunctionSelection([](CSelect* inSelect)
+			m_nextText->SetFunctionSelection([this](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+
+				if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
+				{
+					m_retryText->SetSelect(true);
+					inSelect->SetSelect(false);
+				}
+
+				if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
+				{
+					m_backText->SetSelect(true);
+					inSelect->SetSelect(false);
+				}
 			});
 			// 選択されていなかったらこの処理を行う
 			m_nextText->SetFunctionNoSelection([](CSelect* inSelect)
@@ -232,9 +245,22 @@ void CGame::StageClear()
 			m_retryText->SetTexture("TEXT_RETRY");
 
 			// 選択していたらこの処理を行う
-			m_retryText->SetFunctionSelection([](CSelect* inSelect)
+			m_retryText->SetFunctionSelection([this](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+
+				if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
+				{
+					
+					m_backText->SetSelect(true);
+					inSelect->SetSelect(false);
+				}
+
+				if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
+				{
+					m_nextText->SetSelect(true);
+					inSelect->SetSelect(false);
+				}
 			});
 			// 選択されていなかったらこの処理を行う
 			m_retryText->SetFunctionNoSelection([](CSelect* inSelect)
@@ -264,9 +290,22 @@ void CGame::StageClear()
 			m_backText->SetTexture("TEXT_TITLE");
 
 			// 選択していたらこの処理を行う
-			m_backText->SetFunctionSelection([](CSelect* inSelect)
+			m_backText->SetFunctionSelection([this](CSelect* inSelect)
 			{
 				inSelect->SetSize(D3DXVECTOR3(100.0f, 17.5f, 0.0f) * 1.5f);
+
+				if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
+				{
+
+					m_nextText->SetSelect(true);
+					inSelect->SetSelect(false);
+				}
+
+				if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
+				{
+					m_retryText->SetSelect(true);
+					inSelect->SetSelect(false);
+				}
 			});
 			// 選択されていなかったらこの処理を行う
 			m_backText->SetFunctionNoSelection([](CSelect* inSelect)

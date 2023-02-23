@@ -24,6 +24,7 @@ CSelect::CSelect() : CObject2d(CTaskGroup::EPriority::LEVEL_2D_UI)
 	m_click = nullptr;
 	m_selection = nullptr;
 	m_noSelection = nullptr;
+	m_isSelect = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -79,6 +80,18 @@ void CSelect::NormalUpdate()
 	else
 	{
 		m_noSelection(this);
+	}
+
+	if (m_isSelect)
+	{
+		m_selection(this);
+
+		// ‘I‘ğ‚ÌğŒ
+		if (CInput::GetKey()->Trigger(JOYPAD_A,0))
+		{
+			// ‘I‘ğ‚µ‚½‚çs‚¤ˆ—
+			m_click(this);
+		}
 	}
 }
 

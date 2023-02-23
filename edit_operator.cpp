@@ -56,6 +56,7 @@ HRESULT CEditOperator::Init()
 	m_isEditBlock = true;
 
 	SetColorAlpha(0.75f);
+	SetScale(D3DXVECTOR3(0.5f,1.0f,0.5f));
 
 	return S_OK;
 }

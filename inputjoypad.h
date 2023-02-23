@@ -30,7 +30,7 @@ private:
 		DIJOYSTATE aKeyState;				// ジョイパッドのプレス情報
 		DIJOYSTATE aKeyStateTrigger;		// ジョイパッドのトリガー情報
 		DIJOYSTATE aKeyStateRelease;		// ジョイパッドのリリース情報
-		DirectJoypad aOldKey;				// 前回押されたキーの種類
+		bool aOldKey[JOYPAD_MAX];			// 前回押されたキーの種類
 		int nCrossPressRot;					// ジョイパッドの十字キーの押されている方向
 	};
 

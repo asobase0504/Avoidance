@@ -76,7 +76,13 @@ void CEnemyLaser::NormalUpdate()
 	{
 		m_hit = true;
 		SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
-		CDelayProcess::DelayProcess(60, this, [this]() { SetUpdateStatus(EUpdateStatus::END); });
+		CDelayProcess::DelayProcess(120, this, [this]() { SetUpdateStatus(EUpdateStatus::END); });
+	}
+
+	if (m_hit)
+	{
+		D3DXVECTOR3 scale = GetScale();
+		SetScale(D3DXVECTOR3(scale.x - 0.0025f, scale.y, scale.x - 0.0025f));
 	}
 }
 

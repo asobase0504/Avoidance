@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// マウスで選択可能なUI
+// マウス等で選択可能なUI
 // Author:Yuda Kaito
 //
 //=============================================================================
@@ -13,7 +13,8 @@
 #include "object2d.h"
 
 //=============================================================================
-// マウスで選択可能なUI
+// マウス等で選択可能なUI
+// Author:Yuda Kaito
 //=============================================================================
 class CSelect : public CObject2d
 {
@@ -31,9 +32,14 @@ public:
 	void SetFunctionSelection(std::function<void(CSelect*)> inSelection) { m_selection = inSelection; }
 	void SetFunctionNoSelection(std::function<void(CSelect*)> inSelection) { m_noSelection = inSelection; }
 
+	void SetSelect(bool isSelect) { m_isSelect = isSelect; }
+	bool GetSelect() { return m_isSelect; }
+
 private:
-	std::function<void(CSelect*)> m_click;
-	std::function<void(CSelect*)> m_selection;
-	std::function<void(CSelect*)> m_noSelection;
+	std::function<void(CSelect*)> m_click;			// クリック時に行う処理
+	std::function<void(CSelect*)> m_selection;		// 選択中に行う処理
+	std::function<void(CSelect*)> m_noSelection;	// 選択されていない時に行う処理
+
+	bool m_isSelect;	// 選択中か否か
 };
 #endif
