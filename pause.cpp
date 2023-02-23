@@ -129,8 +129,11 @@ HRESULT CPause::Init(void)
 		});
 	}
 
-	m_mouseCursor = CMouseObject::Create();
-	m_mouseCursor->SetPouseUpdate(true);
+	if (CInput::GetKey()->GetAcceptJoyPadCount() == 0)
+	{
+		m_mouseCursor = CMouseObject::Create();
+		m_mouseCursor->SetPouseUpdate(true);
+	}
 
 	CApplication::GetInstance()->GetTaskGroup()->Pause(true);
 	return S_OK;
@@ -147,7 +150,11 @@ void CPause::Uninit(void)
 	m_back->Release();
 	m_retry->Release();
 	m_titleBack->Release();
-	m_mouseCursor->Release();
+
+	if (m_mouseCursor != nullptr)
+	{
+		m_mouseCursor->Release();
+	}
 }
 
 //=============================================================================
@@ -166,12 +173,14 @@ void CPause::NormalUpdate(void)
 	{
 		if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
 		{
+			CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 			m_retry->SetSelect(true);
 			m_back->SetSelect(false);
 		}
 
 		if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
 		{
+			CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 			m_titleBack->SetSelect(true);
 			m_back->SetSelect(false);
 		}
@@ -180,12 +189,14 @@ void CPause::NormalUpdate(void)
 	{
 		if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
 		{
+			CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 			m_titleBack->SetSelect(true);
 			m_retry->SetSelect(false);
 		}
 
 		if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
 		{
+			CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 			m_back->SetSelect(true);
 			m_retry->SetSelect(false);
 		}
@@ -194,12 +205,14 @@ void CPause::NormalUpdate(void)
 	{
 		if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
 		{
+			CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 			m_back->SetSelect(true);
 			m_titleBack->SetSelect(false);
 		}
 
 		if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
 		{
+			CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 			m_retry->SetSelect(true);
 			m_titleBack->SetSelect(false);
 		}

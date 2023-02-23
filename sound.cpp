@@ -21,9 +21,15 @@ const CSound::SParam CSound::PARAM[] =
 	{ "data/BGM/BGM_01.wav", -1 },
 	{ "data/SE/Die001.wav", 0 },
 	{ "data/SE/pi.wav", 0 },
-	{ "data/SE/pi1.wav", 0 },
-	{ "data/SE/pi2.wav", 0 },
-	{ "data/SE/pi3.wav", 0 }
+	{ "data/SE/pi.wav", 0 },
+	{ "data/SE/pi.wav", 0 },
+	{ "data/SE/pi.wav", 0 },
+	{ "data/SE/Select.wav", 0 },
+	{ "data/SE/click.wav", 0 },
+	{ "data/SE/GoalOn.wav", 0 },
+	{ "data/SE/Dead.wav", 0 },
+	{ "data/SE/back.wav", 0 },
+	{ "data/SE/ok.wav", 0 }
 };
 
 static_assert(sizeof(CSound::PARAM) / sizeof(CSound::PARAM[0]) == CSound::LABEL_MAX, "soundÇ™çáÇÌÇ»Ç¢");

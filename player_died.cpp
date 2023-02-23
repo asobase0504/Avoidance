@@ -8,6 +8,7 @@
 #include "player_died.h"
 #include "utility.h"
 #include "application.h"
+#include "sound.h"
 #include "color.h"
 
 //-----------------------------------------------------------------------------
@@ -85,6 +86,7 @@ void CPlayerDied::NormalUpdate()
 
 	if (m_life == AGGREGATE_TIME)
 	{
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_BACK);
 		SetMoveRot(D3DXVECTOR3(FloatRandom(-0.15f,0.15f), FloatRandom(-0.15f, 0.15f), FloatRandom(-0.15f, 0.15f)));
 		SetMove((m_posOrigin - m_pos) / (float)AGGREGATE_TIME);
 	}

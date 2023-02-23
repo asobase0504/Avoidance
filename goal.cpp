@@ -8,6 +8,8 @@
 #include "goal.h"
 #include "goal_effect.h"
 #include "delay_process.h"
+#include "application.h"
+#include "sound.h"
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -116,6 +118,7 @@ void CGoal::SetTime(int inTime)
 			}
 		};
 
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_GOAL_ON);
 		CDelayProcess::DelayProcess(3,this, effect,-1);
 	});
 }

@@ -149,6 +149,7 @@ void CGame::Update(void)
 			m_countdown = nullptr;
 			m_stage->SetStart(true);	// ステージをスタートする
 			m_player->SetIsMove(true);	// プレイヤーの移動を許可する
+			m_player->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));	// プレイヤーの移動を許可する
 		}
 	}
 
@@ -208,12 +209,14 @@ void CGame::StageClear()
 
 				if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
 				{
+					CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 					m_retryText->SetSelect(true);
 					inSelect->SetSelect(false);
 				}
 
 				if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
 				{
+					CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 					m_backText->SetSelect(true);
 					inSelect->SetSelect(false);
 				}
@@ -229,7 +232,11 @@ void CGame::StageClear()
 			{
 				// マウスの位置ロック
 				CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-				m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
+
+				if (m_mouseCursor != nullptr)
+				{
+					m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
+				}
 
 				m_player->SetPos(D3DXVECTOR3(0.0f, 1900.0f, 0.0f));
 				m_fallCount = 0;
@@ -254,13 +261,14 @@ void CGame::StageClear()
 
 				if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
 				{
-					
+					CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 					m_backText->SetSelect(true);
 					inSelect->SetSelect(false);
 				}
 
 				if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
 				{
+					CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 					m_nextText->SetSelect(true);
 					inSelect->SetSelect(false);
 				}
@@ -276,7 +284,11 @@ void CGame::StageClear()
 			{
 				// マウスの位置ロック
 				CInput::GetKey()->GetMouse()->UseSetPosLock(true);
-				m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
+
+				if (m_mouseCursor != nullptr)
+				{
+					m_mouseCursor->SetUpdateStatus(CObject::EUpdateStatus::END);
+				}
 
 				RetryStage();
 
@@ -299,13 +311,14 @@ void CGame::StageClear()
 
 				if (CInput::GetKey()->Trigger(JOYPAD_DOWN, 0))
 				{
-
+					CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 					m_nextText->SetSelect(true);
 					inSelect->SetSelect(false);
 				}
 
 				if (CInput::GetKey()->Trigger(JOYPAD_UP, 0))
 				{
+					CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_SELECT);
 					m_retryText->SetSelect(true);
 					inSelect->SetSelect(false);
 				}
@@ -328,8 +341,11 @@ void CGame::StageClear()
 			});
 		}
 
-		// マウスの見た目の作成(位置の固定化を解除)
-		m_mouseCursor = CMouseObject::Create();
+		if (CInput::GetKey()->GetAcceptJoyPadCount() == 0)
+		{
+			// マウスの見た目の作成(位置の固定化を解除)
+			m_mouseCursor = CMouseObject::Create();
+		}
 	}
 
 	m_fallCount++;
@@ -353,6 +369,11 @@ void CGame::NextStage()
 	m_stage->Release();	// 終了処理
 
 	m_stageSection++;
+
+	if (m_stagePath.size() <= m_stageSection)
+	{
+		m_stageSection = 0;
+	}
 
 	m_stageNext = LoadAll(m_stagePath[m_stageSection]);
 

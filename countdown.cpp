@@ -50,15 +50,15 @@ HRESULT CCountdown::Init()
 	}, 1);
 	CDelayProcess::DelayProcess(60, this, []()
 	{
-		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN4);
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN3);
 	}, 1);
 	CDelayProcess::DelayProcess(90, this, []()
 	{
-		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN2);
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN3);
 	}, 1);
 	CDelayProcess::DelayProcess(130, this, []()
 	{
-		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN);
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_COUNTDOWN2);
 	}, 1);
 
 	return S_OK;

@@ -13,6 +13,7 @@
 #include "input.h"
 #include "camera.h"
 #include "application.h"
+#include "sound.h"
 #include "utility.h"
 #include "collision.h"
 #include "goal.h"
@@ -26,7 +27,7 @@ const float CPlayer::MAX_SPEED = 5.25f;		// 移動量
 const float CPlayer::SPEED = 5.25f;			// 移動量
 const float CPlayer::ATTENUATION = 0.3f;	// 移動減衰係数
 const float CPlayer::JUMPING_POWER = 7.5f;	// 跳躍力
-const float CPlayer::GRAVITY = 0.175f;		// 重力
+const float CPlayer::GRAVITY = 0.17f;		// 重力
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -378,6 +379,7 @@ void CPlayer::OnHitGoal()
 	{
 		if (OBBAndOBB((CObjectX*)inObject))
 		{
+			CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_OK);
 			CGoal* goal = (CGoal*)inObject;	// Goal
 			goal->Goal(true);
 			m_isGoal = true;
@@ -423,6 +425,7 @@ void CPlayer::OnHitEnemy()
 		// 死んだことにする
 		m_isDied = true;
 
+		CApplication::GetInstance()->GetSound()->Play(CSound::LABEL_SE_DEAD);
 		// リスポーン時間が過ぎたら生き返る
 		CDelayProcess::DelayProcess(CPlayerDied::MAX_LIFE, this, [this]()
 		{
