@@ -77,7 +77,7 @@ void CPlain::EndUpdate()
 
 	m_endCnt++;
 
-	if (m_endCnt > 320)
+	if (m_endCnt > 750)
 	{
 		Release();
 	}

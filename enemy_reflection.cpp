@@ -42,7 +42,6 @@ HRESULT CEnemyReflection::Init()
 {
 	CEnemy::Init();
 	SetScale(SCALE);
-	SetMove(MOVE_POWER);
 	return S_OK;
 }
 
@@ -59,9 +58,12 @@ void CEnemyReflection::Uninit()
 //-----------------------------------------------------------------------------
 void CEnemyReflection::NormalUpdate()
 {
+	SetMove(MOVE_POWER);
+
 	if (OnHitPlain())
 	{
-		MulMove(-1.0f);
+		AddPos(GetMove() * -1.0f);
+		MulRot(-1.0f);
 		m_reflectCnt++;
 	}
 

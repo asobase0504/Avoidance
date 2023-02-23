@@ -10,6 +10,7 @@
     [ "TEXT_NEXT", "data\/TEXTURE\/TEXT\/next.png" ],
     [ "TEXT_BACK", "data\/TEXTURE\/TEXT\/back.png" ],
     [ "TOON", "data\/TEXTURE\/toon.png" ],
-    [ "CIRCLE_SHADOW", "data\/TEXTURE\/shadow.png" ]
+    [ "CIRCLE_SHADOW", "data\/TEXTURE\/shadow.png" ],
+    [ "CHECK", "data\/TEXTURE\/check.png" ]
   ]
 }

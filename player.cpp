@@ -146,7 +146,7 @@ void CPlayer::NormalUpdate()
 	NextStageWait();	// 次のステージまで待機させる
 
 	// 何かの拍子で下に行った場合の対処法
-	if (m_pos.y < -500.0f)
+	if (m_pos.y < -1500.0f)
 	{
 		SetPos(D3DXVECTOR3(m_pos.x, 50.0f, m_pos.z));
 		SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));

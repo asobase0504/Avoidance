@@ -33,6 +33,7 @@ public:
 	void Uninit() override;
 	void PopUpdate() override;
 	void NormalUpdate() override;
+	void EndUpdate() override;
 
 	bool IsEnd() { return m_end; }
 

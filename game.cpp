@@ -33,6 +33,7 @@
 #include "countdown.h"
 #include "mouse_object.h"
 #include "select.h"
+#include "clear.h"
 
 //-----------------------------------------------------------------------------
 // 定数
@@ -176,6 +177,8 @@ void CGame::StageClear()
 
 	if (m_fallCount == 0)
 	{
+		CClear::Create(CApplication::CENTER_POS);
+
 		/* ステージのリセット */
 		m_stage->SetStart(false);	// スタートしてない状態にする
 		m_stage->PopReset();		// 敵が湧かないようにする

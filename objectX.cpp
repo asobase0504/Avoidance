@@ -152,8 +152,6 @@ void CObjectX::DrawMaterial()
 	CLight* lightClass = (CLight*)taskGroup->SearchRoleTop(CTask::ERole::ROLE_LIGHT, GetPriority());
 	D3DLIGHT9 light = lightClass->GetLight(0);
 
-	D3DXVECTOR4 v, light_pos;
-
 	D3DXMATRIX m;
 
 	//-------------------------------------------------
@@ -175,32 +173,23 @@ void CObjectX::DrawMaterial()
 
 	// ライトの方向
 	D3DXVECTOR4 lightDir = D3DXVECTOR4(light.Direction.x, light.Direction.y, light.Direction.z, 0);
-
 	D3DXMatrixInverse(&m, NULL, &m_mtxWorld);
-	D3DXVec4Transform(&v, &lightDir, &m);
+	D3DXVec4Transform(&lightDir, &lightDir, &m);
+	D3DXVec3Normalize((D3DXVECTOR3*)&lightDir, (D3DXVECTOR3*)&lightDir);
+	pEffect->SetVector(m_hvLightDir, &lightDir);
 
-	D3DXVec3Normalize((D3DXVECTOR3*)&v, (D3DXVECTOR3*)&v);
-
-	pEffect->SetVector(m_hvLightDir, &v);
-
-	// 視点
+	// 視点行列
 	m = m_mtxWorld * viewMatrix;
 	D3DXMatrixInverse(&m, NULL, &m);
 
-	//環境光
-	v = D3DXVECTOR4(0, 0, 0, 1);
-
-	D3DXVec4Transform(&v, &v, &m);
-
-	D3DXVec4Normalize(&v, &v);
-
-	//視点をシェーダーに渡す
-	pEffect->SetVector(m_hvEyePos, &v);
+	// 視点
+	D3DXVECTOR4 EyePos(0, 0, 0, 1);
+	D3DXVec4Transform(&EyePos, &EyePos, &m);
+	D3DXVec4Normalize(&EyePos, &EyePos);
+	pEffect->SetVector(m_hvEyePos, &EyePos);	//視点をシェーダーに渡す
 
 	//マテリアルデータのポインタを取得する
 	D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
-	D3DMATERIAL9 *pMtrl = &pMat->MatD3D;
 
 	for (int nCntMat = 0; nCntMat < (int)m_NumMat; nCntMat++)
 	{
@@ -240,8 +229,6 @@ void CObjectX::DrawMaterial()
 		pEffect->BeginPass(0);
 		m_pMesh->DrawSubset(nCntMat);	//モデルパーツの描画
 		pEffect->EndPass();
-
-		pMtrl++;
 	}
 
 	pEffect->End();
@@ -258,7 +245,7 @@ void CObjectX::DrawOutLine()
 	}
 
 	// 計算用マトリックス
-	D3DXMATRIX mtxTrans;
+	D3DXMATRIX mtxScale,mtxTrans;
 
 	// ワールドマトリックスの初期化
 	// 行列初期化関数(第1引数の行列を単位行列に初期化)
@@ -266,8 +253,8 @@ void CObjectX::DrawOutLine()
 
 	// 大きさを反映
 	//D3DXMatrixScaling(&mtxTrans, -m_scale.x * 1.05f, -m_scale.y * 1.05f, -m_scale.z * 1.05f);
-	D3DXMatrixScaling(&mtxTrans, -m_scale.x - 0.15f, -m_scale.y - 0.15f, -m_scale.z - 0.15f);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	D3DXMatrixScaling(&mtxScale, -m_scale.x - 0.15f, -m_scale.y - 0.15f, -m_scale.z - 0.15f);
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScale);
 
 	// 行列掛け算関数(第2引数×第3引数第を１引数に格納)
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxRot);
