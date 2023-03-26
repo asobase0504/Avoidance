@@ -61,7 +61,7 @@ void CCameraGame::Update()
 {
 	Rotate();
 
-	m_posR = D3DXVECTOR3(0.0f, 15.0f, 30.0f);
+	m_posR = D3DXVECTOR3(0.0f, 70.0f, 30.0f);
 	m_posV = D3DXVECTOR3(0.0f, 0.0f, -250.0f);
 
 	// 計算用マトリックス
