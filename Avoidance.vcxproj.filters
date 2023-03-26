@@ -47,12 +47,6 @@
     <Filter Include="00_Cord\02_Object\02_Object2D">
       <UniqueIdentifier>{1275179e-97c5-4666-9150-08228b3071ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_Cord\02_Object\02_Object2D\01_UI">
-      <UniqueIdentifier>{145a86af-5ff6-4807-9f6d-f2bec8c20e78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00_Cord\02_Object\02_Object2D\01_UI\00_Number">
-      <UniqueIdentifier>{893ba109-c22b-4607-bdee-b9db01165e51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00_Cord\00_Main\02_Group">
       <UniqueIdentifier>{23a7b4ab-29bc-45d9-a9c1-f63e25d06da9}</UniqueIdentifier>
     </Filter>
@@ -124,17 +118,8 @@
     <ClCompile Include="particle.cpp">
       <Filter>00_Cord\02_Object\10_Particle</Filter>
     </ClCompile>
-    <ClCompile Include="score.cpp">
-      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
-    </ClCompile>
-    <ClCompile Include="number.cpp">
-      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
-    </ClCompile>
     <ClCompile Include="fade.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="text.cpp">
-      <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
     </ClCompile>
     <ClCompile Include="mode.cpp">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
@@ -174,9 +159,6 @@
     </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>00_Cord\01_System\03_OutSide</Filter>
-    </ClCompile>
-    <ClCompile Include="name.cpp">
-      <Filter>00_Cord\02_Object\02_Object2D</Filter>
     </ClCompile>
     <ClCompile Include="parts.cpp">
       <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>
@@ -402,20 +384,11 @@
     <ClInclude Include="particle.h">
       <Filter>00_Cord\02_Object\10_Particle</Filter>
     </ClInclude>
-    <ClInclude Include="score.h">
-      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
-    </ClInclude>
-    <ClInclude Include="number.h">
-      <Filter>00_Cord\02_Object\02_Object2D\01_UI\00_Number</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>リソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="fade.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="text.h">
-      <Filter>00_Cord\02_Object\02_Object2D\01_UI</Filter>
     </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>00_Cord\00_Main\01_Mode</Filter>
@@ -455,9 +428,6 @@
     </ClInclude>
     <ClInclude Include="sound.h">
       <Filter>00_Cord\01_System\03_OutSide</Filter>
-    </ClInclude>
-    <ClInclude Include="name.h">
-      <Filter>00_Cord\02_Object\02_Object2D</Filter>
     </ClInclude>
     <ClInclude Include="parts.h">
       <Filter>00_Cord\02_Object\01_Master\00_Motion</Filter>

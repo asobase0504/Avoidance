@@ -350,7 +350,14 @@ void CPlayer::boost()
 //-----------------------------------------------------------------------------
 void CPlayer::Landing()
 {
-	m_move.y -= GRAVITY;	// 重力
+	if (m_isMove)
+	{
+		m_move.y -= GRAVITY;	// 重力
+	}
+	else
+	{
+		m_move.y = GRAVITY * -70.0f;	// 重力
+	}
 
 	if (!OnHitPlain())
 	{
@@ -374,6 +381,11 @@ void CPlayer::NextStageWait()
 //-----------------------------------------------------------------------------
 void CPlayer::OnHitGoal()
 {
+	if (m_isGoal)
+	{
+		return;
+	}
+
 	// 指定したタイプを全て検索して指定した関数を呼ぶ
 	TypeAllFunc(CObject::EType::GOAL, CTaskGroup::EPriority::LEVEL_3D_1, [this](CObject* inObject)
 	{

@@ -97,7 +97,6 @@ void CDebugProc::Init()
 #ifdef _DEBUG
 	m_use = true;
 #endif // _DEBUG
-	m_use = true;
 
 	LPDIRECT3DDEVICE9 pDevice = CRenderer::GetInstance()->GetDevice();
 

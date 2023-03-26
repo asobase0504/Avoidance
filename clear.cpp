@@ -14,7 +14,7 @@
 // 定数
 // Author:Yuda Kaito
 //-----------------------------------------------------------------------------
-const int CClear::START_TIME(150);
+const int CClear::START_TIME(120);
 
 //-----------------------------------------------------------------------------
 // コンストラクタ
@@ -143,12 +143,6 @@ void CClear::EndUpdate()
 			{
 				m_side[i]->Release();
 				m_side[i] = nullptr;
-			}
-
-			if (m_sideTrace[i] != nullptr)
-			{
-				m_sideTrace[i]->Release();
-				m_sideTrace[i] = nullptr;
 			}
 		}
 		Release();
